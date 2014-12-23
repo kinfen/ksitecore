@@ -1,0 +1,73 @@
+    script(src='/js/bootstrap-treeview.js')
+    script(src='/js/bootstrap-contextmenu.js')
+    script(type='text/javascript').
+      var menuData = [
+      {
+      text: 'Parent 1',
+      href: '#parent1',
+      tags: ['4'],
+      selectedBackColor: "#CCCCCC",
+      nodes: [
+      {
+      text: 'Child 1',
+      href: '#child1',
+      tags: ['2'],
+      nodes: [
+      {
+      text: 'Grandchild 1',
+      href: '#grandchild1',
+      tags: ['0']
+      },
+      {
+      text: 'Grandchild 2',
+      href: '#grandchild2',
+      tags: ['0']
+      }
+      ]
+      },
+      {
+      text: 'Child 2',
+      href: '#child2',
+      tags: ['0']
+      }
+      ]
+      },
+      {
+      text: 'Parent 2',
+      href: '#parent2',
+      tags: ['0']
+      },
+      {
+      text: 'Parent 3',
+      href: '#parent3',
+      tags: ['0']
+      },
+      {
+      text: 'Parent 4',
+      href: '#parent4',
+      tags: ['0']
+      },
+      {
+      text: 'Parent 5',
+      href: '#parent5'  ,
+      tags: ['0']
+      }
+      ];
+      $('#treeview1').treeview({
+      data: menuData,
+      levels:0,
+      selectedColor: "white",
+      selectedBackColor: "#333333"
+      });
+      $('#treeview1').contextmenu({
+      target: '#context-menu',
+      onItem: function (context, e) {
+      var obj = e.target;
+      var str = '';
+      for (var i in obj)
+      {
+      str += i + ':' + obj[i] + '\\n';
+      }
+      console.log(str);
+      }
+      });
