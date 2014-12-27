@@ -68,25 +68,8 @@ keystone.set('routes', require('./routes'));
 
 var email_hostname = process.env.EMAIL_HOSTNAME || 'localhost:3000';
 
-keystone.set('email locals', {
-	server: 'http://' + email_hostname,
-	logo_src: 'http://' + email_hostname + '/images/logo-email.gif',
-	logo_width: 194,
-	logo_height: 76,
-	theme: {
-		email_bg: '#f9f9f9',
-		link_color: '#2697de',
-		buttons: {
-			color: '#fff',
-			background_color: '#2697de',
-			border_color: '#1a7cb7'
-		}
-	}
-});
 
 // Load your project's email test routes
-
-keystone.set('email tests', require('./routes/emails'));
 
 // Configure the navigation bar in Keystone's Admin UI
 
