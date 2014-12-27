@@ -7,7 +7,9 @@ body{
 	margin-bottom: 60px;
 
 }
-
+iframe{
+	width:100%;
+}
 .footer {
   position: absolute;
   bottom: 0;
@@ -30,6 +32,27 @@ body > .container {
   padding-left: 15px;
 }
 
+.category-table{
+		
+}
+.category-table a:hover{
+	text-decoration:none;
+}
+.category-table td{
+	text-align:center;
+}
+.category-table .category-title{
+	text-align:left;
+}
+.tableHeader{
+	float:left; 
+}
+.tableAction{
+	float:right;	
+}
+.clear{
+	clear:both;
+}
 code {
   font-size: 80%;
 }

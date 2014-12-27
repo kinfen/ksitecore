@@ -9,13 +9,9 @@ block content
           .panel.panel-default
             .panel-body
               .page-header
-                h1 #{categoryName}        
-              ol.breadcrumb
-                li
-                  a(href='#') Home            
-                li
-                  a(href='#') Library          
-                li.active Data
+                h1 #{categoryName}
+                include ../component/archive-list.jade
+
             // <div class="panel-footer">KStudio.</div>
     .footer
       .container
@@ -30,9 +26,7 @@ block content
      
         li
           a(tabindex='-1') Something else here
-     
         li.divider
-    
         li
           a(tabindex='-1') Separated link
     //
@@ -47,20 +41,11 @@ append js
 
       var menuData = !{list};
       $('#treeview1').treeview({
-      data: menuData,
-      levels:0,
-      selectedColor: "white",
-      selectedBackColor: "#333333"
-      });
-      $('#treeview1').contextmenu({
-      target: '#context-menu',
-      onItem: function (context, e) {
-      var obj = e.target;
-      var str = '';
-      for (var i in obj)
-      {
-      str += i + ':' + obj[i] + '\\n';
-      }
-      console.log(str);
-      }
+        data: menuData,
+        levels:0,
+        selectedColor: "white",
+        selectedBackColor: "#333333",
+        onNodeSelected: function(event, node) {
+            window.location.href = node.href;
+          }
       });
