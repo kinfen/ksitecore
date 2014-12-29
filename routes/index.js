@@ -32,12 +32,24 @@ var routes = {
 	views: importRoutes('./views')
 };
 
+var initList = function(protect) {
+		return function(req, res, next) {
+			req.list = keystone.list(req.params.list);
+			if (!req.list || (protect && req.list.get('hidden'))) {
+				req.flash('error', 'List ' + req.params.list + ' could not be found.');
+				return res.redirect('/ksitecore');
+			}
+			next();
+		};
+	};
+
 // Setup Route Bindings
 exports = module.exports = function(app) {
 	
 	// Views
 	app.get('/ksitecore', routes.views.contentManager);
 	app.get('/ksitecore/welcome', routes.views.welcome);
-	app.get('/ksitecore/ca/:id', routes.views.archivelist);
+	app.get('/ksitecore/:list/:id/listtype/:listtype', initList(true), routes.views.list);
+	app.get('/ksitecore/:list/edit/:id', initList(true), routes.views.item);
 
 };

@@ -1,11 +1,10 @@
-var keystone = require('keystone'),
-	Category = keystone.list('SysCategory');
-
-var ca = null;
-
+var keystone = require('keystone');
 exports = module.exports = function(req, res) {
 	var view = new keystone.View(req, res);
-	var itemQuery = Category.model.findById(req.params.id);
+	var itemQuery = req.list.model.findById(req.params.id);
+	
+	console.log(req.params.listtype);
+	
     itemQuery.exec(function(err, category) {
         if (err)
         {
@@ -14,7 +13,7 @@ exports = module.exports = function(req, res) {
         else
         {
         	ca = category;
-        	view.render('archivelist', {categoryName:ca.name, id:ca._id});
+        	view.render('list', {categoryName:ca.name, id:ca._id});
         }
     });
 };
