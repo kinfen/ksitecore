@@ -37,5 +37,7 @@ exports = module.exports = function(app) {
 	
 	// Views
 	app.get('/ksitecore', routes.views.contentManager);
+	app.get('/ksitecore/welcome', routes.views.welcome);
+	app.get('/ksitecore/ca/:id', routes.views.archivelist);
 
 };

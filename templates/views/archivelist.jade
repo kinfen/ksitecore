@@ -1,0 +1,54 @@
+extends ../layouts/inner-template
+
+block content
+  .panel.panel-default
+    .panel-body
+      .page-header
+        h1 #{categoryName}
+      .tableBar
+        span.navbar-text 共有 3 条文章
+        .btn-group.tableAction
+          button.btn.btn-default(type="button")
+            span.glyphicon.glyphicon-cog
+            span 管理栏目 
+          button.btn.btn-default(type="button")
+            span.glyphicon.glyphicon-cog
+            span 管理子栏目
+        .clear
+            
+      .archive-list   
+        table.table.table-striped.table-hover.category-table
+          tr
+            td.col-xs-1 #
+            td.col-xs-8.category-title 标题
+            td.col-xs-2 发布日期
+            td.col-xs-1 操作
+          tr
+            td.col-xs-1 1
+            td.col-xs-8.category-title
+              a(href="#") 文章
+            td.col-xs-2 2014-10-10
+            td.col-xs-1 
+              a(href="#").glyphicon.glyphicon-cog
+              span &nbsp; 
+              a(href="#").glyphicon.glyphicon-remove
+        nav.text-center
+          ul.pagination
+            li
+              a(href="#") &laquo;
+            li.active
+              a(href="#") 1
+            li
+              a(href="#") 2
+            li
+              a(href="#") 3
+            li
+              a(href="#") 4
+            li
+              a(href="#") &raquo;
+      .no-list
+        h3 
+          span.label.label-primary 此栏目还没有内容
+
+
+   
