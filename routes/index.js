@@ -50,6 +50,6 @@ exports = module.exports = function(app) {
 	app.get('/ksitecore', routes.views.contentManager);
 	app.get('/ksitecore/welcome', routes.views.welcome);
 	app.get('/ksitecore/:list/:id/listtype/:listtype', initList(true), routes.views.list);
-	app.get('/ksitecore/:list/edit/:id', initList(true), routes.views.item);
+	app.all('/ksitecore/:list/edit/:id', initList(true), routes.views.item);
 
 };

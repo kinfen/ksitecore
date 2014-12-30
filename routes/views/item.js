@@ -154,16 +154,8 @@ exports = module.exports = function(req, res) {
 					return rel.items.results.length;
 				});
 
-				console.log('ksitecore list:' + req.list.uiElements);
-				for (var i = 0 ; i < req.list.uiElements.length; i++)
-				{
-					console.log('-------obj----------')
-					for (var k in req.list.uiElements[i])
-					{
-						console.log(k + ":" + req.list.uiElements[i][k]);
-					}
-				}
-
+				console.log('ksitecore list:' + item);
+				
 				ksitecore.render(req, res, 'item', _.extend(viewLocals, {
 					title: 'Keystone: ' + req.list.singular + ': ' + req.list.getDocumentName(item),
 					page: 'item',
@@ -177,8 +169,10 @@ exports = module.exports = function(req, res) {
 			});
 			
 		};
-		
+		console.log('method;' + req.method + ": action:" + req.body.action + ": is edit:" + req.list.get('noedit'));
 		if (req.method === 'POST' && req.body.action === 'updateItem' && !req.list.get('noedit')) {
+			
+			
 			
 			if (!keystone.security.csrf.validate(req)) {
 				req.flash('error', 'There was a problem with your request, please try again.');

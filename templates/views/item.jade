@@ -1,4 +1,6 @@
 extends ../layouts/inner-template
+include ../mixins/columns
+
 block css
 	link(rel="stylesheet", href="/keystone/js/lib/fancybox/jquery.fancybox.css")
 	if list.fieldTypes.markdown
@@ -106,7 +108,7 @@ block content
 				
 				.toolbar.toolbar-fixed
 					if !list.get('noedit')
-						button(type='submit').btn.btn-default.btn-save Save
+						button(type='submit').btn.btn-default.btn-save 保存
 						a(href='/keystone/' + list.path + '/' + item.id, data-confirm='Are you sure you want to reset your changes?').btn.btn-link.btn-cancel reset changes
 					if !list.get('nodelete')  && item.id !== user.id
 						a(href='/keystone/' + list.path + '?delete=' + item.id + csrf_query, data-confirm='Are you sure you want to delete this ' + list.singular.toLowerCase() + '?').btn.btn-link.btn-cancel delete #{list.singular.toLowerCase()}
