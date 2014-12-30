@@ -154,7 +154,16 @@ exports = module.exports = function(req, res) {
 					return rel.items.results.length;
 				});
 
-				console.log('ksitecore:' + ksitecore);
+				console.log('ksitecore list:' + req.list.uiElements);
+				for (var i = 0 ; i < req.list.uiElements.length; i++)
+				{
+					console.log('-------obj----------')
+					for (var k in req.list.uiElements[i])
+					{
+						console.log(k + ":" + req.list.uiElements[i][k]);
+					}
+				}
+
 				ksitecore.render(req, res, 'item', _.extend(viewLocals, {
 					title: 'Keystone: ' + req.list.singular + ': ' + req.list.getDocumentName(item),
 					page: 'item',
