@@ -1,11 +1,12 @@
 var keystone = require('keystone'),
 	_ = require('underscore'),
-	async = require('async');
+	async = require('async'),
+	ksitecore = require('../../');
 
 exports = module.exports = function(req, res) {
 	
 	var itemQuery = req.list.model.findById(req.params.id);
-	
+	var view = new keystone.View(req, res);
 	if (req.list.tracking && req.list.tracking.createdBy) {
 		itemQuery.populate(req.list.tracking.createdBy);
 	}
@@ -152,10 +153,9 @@ exports = module.exports = function(req, res) {
 				var showRelationships = _.some(relationships, function(rel) {
 					return rel.items.results.length;
 				});
-				
-				console.log('item : ' + item);
 
-				keystone.render(req, res, 'item', _.extend(viewLocals, {
+				console.log('ksitecore:' + ksitecore);
+				ksitecore.render(req, res, 'item', _.extend(viewLocals, {
 					title: 'Keystone: ' + req.list.singular + ': ' + req.list.getDocumentName(item),
 					page: 'item',
 					list: req.list,
