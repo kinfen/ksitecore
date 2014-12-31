@@ -46,6 +46,7 @@ block js
 		Keystone.wysiwyg = { options: !{JSON.stringify(wysiwygOptions)} };	
 block content
 	.panel.panel-default
+		.panel-heading #{item.name}
 		.panel-body
 			form(method='post', enctype='multipart/form-data').item-details
 				input(type='hidden', name='action', value='updateItem')
@@ -108,10 +109,10 @@ block content
 				
 				.toolbar.toolbar-fixed
 					if !list.get('noedit')
-						button(type='submit').btn.btn-default.btn-save 保存
-						a(href='/keystone/' + list.path + '/' + item.id, data-confirm='Are you sure you want to reset your changes?').btn.btn-link.btn-cancel reset changes
+						button(type='submit').btn.btn-success Save
+						a(href='/ksitecore/' + list.path + '/edit/' + item.id, data-confirm='Are you sure you want to reset your changes?').btn.btn-default Reset
 					if !list.get('nodelete')  && item.id !== user.id
-						a(href='/keystone/' + list.path + '?delete=' + item.id + csrf_query, data-confirm='Are you sure you want to delete this ' + list.singular.toLowerCase() + '?').btn.btn-link.btn-cancel delete #{list.singular.toLowerCase()}
+						a(href='/ksitecore/' + list.path + '?delete=' + item.id + csrf_query, data-confirm='Are you sure you want to delete this ' + list.singular.toLowerCase() + '?').btn.btn-danger delete #{list.singular.toLowerCase()}
 			
 			
 			if showRelationships
@@ -140,5 +141,6 @@ block content
 											each col, i in rel.columns
 												td
 													+column(rel.list, col, item)
+			+flash-messages(messages)
 
 

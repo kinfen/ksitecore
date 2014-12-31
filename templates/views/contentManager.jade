@@ -35,13 +35,13 @@ append js
 
     script(type='text/javascript').
 
-      var menuData = !{list};
+      var menuData = !{items};
       $('#treeview1').treeview({
         data: menuData,
         levels:0,
         selectedColor: "white",
         selectedBackColor: "#333333",
         onNodeSelected: function(event, node) {
-            $("#content-frame").attr("src", "/ksitecore/SysCategory/" + node._id + "/listtype/Archive");
+            $("#content-frame").attr("src", "/ksitecore/#{list.path}/" + node._id + "/listtype/Archive");
           }
       });

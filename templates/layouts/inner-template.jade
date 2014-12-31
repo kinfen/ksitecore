@@ -10,20 +10,20 @@ html(lang='en')
     meta(name='author', content='') 
     link(rel='icon', href='/favicon.ico')   
     title Starter Template for Bootstrap
-    // Bootstrap core CSS
-    link(href='/css/bootstrap.css', rel='stylesheet')  
-    link(href='/css/base.css', rel='stylesheet')
+    
+    
 
+    // Bootstrap core CSS
     link(rel="stylesheet", href="/keystone/js/lib/select2/select2-3.3.2.css")
     link(rel="stylesheet", href="/keystone/js/lib/pikaday/pikaday-1.1.0.css")
-
     //- Keystone Stylesheet
     link(rel="stylesheet", href="/css/keystone2.css")
+    link(href='/css/bootstrap.css', rel='stylesheet')  
+    link(href='/css/base.css', rel='stylesheet')
 
     block css
   body
 
-    +flash-messages(messages)
     block content
 
     //script(src='/js/jquery-2.1.3.min.js')

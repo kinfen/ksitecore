@@ -1,4 +1,7 @@
 var keystone = require('keystone'),
+	_ = require('underscore'),
+	async = require('async'),
+	ksitecore = require('../../'),
 	Category = keystone.list('SysCategory');
 
 
@@ -9,7 +12,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 	
 
-	Category.model.find()
+	var itemQuery = Category.model.find()
     .exec(function(err, categorys) {
         if (err)
         {
@@ -62,7 +65,10 @@ exports = module.exports = function(req, res) {
 			var menuData = reformData('root', hashData);
 			// console.log(menuData);
 
-        	view.render('contentManager', {list:JSON.stringify(menuData)});
+        	ksitecore.render(req, res, 'contentManager', {
+        		list: Category,
+				items:JSON.stringify(menuData)}
+			);
         }
     });
 
