@@ -5,6 +5,49 @@ block content
     .panel-body
       .page-header
         h1 Welcome to KSiteCore
+        if !list.get('nocreate') && item.total == 0
+          .create-item
+            if list.get('autocreate')
+              .toolbar
+                a(href='?new' + csrf_query).btn.btn-default.btn-create.btn-create-item
+                  span.ion-plus-round
+                  |  Create #{list.singular}
+            else
+              form(method='post', action='/ksitecore/#{list.path}/0/listtype/#{list.path}')
+                input(type='hidden', name='action', value='create')
+                input(type='hidden', name=csrf_token_key, value=csrf_token_value)
+                input(type='hidden', name='parent', value='#{item.id ? item.id : ""}')
+                .form
+                  h4 New #{list.singular}
+                  if list.nameIsInitial
+                    if list.nameField.type == 'name'
+                      .field.item-name: .col-sm-12: input(type='text', name=list.nameField.paths.full, value=submitted[list.nameField.paths.full], placeholder=list.singular + ' ' + list.nameField.label.toLowerCase()).form-control.input-lg
+                      if list.nameField.note
+                        .field-note !{list.nameField.note}
+                    else if list.nameField.type == 'text'
+                      .field.item-name: .col-sm-12: input(type='text', name=list.nameField.path, value=submitted[list.nameField.path], placeholder=list.singular + ' ' + list.nameField.label.toLowerCase()).form-control.input-lg
+                      if list.nameField.note
+                        .field-note !{list.nameField.note}
+                    else
+                      .alert.alert-danger Unsupported field type (#{list.nameField.type}) for item name (#{list.nameField.path}).
+                  
+                  each field in list.initialFields
+                    != field.render('initial', submitted)
+                
+                .toolbar
+                  .toolbar-create
+                    button(type='submit').btn.btn-default.btn-create Create
+                    button(type='button').btn.btn-link.btn-cancel.btn-cancel-create-item cancel
+                  .toolbar-default.row
+                    .col-xs-12
+                      button(type='button', class=(showCreateForm ? 'autoclick' : null)).btn.btn-default.btn-create.btn-create-item
+                        span.glyphicon.glyphicon-plus
+                        |  Create Category
 
 
-   
+block js
+ script(src='/keystone/js/views/list.js')
+ script(src='/keystone/js/lib/browserified/querystring.js')
+ script(src='/keystone/js/lib/browserified/queryfilter.js')
+ script.
+    Keystone.list = { path: "#{list.path}"};

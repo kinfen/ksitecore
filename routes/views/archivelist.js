@@ -1,5 +1,5 @@
 var keystone = require('keystone'),
-	Category = keystone.list('SysCategory');
+	Category = keystone.list('Category');
 
 var ca = null;
 

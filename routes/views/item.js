@@ -1,7 +1,8 @@
 var keystone = require('keystone'),
 	_ = require('underscore'),
 	async = require('async'),
-	ksitecore = require('../../');
+	ksitecore = require('../../'),
+	Render = require('../../lib/core/FieldRender');
 
 exports = module.exports = function(req, res) {
 	
@@ -153,12 +154,13 @@ exports = module.exports = function(req, res) {
 				var showRelationships = _.some(relationships, function(rel) {
 					return rel.items.results.length;
 				});
-
-				console.log('ksitecore list:' + item);
+				
+				var render = new Render();
 				
 				ksitecore.render(req, res, 'item', _.extend(viewLocals, {
 					title: 'Keystone: ' + req.list.singular + ': ' + req.list.getDocumentName(item),
 					page: 'item',
+					render:render,
 					list: req.list,
 					item: item,
 					relationships: relationships,
@@ -169,7 +171,6 @@ exports = module.exports = function(req, res) {
 			});
 			
 		};
-		console.log('method;' + req.method + ": action:" + req.body.action + ": is edit:" + req.list.get('noedit'));
 		if (req.method === 'POST' && req.body.action === 'updateItem' && !req.list.get('noedit')) {
 			
 			

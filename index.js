@@ -87,5 +87,6 @@ KSiteCore.prototype.start = function()
 var ksitecore = new KSiteCore();
 module.exports = exports = ksitecore;
 ksitecore.init();
+KSiteCore.prototype.templateList = require('./lib/core/templatelist');
 ksitecore.start();
 

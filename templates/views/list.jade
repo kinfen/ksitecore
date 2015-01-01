@@ -2,39 +2,41 @@ extends ../layouts/inner-template
 
 block content
   .panel.panel-default
-    .panel-heading #{sublisttype + ' list'}
+    .panel-heading #{sublisttype.path + ' list'}
     .panel-body
       .page-header
         h1 #{item.name}
         .text-right 
           label total #{sublist.total} items
       .tableBar
-        if !list.get('nocreate')
+        if !sublisttype.get('nocreate')
           .create-item
-            if list.get('autocreate')
+            if sublisttype.get('autocreate')
               .toolbar
                 a(href='?new' + csrf_query).btn.btn-default.btn-create.btn-create-item
                   span.ion-plus-round
-                  |  Create #{list.singular}
+                  |  Create #{sublisttype.singular}
             else
-              form(method='post', action='/ksitecore/' + list.path)
+              form(method='post')
                 input(type='hidden', name='action', value='create')
                 input(type='hidden', name=csrf_token_key, value=csrf_token_value)
+                input(type='hidden', name='parent', value='#{item.id}')
+                input(type='hidden', name='list', value='#{sublisttype.path}')
                 .form
-                  h4 New #{list.singular}
-                  if list.nameIsInitial
-                    if list.nameField.type == 'name'
-                      .field.item-name: .col-sm-12: input(type='text', name=list.nameField.paths.full, value=submitted[list.nameField.paths.full], placeholder=list.singular + ' ' + list.nameField.label.toLowerCase()).form-control.input-lg
-                      if list.nameField.note
-                        .field-note !{list.nameField.note}
-                    else if list.nameField.type == 'text'
-                      .field.item-name: .col-sm-12: input(type='text', name=list.nameField.path, value=submitted[list.nameField.path], placeholder=list.singular + ' ' + list.nameField.label.toLowerCase()).form-control.input-lg
-                      if list.nameField.note
-                        .field-note !{list.nameField.note}
+                  h4 New #{sublisttype.singular}
+                  if sublisttype.nameIsInitial
+                    if sublisttype.nameField.type == 'name'
+                      .field.item-name: .col-sm-12: input(type='text', name=sublisttype.nameField.paths.full, value=submitted[sublisttype.nameField.paths.full], placeholder=sublisttype.singular + ' ' + sublisttype.nameField.label.toLowerCase()).form-control.input-lg
+                      if sublisttype.nameField.note
+                        .field-note !{sublisttype.nameField.note}
+                    else if sublisttype.nameField.type == 'text'
+                      .field.item-name: .col-sm-12: input(type='text', name=sublisttype.nameField.path, value=submitted[sublisttype.nameField.path], placeholder=sublisttype.singular + ' ' + sublisttype.nameField.label.toLowerCase()).form-control.input-lg
+                      if sublisttype.nameField.note
+                        .field-note !{sublisttype.nameField.note}
                     else
-                      .alert.alert-danger Unsupported field type (#{list.nameField.type}) for item name (#{list.nameField.path}).
+                      .alert.alert-danger Unsupported field type (#{sublisttype.nameField.type}) for item name (#{sublisttype.nameField.path}).
                   
-                  each field in list.initialFields
+                  each field in sublisttype.initialFields
                     != field.render('initial', submitted)
                 
                 .toolbar
@@ -45,9 +47,8 @@ block content
                     .col-xs-6
                       button(type='button', class=(showCreateForm ? 'autoclick' : null)).btn.btn-default.btn-create.btn-create-item
                         span.glyphicon.glyphicon-plus
-                        |  Create #{sublisttype}
+                        |  Create #{sublisttype.path}
                     .col-xs-6
-                      if sublisttype!=list.path
                         .btn-group.tableAction
                           a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/edit/#{item.id}")
                             span.glyphicon.glyphicon-cog
@@ -72,7 +73,7 @@ block content
                 a(href="#") #{item.name}
               td.col-xs-2 #{item.createAt}
               td.col-xs-1 
-                a(href="#").glyphicon.glyphicon-cog
+                a(href="/ksitecore/#{sublisttype.path}/edit/#{item.id}").glyphicon.glyphicon-cog
                 span &nbsp; 
                 a(href="#").glyphicon.glyphicon-remove
         nav.text-center

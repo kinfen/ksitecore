@@ -6,12 +6,11 @@ var keystone = require('keystone'),
  * =============
  */
 
-var SysCategory = new keystone.List('SysCategory');
+var CaTemplate = new keystone.List('CaTemplate');
 
-SysCategory.add({
+CaTemplate.add({
 	name: { type: String, required: true },
-	parent: { type: Types.Relationship, ref: 'SysCategory' },
+	path: { type: String, default:''},
 	publishedDate: { type: Date, default: Date.now },
 });
-
-SysCategory.register();
+CaTemplate.register();

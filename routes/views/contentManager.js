@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	_ = require('underscore'),
 	async = require('async'),
 	ksitecore = require('../../'),
-	Category = keystone.list('SysCategory');
+	Category = keystone.list('Category');
 
 
 
@@ -27,6 +27,8 @@ exports = module.exports = function(req, res) {
 				var tmp = {};
 				tmp._id = obj._id;
         		tmp.text = obj.name;
+				var template = ksitecore.templateList.template[obj.template];
+				tmp.template  = template ? template : "categories";
         		var tag = obj.parent ? obj.parent + '' : 'root';
         		tmp.parent = tag;
         		if (hashData[tag] == null)
@@ -36,11 +38,6 @@ exports = module.exports = function(req, res) {
         		hashData[tag].push(tmp);
         		// console.log('create array ' + hashData[tag].length);
         	}
-
-        	// for (var k in hashData)
-        	// {
-        	// 	console.log(k + ':' + hashData[k]);
-        	// }
         	function reformData(tag, res)
 			{
 				var list = null;

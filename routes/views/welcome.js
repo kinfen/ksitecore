@@ -1,13 +1,48 @@
 var keystone = require('keystone'),
-	Category = keystone.list('SysCategory');
-
-
+	_ = require('underscore'),
+	async = require('async'),
+	ksitecore = require('../../'),
+	Category = keystone.list('Category');
 
 exports = module.exports = function(req, res) {
 	
-	var view = new keystone.View(req, res),
-		locals = res.locals;
-    view.render('welcome');
+	
+	var categorys = null;
+	var viewLocals = {
+				validationErrors: {}
+			};
+	var loadList = function(cb)
+	{
+		var listQuery = Category.paginate({page: 1, perPage: 1 });
+		listQuery.exec(function (err, list){
+			if (err || list.length == 0) {
+				req.flash('error', 'has not a Category could not be found.');
+			}
+			categorys = list;
+			cb();
 
+		});
+	}
+
+	var renderView = function() {
+				
+			ksitecore.render(req, res, 'welcome', _.extend(viewLocals, {
+				list:keystone.list("Category"),
+				submitted: req.body || {},
+				item: categorys
+			}));
+			
+		// });
+		
+	};
+	
+	var startRender = function()
+	{
+		async.waterfall([loadList], function(err){
+			renderView();
+		});
+	}
+	
+	startRender();
 	
 };
