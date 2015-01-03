@@ -50,49 +50,51 @@ block content
                         |  Create #{sublisttype.path}
                     .col-xs-6
                         .btn-group.tableAction
-                          a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/edit/#{item.id}")
-                            span.glyphicon.glyphicon-cog
+                          a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/item/#{item.id}")
+                            span.glyphicon.glyphicon-edit 
                             span 管理栏目 
-                          a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/#{item.id}/listtype/#{list.path}")
-                            span.glyphicon.glyphicon-cog
+                          a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{item.id}?type=#{list.path}")
+                            span.glyphicon.glyphicon-list-alt 
                             span 管理子栏目
                         .clear
         br
-      .archive-list   
-        table.table.table-striped.table-hover.category-table
-          tr
-            td.col-xs-1 #
-            td.col-xs-8.category-title 标题
-            td.col-xs-2 发布日期
-            td.col-xs-1 操作
-          - var i = 0;
-          each item in sublist.results
+      if sublist.results.length > 0
+        .archive-list 
+          table.table.table-striped.table-hover.category-table
             tr
-              td.col-xs-1 #{++i}
-              td.col-xs-8.category-title
-                a(href="#") #{item.name}
-              td.col-xs-2 #{item.createAt}
-              td.col-xs-1 
-                a(href="/ksitecore/#{sublisttype.path}/edit/#{item.id}").glyphicon.glyphicon-cog
-                span &nbsp; 
-                a(href="#").glyphicon.glyphicon-remove
-        nav.text-center
-          ul.pagination
-            li
-              a(href="#") &laquo;
-            li.active
-              a(href="#") 1
-            li
-              a(href="#") 2
-            li
-              a(href="#") 3
-            li
-              a(href="#") 4
-            li
-              a(href="#") &raquo;
-      .no-list
-        h3 
-          span.label.label-primary 此栏目还没有内容
+              td.col-xs-1 #
+              td.col-xs-8.category-title 标题
+              td.col-xs-2 发布日期
+              td.col-xs-1 操作
+            - var i = 0;
+            each item in sublist.results
+              tr
+                td.col-xs-1 #{++i}
+                td.col-xs-8.category-title
+                  a(href="#") #{item.name}
+                td.col-xs-2 #{item.createAt}
+                td.col-xs-1 
+                  a(href="/ksitecore/#{sublisttype.path}/item/#{item.id}").glyphicon.glyphicon-cog
+                  span &nbsp; 
+                  a(href="#").glyphicon.glyphicon-remove
+          nav.text-center
+            ul.pagination
+              li
+                a(href="#") &laquo;
+              li.active
+                a(href="#") 1
+              li
+                a(href="#") 2
+              li
+                a(href="#") 3
+              li
+                a(href="#") 4
+              li
+                a(href="#") &raquo;
+      else
+        .no-list
+          h3 
+            span.label.label-primary no content with this template!
 
 block js
   if list.fieldTypes.location

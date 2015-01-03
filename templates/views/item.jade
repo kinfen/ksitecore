@@ -48,6 +48,16 @@ block content
 	.panel.panel-default
 		.panel-heading #{item.name}
 		.panel-body
+			.btn-group
+				if list.singular.toLowerCase() === 'category'
+					a.btn.btn-default(href='/ksitecore/#{list.path}/list/#{item.id}?type=#{list.path}')
+						span.glyphicon.glyphicon-chevron-left 
+						span back to #{list.singular}
+				if item.parent
+					a.btn.btn-default(href='/ksitecore/#{list.path}/list/#{item.parent}?type=#{list.path}')
+						span.glyphicon.glyphicon-chevron-left 
+						span back to parent 
+			hr
 			form(method='post', enctype='multipart/form-data').item-details
 				input(type='hidden', name='action', value='updateItem')
 				input(type='hidden', name=csrf_token_key, value=csrf_token_value)
@@ -110,9 +120,9 @@ block content
 				.toolbar.toolbar-fixed
 					if !list.get('noedit')
 						button(type='submit').btn.btn-success Save
-						a(href='/ksitecore/' + list.path + '/edit/' + item.id, data-confirm='Are you sure you want to reset your changes?').btn.btn-default Reset
+						a(href='/ksitecore/' + list.path + '/item/' + item.id, data-confirm='Are you sure you want to reset your changes?').btn.btn-default Reset
 					if !list.get('nodelete')  && item.id !== user.id
-						a(href='/ksitecore/categories/#{item.parent}/listtype/#{list.path}?delete=' + (item.id ? item.id : 0) + csrf_query, data-confirm='Are you sure you want to delete this ' + list.singular.toLowerCase() + '?').btn.btn-danger delete #{list.singular.toLowerCase()}
+						a(href='/ksitecore/categories/list/#{item.parent}?type=#{list.path}&delete=' + (item.id ? item.id : 0) + csrf_query, data-confirm='Are you sure you want to delete this ' + list.singular.toLowerCase() + '?').btn.btn-danger delete #{list.singular.toLowerCase()}
 			
 			
 			if showRelationships

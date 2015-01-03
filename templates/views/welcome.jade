@@ -13,7 +13,7 @@ block content
                   span.ion-plus-round
                   |  Create #{list.singular}
             else
-              form(method='post', action='/ksitecore/#{list.path}/0/listtype/#{list.path}')
+              form(method='post', action='/ksitecore/#{list.path}/list?type=#{list.path}')
                 input(type='hidden', name='action', value='create')
                 input(type='hidden', name=csrf_token_key, value=csrf_token_value)
                 input(type='hidden', name='parent', value='#{item.id ? item.id : ""}')

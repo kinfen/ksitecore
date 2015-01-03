@@ -42,6 +42,6 @@ append js
         selectedColor: "white",
         selectedBackColor: "#333333",
         onNodeSelected: function(event, node) {
-            $("#content-frame").attr("src", "/ksitecore/#{list.path}/" + node._id + "/listtype/" + node.template);
+            $("#content-frame").attr("src", "/ksitecore/#{list.path}/list/" + node._id + "?type=" + node.template);
           }
       });

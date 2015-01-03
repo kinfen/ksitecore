@@ -51,7 +51,7 @@ exports = module.exports = function(app) {
 	app.all('/ksitecore/templates', routes.views.templates);
 	app.get('/ksitecore/err', routes.views.err);
 	app.get('/ksitecore/welcome', routes.views.welcome);
-	app.all('/ksitecore/:list/:id/listtype/:listtype', initList(true), routes.views.list);
-	app.all('/ksitecore/:list/edit/:id', initList(true), routes.views.item);
+	app.all('/ksitecore/:list/list/:id', initList(true), routes.views.list);
+	app.all('/ksitecore/:list/item/:id', initList(true), routes.views.item);
 
 };

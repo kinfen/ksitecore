@@ -69,7 +69,7 @@ exports = module.exports = function(req, res) {
 				submitted: req.body || {},
 				list: Template,
 				item: category,
-				sublisttype:req.params.listtype,
+				sublisttype:req.query.type,
 				sublist:sublist,
 
 				// section: keystone.nav.by.list[Template.key] || {},
@@ -130,7 +130,7 @@ exports = module.exports = function(req, res) {
 					req.flash('success', 'All ' + Template.plural + ' updated successfully.');
 				}
 				ksitecore.templateList.loadList();
-				res.redirect('/ksitecore/' + Template.path + "/listtype/" + req.params.listtype);
+				res.redirect('/ksitecore/' + Template.path + "/list/?type=" + req.query.type);
 			});
 		})();
 		
@@ -144,7 +144,7 @@ exports = module.exports = function(req, res) {
 		}
 		
 		Template.model.findById(req.query['delete']).exec(function (err, item) {
-			if (err || !item) return res.redirect('/ksitecore/' + Template.path + "/" + req.params.id + "/listtype/" + req.params.listtype);
+			if (err || !item) return res.redirect('/ksitecore/' + Template.path + "/list/" + req.params.id + "?type=" + req.query.type);
 			
 			item.remove(function (err) {
 				if (err) {
@@ -154,7 +154,7 @@ exports = module.exports = function(req, res) {
 				} else {
 					req.flash('success', Template.singular + ' deleted successfully.');
 				}
-				res.redirect('/ksitecore/' + Template.path + "/" + req.params.id + "/listtype/" + req.params.listtype);
+				res.redirect('/ksitecore/' + Template.path + "/list/" + req.params.id + "?type=" + req.query.type);
 			});
 		});
 		
@@ -174,7 +174,7 @@ exports = module.exports = function(req, res) {
 				startRender();
 			} else {
 				req.flash('success', 'New ' + Template.singular + ' ' + Template.getDocumentName(item) + ' created.');
-				return res.redirect('/ksitecore/' + Template.path + '/edit/' + item.id);
+				return res.redirect('/ksitecore/' + Template.path + '/item/' + item.id);
 			}
 			
 		});
@@ -210,7 +210,7 @@ exports = module.exports = function(req, res) {
 			}
 			req.flash('success', 'New ' + Template.singular + ' ' + Template.getDocumentName(item) + ' created.');
 			ksitecore.templateList.loadList();
-			return res.redirect('/ksitecore/' + Template.path + '/edit/' + item.id);
+			return res.redirect('/ksitecore/' + Template.path + '/item/' + item.id);
 		});
 		
 	} else {

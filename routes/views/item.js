@@ -185,7 +185,7 @@ exports = module.exports = function(req, res) {
 					return renderView();
 				}
 				req.flash('success', 'Your changes have been saved.');
-				return res.redirect('/ksitecore/' + req.list.path + '/edit/' + item.id);
+				return res.redirect('/ksitecore/' + req.list.path + '/item/' + item.id);
 			});
 			
 			

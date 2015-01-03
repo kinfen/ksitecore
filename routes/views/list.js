@@ -8,7 +8,7 @@ exports = module.exports = function(req, res) {
 	
 	var category = null;
 	var sublist = null;
-	var sl = keystone.list(req.params.listtype);
+	var sl = keystone.list(req.query.type);
 	var pageSize = req.query.pagesize || 10;
 	var sort = { by: req.query.sort || req.list.defaultSort };
 	var viewLocals = {
@@ -82,7 +82,7 @@ exports = module.exports = function(req, res) {
 				item: category,
 				sublisttype:sl,
 				sublist:sublist,
-
+				callfrom:res.path,
 				// section: keystone.nav.by.list[req.list.key] || {},
 				// title: 'Keystone: ' + req.list.plural,
 				// page: 'list',
@@ -138,9 +138,9 @@ exports = module.exports = function(req, res) {
 					console.log(err);
 					req.flash('error', 'There was an error updating all ' + sl.plural + ' (logged to console)');
 				} else {
-					req.flash('success', 'All ' + slt.plural + ' updated successfully.');
+					req.flash('success', 'All ' + sl.plural + ' updated successfully.');
 				}
-				res.redirect('/ksitecore/' + req.list.path + "/listtype/" + sl.path);
+				res.redirect('/ksitecore/' + req.list.path + "/list/?type=" + sl.path);
 			});
 		})();
 		
@@ -154,7 +154,7 @@ exports = module.exports = function(req, res) {
 		}
 		
 		sl.model.findById(req.query['delete']).exec(function (err, item) {
-			if (err || !item) return res.redirect('/ksitecore/' + req.list.path + "/" + req.params.id + "/listtype/" + sl.path);
+			if (err || !item) return res.redirect('/ksitecore/' + req.list.path + "/list/" + req.params.id + "?type=" + sl.path);
 			
 			item.remove(function (err) {
 				if (err) {
@@ -166,7 +166,7 @@ exports = module.exports = function(req, res) {
 				}
 				if (req.params.id && req.params.id != "undefined")
 				{
-					res.redirect('/ksitecore/' + req.list.path + "/" + req.params.id + "/listtype/" + sl.path);
+					res.redirect('/ksitecore/' + req.list.path + "/list/" + req.params.id + "?type=" + sl.path);
 				}
 				else
 				{
@@ -192,7 +192,7 @@ exports = module.exports = function(req, res) {
 				startRender();
 			} else {
 				req.flash('success', 'New ' + sl.singular + ' ' + sl.getDocumentName(item) + ' created.');
-				return res.redirect('/ksitecore/' + sl.path + '/edit/' + item.id);
+				return res.redirect('/ksitecore/' + sl.path + '/item/' + item.id);
 			}
 			
 		});
@@ -227,7 +227,7 @@ exports = module.exports = function(req, res) {
 				return startRender();
 			}
 			req.flash('success', 'New ' + sl.singular + ' ' + sl.getDocumentName(item) + ' created.');
-			return res.redirect('/ksitecore/' + sl.path + '/edit/' + item.id);
+			return res.redirect('/ksitecore/' + sl.path + '/item/' + item.id);
 		});
 		
 	} else {
