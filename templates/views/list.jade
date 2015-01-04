@@ -1,91 +1,93 @@
 extends ../layouts/inner-template
 
+
 block content
-  .panel.panel-default
-    .panel-heading #{sublisttype.path + ' list'}
-    .panel-body
-      .page-header
-        h1 #{item.name}
-        .text-right 
-          label total #{sublist.total} items
-      +flash-messages(messages)
-      .tableBar
-        if !sublisttype.get('nocreate')
-          .create-item
-            if sublisttype.get('autocreate')
-              .toolbar
-                a(href='?new' + csrf_query).btn.btn-default.btn-create.btn-create-item
-                  span.ion-plus-round
-                  |  Create #{sublisttype.singular}
-            else
-              form(method='post')
-                input(type='hidden', name='action', value='create')
-                input(type='hidden', name=csrf_token_key, value=csrf_token_value)
-                input(type='hidden', name='parent', value='#{item.id}')
-                input(type='hidden', name='list', value='#{sublisttype.path}')
-                .form
-                  h4 New #{sublisttype.singular}
-                  if sublisttype.nameIsInitial
-                    if sublisttype.nameField.type == 'name'
-                      .field.item-name: .col-sm-12: input(type='text', name=sublisttype.nameField.paths.full, value=submitted[sublisttype.nameField.paths.full], placeholder=sublisttype.singular + ' ' + sublisttype.nameField.label.toLowerCase()).form-control.input-lg
-                      if sublisttype.nameField.note
-                        .field-note !{sublisttype.nameField.note}
-                    else if sublisttype.nameField.type == 'text'
-                      .field.item-name: .col-sm-12: input(type='text', name=sublisttype.nameField.path, value=submitted[sublisttype.nameField.path], placeholder=sublisttype.singular + ' ' + sublisttype.nameField.label.toLowerCase()).form-control.input-lg
-                      if sublisttype.nameField.note
-                        .field-note !{sublisttype.nameField.note}
-                    else
-                      .alert.alert-danger Unsupported field type (#{sublisttype.nameField.type}) for item name (#{sublisttype.nameField.path}).
-                  
-                  each field in sublisttype.initialFields
-                    != field.render('initial', submitted)
-                
-                .toolbar
-                  .toolbar-create
-                    button(type='submit').btn.btn-default.btn-create Create
-                    button(type='button').btn.btn-link.btn-cancel.btn-cancel-create-item cancel
-                  .toolbar-default.row
-                    .col-xs-6
-                      button(type='button', class=(showCreateForm ? 'autoclick' : null)).btn.btn-default.btn-create.btn-create-item
-                        span.glyphicon.glyphicon-plus
-                        |  Create #{sublisttype.path}
-                    .col-xs-6
-                        .btn-group.tableAction
-                          a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/item/#{item.id}")
-                            span.glyphicon.glyphicon-edit
-                            span  &nbsp;Edit 
-                          a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{item.id}?type=#{list.path}")
-                            span.glyphicon.glyphicon-list-alt
-                            span  &nbsp;Edit Sub Categories
-                        .clear
-        br
-      if sublist.results.length > 0
-        .archive-list 
-          table.table.table-striped.table-hover.category-table
-            tr
-              td.col-xs-1 #
-              td.col-xs-7.category-title Name
-              td.col-xs-2 Create Date
-              td.col-xs-1 State
-              td.col-xs-1 Action
-            - var i = 0;
-            each item in sublist.results
-              - var date = new Date2(item.publishedDate);
-              tr
-                td.col-xs-1 #{++i}
-                td.col-xs-8.category-title
-                  a(href="#") #{item.name}
-                td.col-xs-2 #{date.format(yyyy-MM-dd)}
-                td.col-xs-1 #{item.state}
-                td.col-xs-1 
-                  a(href="/ksitecore/#{sublisttype.path}/item/#{item.id}").glyphicon.glyphicon-edit
-                  span &nbsp; 
-                  a(href='/ksitecore/categories/list/#{item.parent}?type=#{sublisttype.path}&delete=' + (item.id ? item.id : 0) + csrf_query, data-confirm='Are you sure you want to delete this ' + sublisttype.singular.toLowerCase() + ' with name #{item.name}?').glyphicon.glyphicon-remove
-      else
-        .no-list
-          h3 
-            span.label.label-primary no content with this template!
-      include ../component/pager
+ .panel.panel-default
+   .panel-heading #{sublisttype.path + ' list'}
+   .panel-body
+     .page-header
+       h1 #{item.name}
+       .text-right 
+         label total #{sublist.total} items
+     +flash-messages(messages)
+     .tableBar
+       if !sublisttype.get('nocreate')
+         .create-item
+           if sublisttype.get('autocreate')
+             .toolbar
+               a(href='?new' + csrf_query).btn.btn-default.btn-create.btn-create-item
+                 span.ion-plus-round
+                 |  Create #{sublisttype.singular}
+           else
+             form(method='post')
+               input(type='hidden', name='action', value='create')
+               input(type='hidden', name=csrf_token_key, value=csrf_token_value)
+               input(type='hidden', name='parent', value='#{item.id}')
+               input(type='hidden', name='list', value='#{sublisttype.path}')
+               .form
+                 h4 New #{sublisttype.singular}
+                 if sublisttype.nameIsInitial
+                   if sublisttype.nameField.type == 'name'
+                     .field.item-name: .col-sm-12: input(type='text', name=sublisttype.nameField.paths.full, value=submitted[sublisttype.nameField.paths.full], placeholder=sublisttype.singular + ' ' + sublisttype.nameField.label.toLowerCase()).form-control.input-lg
+                     if sublisttype.nameField.note
+                       .field-note !{sublisttype.nameField.note}
+                   else if sublisttype.nameField.type == 'text'
+                     .field.item-name: .col-sm-12: input(type='text', name=sublisttype.nameField.path, value=submitted[sublisttype.nameField.path], placeholder=sublisttype.singular + ' ' + sublisttype.nameField.label.toLowerCase()).form-control.input-lg
+                     if sublisttype.nameField.note
+                       .field-note !{sublisttype.nameField.note}
+                   else
+                     .alert.alert-danger Unsupported field type (#{sublisttype.nameField.type}) for item name (#{sublisttype.nameField.path}).
+                 
+                 each field in sublisttype.initialFields
+                   != field.render('initial', submitted)
+               
+               .toolbar
+                 .toolbar-create
+                   button(type='submit').btn.btn-default.btn-create Create
+                   button(type='button').btn.btn-link.btn-cancel.btn-cancel-create-item cancel
+                 .toolbar-default.row
+                   .col-xs-6
+                     button(type='button', class=(showCreateForm ? 'autoclick' : null)).btn.btn-default.btn-create.btn-create-item
+                       span.glyphicon.glyphicon-plus
+                       |  Create #{sublisttype.path}
+                   .col-xs-6
+                       .btn-group.tableAction
+                         a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/item/#{item.id}")
+                           span.glyphicon.glyphicon-edit
+                           span  &nbsp;Edit 
+                         a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{item.id}?type=#{list.path}")
+                           span.glyphicon.glyphicon-list-alt
+                           span  &nbsp;Edit Sub Categories
+                       .clear
+       br
+     table#table
+     if sublist.results.length > 0
+       .archive-list 
+         table.table.table-striped.table-hover.category-table
+           tr
+             td.col-xs-1 #
+             td.col-xs-7.category-title Name
+             td.col-xs-2 Create Date
+             td.col-xs-1 State
+             td.col-xs-1 Action
+           - var i = 0;
+           each item in sublist.results
+             - var date = new Date2(item.publishedDate);
+             tr
+               td.col-xs-1 #{++i}
+               td.col-xs-8.category-title
+                 a(href="#") #{item.name}
+               td.col-xs-2 #{date.format(yyyy-MM-dd)}
+               td.col-xs-1 #{item.state}
+               td.col-xs-1 
+                 a(href="/ksitecore/#{sublisttype.path}/item/#{item.id}").glyphicon.glyphicon-edit
+                 span &nbsp; 
+                 a(href='/ksitecore/categories/list/#{item.parent}?type=#{sublisttype.path}&delete=' + (item.id ? item.id : 0) + csrf_query, data-confirm='Are you sure you want to delete this ' + sublisttype.singular.toLowerCase() + ' with name #{item.name}?').glyphicon.glyphicon-remove
+     else
+       .no-list
+         h3 
+           span.label.label-primary no content with this template!
+     include ../component/pager
 
 block js
   if list.fieldTypes.location
@@ -101,6 +103,7 @@ block js
   script(src='/keystone/js/views/list.js')
   script(src='/keystone/js/lib/browserified/querystring.js')
   script(src='/keystone/js/lib/browserified/queryfilter.js')
+  script(src='/js/bootstrap-table.min.js')
   script.
     Keystone.list = { path: "#{list.path}", label: "#{list.label}", singular: "#{list.singular}", plural: "#{list.plural}", cols: !{JSON.stringify(colPaths)}, perPage: !{ Number(list.perPage) || 50 } };
     Keystone.wysiwyg = { options: !{JSON.stringify(wysiwygOptions)} };
@@ -110,3 +113,17 @@ block js
     Keystone.sort = "#{sort.by}";
     Keystone.query = "#{query}";
     Keystone.csrf_query = "!{csrf_query}";
+  script.
+   $('#table').bootstrapTable({
+    columns: [{
+        field: '_id',
+        title: 'Item ID'
+    }, {
+        field: 'name',
+        title: 'Item Name'
+    }],
+    data: !{JSON.stringify(sublist.results)}
+   });
+
+block	css
+ link(src='/css/bootstrap-table.min.css')
