@@ -25,7 +25,7 @@ KSiteCore.prototype.init = function()
 		'less': 'public',
 		
 		'static': 'public',
-		'favicon': 'public/favicon.ico',
+		'favicon': 'favicon.ico',
 		'views': 'templates/views',
 		'view engine': 'jade',
 		'emails': 'templates/emails',
@@ -34,10 +34,14 @@ KSiteCore.prototype.init = function()
 		'session': true,
 		'session store': 'mongo',
 		'auth': true,
-		'user model': 'User'
+		'user model': 'User',
+		'signin logo': '/images/logo.png'
 		
 	});
 
+	keystone.set('signout url', '/ksitecore/signout');
+	keystone.set('signin url', '/ksitecore/signin');
+		
 	// Load your project's Models
 
 	keystone.import('models');

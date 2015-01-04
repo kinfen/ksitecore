@@ -1,0 +1,14 @@
+nav.text-center
+  ul.pagination
+    li
+      a(href="#{sublist.previous ? '?type=' + sublisttype.path + '&page=' + sublist.previous : '#'}") &laquo;
+    - for (var i = 0; i < sublist.pages.length; i++){
+      if sublist.currentPage == i + 1
+          li.active
+            a(href="?type=#{sublisttype.path}&page=#{sublist.pages[i]}") #{sublist.pages[i]}
+      else
+          li
+            a(href="?type=#{sublisttype.path}&page=#{sublist.pages[i]}") #{sublist.pages[i]}
+    -}
+    li
+      a(href="#{sublist.next ? '?type=' + sublisttype.path + '&page=' + sublist.next : '#'}") &raquo;

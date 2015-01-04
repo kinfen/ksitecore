@@ -54,10 +54,11 @@ block content
 						span.glyphicon.glyphicon-chevron-left 
 						span back to #{list.singular}
 				if item.parent
-					a.btn.btn-default(href='/ksitecore/#{list.path}/list/#{item.parent}?type=#{list.path}')
+					a.btn.btn-default(href='/ksitecore/categories/list/#{item.parent}?type=#{list.path}')
 						span.glyphicon.glyphicon-chevron-left 
 						span back to parent 
 			hr
+			+flash-messages(messages)
 			form(method='post', enctype='multipart/form-data').item-details
 				input(type='hidden', name='action', value='updateItem')
 				input(type='hidden', name=csrf_token_key, value=csrf_token_value)
@@ -151,6 +152,6 @@ block content
 											each col, i in rel.columns
 												td
 													+column(rel.list, col, item)
-			+flash-messages(messages)
+			
 
 

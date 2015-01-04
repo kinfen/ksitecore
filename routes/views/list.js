@@ -3,6 +3,25 @@ var keystone = require('keystone'),
 	async = require('async'),
 	ksitecore = require('../../');
 
+Date.prototype.format = function(fmt)   
+{ //author: meizz   
+  var o = {   
+    "M+" : this.getMonth()+1,                 //月份   
+    "d+" : this.getDate(),                    //日   
+    "h+" : this.getHours(),                   //小时   
+    "m+" : this.getMinutes(),                 //分   
+    "s+" : this.getSeconds(),                 //秒   
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+    "S"  : this.getMilliseconds()             //毫秒   
+  };   
+  if(/(y+)/.test(fmt))   
+    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+  for(var k in o)   
+    if(new RegExp("("+ k +")").test(fmt))   
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+  return fmt;   
+};
+
 exports = module.exports = function(req, res) {
 	
 	
@@ -53,14 +72,12 @@ exports = module.exports = function(req, res) {
 	{
 		if (category)
 		{
-			
-			var listQuery = sl.paginate({page: req.params.page, perPage: pageSize }).where('parent', category._id).sort(sort.by);
+			var listQuery = sl.paginate({page: req.page, perPage:req.pageSize }).where('parent', category._id).sort(sort.by);
 			listQuery.exec(function (err, list){
 				if (err) {
 					req.flash('error', 'List ' + req.params.item + ' could not be found.');
 					return res.redirect(req.path);
 				}
-				
 				sublist = list;
 				cb();
 	
@@ -79,10 +96,12 @@ exports = module.exports = function(req, res) {
 				page: 'list',
 				submitted: req.body || {},
 				list: req.list,
+				req: req,
 				item: category,
 				sublisttype:sl,
 				sublist:sublist,
 				callfrom:res.path,
+				Date2:Date,
 				// section: keystone.nav.by.list[req.list.key] || {},
 				// title: 'Keystone: ' + req.list.plural,
 				// page: 'list',
