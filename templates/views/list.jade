@@ -104,6 +104,7 @@ block js
   script(src='/keystone/js/lib/browserified/querystring.js')
   script(src='/keystone/js/lib/browserified/queryfilter.js')
   script(src='/js/bootstrap-table.min.js')
+  script(src='/js/table_config/list.js')
   script.
     Keystone.list = { path: "#{list.path}", label: "#{list.label}", singular: "#{list.singular}", plural: "#{list.plural}", cols: !{JSON.stringify(colPaths)}, perPage: !{ Number(list.perPage) || 50 } };
     Keystone.wysiwyg = { options: !{JSON.stringify(wysiwygOptions)} };
@@ -115,13 +116,7 @@ block js
     Keystone.csrf_query = "!{csrf_query}";
   script.
    $('#table').bootstrapTable({
-    columns: [{
-        field: '_id',
-        title: 'Item ID'
-    }, {
-        field: 'name',
-        title: 'Item Name'
-    }],
+    columns: list_table_columns,
     data: !{JSON.stringify(sublist.results)}
    });
 
