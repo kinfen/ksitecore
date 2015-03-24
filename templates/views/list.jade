@@ -115,10 +115,45 @@ block js
     Keystone.query = "#{query}";
     Keystone.csrf_query = "!{csrf_query}";
   script.
+   function operateFormatter(value, row, index) {
+        return [
+            '<a class="like" href="javascript:void(0)" title="Like">',
+                '<i class="glyphicon glyphicon-heart"></i>',
+            '</a>',
+            '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
+                '<i class="glyphicon glyphicon-edit"></i>',
+            '</a>',
+            '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>'
+        ].join('');
+    }
+
+    window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+            alert('You click like icon, row: ' + JSON.stringify(row));
+            console.log(value, row, index);
+        },
+        'click .edit': function (e, value, row, index) {
+            alert('You click edit icon, row: ' + JSON.stringify(row));
+            console.log(value, row, index);
+        },
+        'click .remove': function (e, value, row, index) {
+            alert('You click remove icon, row: ' + JSON.stringify(row));
+            console.log(value, row, index);
+        }
+    };
    $('#table').bootstrapTable({
     columns: list_table_columns,
-    data: !{JSON.stringify(sublist.results)}
+    data: !{JSON.stringify(sublist.results)},
+    clickToSelect:true,
+    showColumns: true,
+    showRefresh: true,
+    minimumCountColumns: 2
    });
+
+   
+
 
 block	css
  link(src='/css/bootstrap-table.min.css')
