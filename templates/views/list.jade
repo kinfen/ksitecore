@@ -90,6 +90,9 @@ block content
      include ../component/pager
 
 block js
+  script(src='/keystone/js/views/list.js')
+  script(src='/keystone/js/lib/browserified/querystring.js')
+  script(src='/keystone/js/lib/browserified/queryfilter.js')
   if list.fieldTypes.location
     script(src="/keystone/js/common/ui-location.js")
   if list.fieldTypes.markdown

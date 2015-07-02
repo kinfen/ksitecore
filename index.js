@@ -1,6 +1,3 @@
-// Simulate config options from your production environment by
-// customising the .env file in your project's root folder.
-require('dotenv').load();
 
 // Require keystone
 var keystone = require('keystone');
@@ -26,7 +23,7 @@ KSiteCore.prototype.init = function()
 		
 		'static': 'public',
 		'favicon': 'favicon.ico',
-		'views': 'templates/views',
+		'views': '/templates/views',
 		'view engine': 'jade',
 		'emails': 'templates/emails',
 		
