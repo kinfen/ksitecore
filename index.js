@@ -1,6 +1,3 @@
-// Simulate config options from your production environment by
-// customising the .env file in your project's root folder.
-require('dotenv').load();
 
 // Require keystone
 var keystone = require('keystone');
@@ -23,10 +20,10 @@ KSiteCore.prototype.init = function()
 		'brand': 'KeystoneJS',
 
 		'less': 'public',
-		
+		'env' : "development",
 		'static': 'public',
 		'favicon': 'favicon.ico',
-		'views': 'templates/views',
+		'views': '/templates/views',
 		'view engine': 'jade',
 		'emails': 'templates/emails',
 		
@@ -39,6 +36,12 @@ KSiteCore.prototype.init = function()
 		
 	});
 
+	keystone.set('locals', {
+		_: require('underscore'),
+		env: keystone.get('env'),
+		utils: keystone.utils,
+		editable: keystone.content.editable
+	});
 	keystone.set('signout url', '/ksitecore/signout');
 	keystone.set('signin url', '/ksitecore/signin');
 		

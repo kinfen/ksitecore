@@ -14,10 +14,16 @@ html
 		link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
 		link(href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700', rel='stylesheet')
 		link(href="/styles/site.min.css", rel="stylesheet")
-		
+		//- This file provides the default styling for the KeystoneJS Content Editor
 		if user && user.canAccessKeystone
 			link(href="/keystone/styles/content/editor.min.css", rel="stylesheet")
-		
+			
+		//- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+		//- Safely remove this block if you are not targeting IE8
+		//-[if lt IE 9]
+			script(src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js")
+			script(src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js")
+		//-[endif]
 		block css
 		block head
 	body: .wrapper
@@ -58,8 +64,26 @@ html
 			script.
 				!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 
-		//- scripts
-		script(src='/js/lib/jquery/jquery-1.10.2.min.js')
+		//- JAVASCRIPT
+
+		//- jQuery 1.11.1 is included by default, and required by both Bootstrap
+		//- and the KeystoneJS Content Editor. If you are not targeting IE8,
+		//- you can upgrade to 2.1.1 (also bundled) for better performance.
+		script(src='/js/lib/jquery/jquery-1.11.1.min.js')
+
+		//- Customise which Bootstrap javascript files are served by including
+		//- them specifically here, instead of bootstrap-3.2.0.min.js
+		script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
+
+		//- The KeystoneJS Content Editor provides support for ks-editable data attributes,
+		//- which generate links to edit content for users who can access Keystone
+		if user && user.canAccessKeystone
+			script(src='/keystone/js/content/editor.js')
+
+		//- Add scripts that are globally required by your site here.
+
+		//- Include template-specific javascript files by extending the js block
+		
 		script(src='/js/lib/bootstrap/collapse.js')
 		script(src='/js/lib/bootstrap/dropdown.js')
 	

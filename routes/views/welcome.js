@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
 	_ = require('underscore'),
-	async = require('async'),
 	ksitecore = require('../../'),
+	async = require('async'),
 	Category = keystone.list('Category');
 
 exports = module.exports = function(req, res) {
