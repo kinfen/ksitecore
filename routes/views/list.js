@@ -31,7 +31,8 @@ exports = module.exports = function(req, res) {
 	var pageSize = req.query.pagesize || 10;
 	var sort = { by: req.query.sort || req.list.defaultSort };
 	var viewLocals = {
-				validationErrors: {}
+				validationErrors: {},
+				showCreateForm: _.has(req.query, 'new')
 			};
 	var filters = req.list.processFilters(req.query.q),
 		cleanFilters = {},
@@ -66,6 +67,7 @@ exports = module.exports = function(req, res) {
 		});	
 	}
 
+	console.log("path:" + req.list.initialFields);
 	
 
 	var loadList = function(cb)

@@ -10,8 +10,8 @@ var Category = new keystone.List('Category');
 
 Category.add({
 	name: { type: String, required: true },
-	parent: { type: Types.Relationship, ref: 'Category' },
-	template:{ type: Types.Relationship, ref: 'CaTemplate'},
+	parent: { type: Types.Relationship, ref: 'Category', initial:true },
+	template:{ type: Types.Relationship, ref: 'CaTemplate', initial:true},
 	publishedDate: { type: Date, default: Date.now },
 });
 
