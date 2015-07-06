@@ -91,7 +91,7 @@ html(lang='en')
 			script(src='/keystone/js/lib/jqueryfileupload/jquery.iframe-transport.js')
 			script(src='/keystone/js/lib/jqueryfileupload/jquery.fileupload.js')
 			script(src='/keystone/js/lib/cloudinary/jquery.cloudinary.js')
-				| !{cloudinary_js_config}
+			| !{cloudinary_js_config}
 			script.
 				Keystone.cloudinary = {
 					cloud_name: "#{cloudinary.cloud_name}",
@@ -99,9 +99,6 @@ html(lang='en')
 					timestamp: "#{cloudinary.timestamp}",
 					signature: "#{cloudinary.signature}"
 				}
-    
-				Keystone.query = '#{query}';
-				Keystone.csrf_query = '!{csrf_query}';
 
   
 		//- Keystone UI

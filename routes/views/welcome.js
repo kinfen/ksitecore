@@ -9,7 +9,8 @@ exports = module.exports = function(req, res) {
 	
 	var categorys = null;
 	var viewLocals = {
-				validationErrors: {}
+				validationErrors: {},
+				showCreateForm: _.has(req.query, 'new')
 			};
 	var loadList = function(cb)
 	{
