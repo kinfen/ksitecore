@@ -1,4 +1,4 @@
-var keystone = require('keystone'),
+var keystone = require('../../keystone'),
 	ksitecore = require('../../')
 	session = keystone.session;
 

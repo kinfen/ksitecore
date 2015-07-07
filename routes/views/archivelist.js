@@ -1,4 +1,4 @@
-var keystone = require('keystone'),
+var keystone = require('../../keystone'),
 	Category = keystone.list('Category');
 
 var ca = null;

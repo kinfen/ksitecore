@@ -1,4 +1,4 @@
-var keystone = require('keystone'),
+var keystone = require('../../keystone'),
 	session = keystone.session;
 
 exports = module.exports = function(req, res) {

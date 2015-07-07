@@ -1,4 +1,4 @@
-var keystone = require('keystone'),
+var keystone = require('../../keystone'),
 	_ = require('underscore'),
 	ksitecore = require('../../'),
 	async = require('async'),

@@ -19,7 +19,7 @@
  */
 
 var _ = require('underscore'),
-	keystone = require('keystone'),
+	keystone = require('../keystone'),
 	middleware = require('./middleware'),
 	importRoutes = keystone.importer(__dirname);
 

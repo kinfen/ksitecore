@@ -83,7 +83,7 @@ block js
     Keystone.createFormData = !{JSON.stringify(submitted)};
     Keystone.createFormErrors = !{JSON.stringify(createErrors || null)};
     Keystone.list.cols = !{JSON.stringify(colPaths)};
-	Keystone.list.perPage = !{ Number(list.perPage) || 50 };
+    Keystone.list.perPage = !{ Number(list.perPage) || 50 };
     Keystone.items = !{ JSON.stringify(sublist.results) };
     Keystone.search = "#{search}";
     Keystone.filters = !{ JSON.stringify(filters) };
