@@ -1,6 +1,5 @@
-var keystone = require('../../keystone'),
+var keystone = require('../../../'),
 	_ = require('underscore'),
-	ksitecore = require('../../'),
 	async = require('async'),
 	Category = keystone.list('Category');
 
@@ -12,6 +11,9 @@ exports = module.exports = function(req, res) {
 				validationErrors: {},
 				showCreateForm: _.has(req.query, 'new')
 			};
+	
+	var list = keystone.list("Category");
+
 	var loadList = function(cb)
 	{
 		var listQuery = Category.paginate({page: 1, perPage: 1 });
@@ -25,10 +27,12 @@ exports = module.exports = function(req, res) {
 		});
 	}
 
+
 	var renderView = function() {
 				
-			ksitecore.render(req, res, 'welcome', _.extend(viewLocals, {
-				list:keystone.list("Category"),
+			keystone.render(req, res, 'welcome', _.extend(viewLocals, {
+				list:list,
+				sublisttype:list,
 				submitted: req.body || {},
 				item: categorys
 			}));
