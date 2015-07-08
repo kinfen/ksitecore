@@ -32,18 +32,18 @@ function routes(app) {
 		debug('setting up auth');
 
 		if (!this.get('signout url')) {
-			this.set('signout url', '/keystone/signout');
+			this.set('signout url', '/ksitecore/signout');
 		}
 		if (!this.get('signin url')) {
-			this.set('signin url', '/keystone/signin');
+			this.set('signin url', '/ksitecore/signin');
 		}
 
 		if (!this.nativeApp || !this.get('session')) {
 			app.all('/keystone*', this.session.persist);
 		}
-
-		app.all('/keystone/signin', require('../../admin/routes/views/signin'));
-		app.all('/keystone/signout', require('../../admin/routes/views/signout'));
+		//set route to ksitecore views
+		app.all('/keystone/signin', require('../../../routes/views/signin'));
+		app.all('/keystone/signout', require('../../../routes/views/signout'));
 		app.all('/keystone*', this.session.keystoneAuth);
 
 	} else if ('function' === typeof this.get('auth')) {
@@ -67,7 +67,7 @@ function routes(app) {
 	}
 
 	debug('setting keystone Admin Route');
-	app.all('/keystone', require('../../admin/routes/views/home'));
+	app.all('/keystone', require('../../../routes/index'));
 
 	// Email test routes
 	if (this.get('email tests')) {

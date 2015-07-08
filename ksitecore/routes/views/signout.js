@@ -1,5 +1,5 @@
-var keystone = require('../../../');
-var session = require('../../../lib/session');
+var keystone = require('../../keystone/');
+var session = require('../../keystone/lib/session');
 
 exports = module.exports = function(req, res) {
 
@@ -10,7 +10,7 @@ exports = module.exports = function(req, res) {
 		} else if ('function' === typeof keystone.get('signout redirect')) {
 			return keystone.get('signout redirect')(req, res);
 		} else {
-			return res.redirect('/keystone');
+			return res.redirect('/ksitecore');
 		}
 
 		keystone.render(req, res, 'signout', {

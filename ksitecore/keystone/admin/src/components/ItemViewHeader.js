@@ -87,16 +87,16 @@ var Header = React.createClass({
 			
 		});
 		
-		var backIcon = (!els.length) ? <span className="mr-5 ion-arrow-left-c"></span> : '';
+		// var backIcon = (!els.length) ? <span className="mr-5 ion-arrow-left-c"></span> : '';
 		
-		els.push(
-			<li key="back">
-				<a href={'/keystone/' + list.path} title={'Back to ' + list.plural}>
-					{backIcon}
-					{list.plural}
-				</a>
-			</li>
-		);
+		// els.push(
+		// 	<li key="back">
+		// 		<a href={'/keystone/' + list.path} title={'Back to ' + list.plural}>
+		// 			{backIcon}
+		// 			{list.plural}
+		// 		</a>
+		// 	</li>
+		// );
 		
 		return els;
 		

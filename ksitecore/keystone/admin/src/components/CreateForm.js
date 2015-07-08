@@ -11,7 +11,8 @@ var Form = React.createClass({
 		return {
 			err: null,
 			values: {},
-			animate: false
+			animate: false,
+			type: null
 		};
 	},
 	
@@ -68,7 +69,8 @@ var Form = React.createClass({
 		var errors = null,
 			form = {},
 			list = this.props.list,
-			formAction = '/ksitecore/' + list.path,
+			type = this.props.type,
+			formAction = '/ksitecore/' + list.path + '/list/' + this.props.id + '?type=' + this.props.type,
 			nameField = this.props.list.nameField,
 			focusRef;
 		

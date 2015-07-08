@@ -28,6 +28,9 @@ keystone.pre('routes', middleware.initLocals);
 keystone.pre('render', middleware.flashMessages);
 
 // Import Route Controllers
+var keystone_routes = {
+	views: importRoutes('../keystone/admin/routes/views')
+};
 var routes = {
 	views: importRoutes('./views')
 };
@@ -83,8 +86,8 @@ exports = module.exports = function(app) {
 	app.all('/ksitecore/templates', routes.views.templates);
 	app.get('/ksitecore/err', routes.views.err);
 	app.get('/ksitecore/welcome', routes.views.welcome);
-	app.all('/ksitecore/:list/list', initList(true), routes.views.list);
-	app.all('/ksitecore/:list/list/:id', initList(true), routes.views.list);
+	app.all('/ksitecore/:list/list', initList(true), keystone_routes.views.list);
+	app.all('/ksitecore/:list/list/:id', initList(true), keystone_routes.views.list);
 	app.all('/ksitecore/:list/item/:id', initList(true), routes.views.item);
 
 };

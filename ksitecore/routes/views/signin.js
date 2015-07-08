@@ -1,5 +1,5 @@
-var keystone = require('../../../');
-var session = require('../../../lib/session');
+var keystone = require('../../keystone');
+var session = require('../../keystone/lib/session');
 
 exports = module.exports = function(req, res) {
 
@@ -33,7 +33,7 @@ exports = module.exports = function(req, res) {
 			} else if ('function' === typeof keystone.get('signin redirect')) {
 				keystone.get('signin redirect')(user, req, res);
 			} else {
-				res.redirect('/keystone');
+				res.redirect('/ksitecore');
 			}
 
 		};

@@ -10,7 +10,7 @@ exports = module.exports = function(req, res) {
 
 		if (!item) {
 			req.flash('error', 'Item ' + req.params.item + ' could not be found.');
-			return res.redirect('/keystone/' + req.list.path);
+			return res.redirect('/keystone/' + req.list.parent);
 		}
 
 		var renderView = function() {

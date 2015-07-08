@@ -43,7 +43,7 @@ var View = React.createClass({
 	
 	renderCreateForm: function() {
 		if (!this.state.createIsVisible) return null;
-		return <CreateForm list={Keystone.list} animate onCancel={this.toggleCreate.bind(this, false)} />;
+		return <CreateForm list={Keystone.list} type={Keystone.sublist} id={Keystone.sublist_id} animate onCancel={this.toggleCreate.bind(this, false)} />;
 	},
 	
 	render: function() {
@@ -52,7 +52,7 @@ var View = React.createClass({
 			<div>
 				{this.renderCreateForm()}
 				<Header list={this.state.list} data={this.state.itemData} drilldown={this.state.itemDrilldown} toggleCreate={this.toggleCreate} />
-				<EditForm list={this.state.list} data={this.state.itemData} />
+				<EditForm list={this.state.list} data={this.state.itemData} type={Keystone.sublist} id={Keystone.sublist_id} />
 			</div>
 		);
 	}
