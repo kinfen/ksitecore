@@ -49,7 +49,11 @@ exports = module.exports = function(req, res) {
 		for (var i = 0 ; i < columns.length; i++)
 		{
 			var obj = columns[i];
-			var item = {field:obj.path, title:obj.label};
+			var item = {field:obj.path, title:obj.label, align:"center"};
+			if (obj.path == "name")
+			{
+				item.align = "left";
+			}
 			if (obj.width){
 				item.width = obj.width;
 			}
@@ -74,8 +78,6 @@ exports = module.exports = function(req, res) {
 		{
 			itemQuery = req.list.model.findById(req.params.id);
 		}
-		
-			
 		itemQuery.exec(function(err, item) {
 			if (!item) {
 				req.flash('error', 'Item could not be found.');
@@ -99,25 +101,6 @@ exports = module.exports = function(req, res) {
 					req.flash('error', 'List ' + req.params.item + ' could not be found.');
 					return res.redirect(req.path);
 				}
-				
-				var results = [];
-				
-				
-				for (var i = 0; i < list.results.length; i++){
-					var item = list.results[i];
-					var obj = {}
-					for (var key in item){
-						if (typeof(item[key]) == "object"){
-							obj[key] = item[key].name;
-						}
-						else{
-							obj[key] = item[key];
-						}
-					}
-					results.push(item)
-				}
-				list.results = results;
-				console.log(list);
 				sublist = list;
 				cb();
 	

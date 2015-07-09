@@ -74,6 +74,9 @@ block js
   script(src='/keystone/js/packages.js')
   script(src='/keystone/js/fields.js')
   script(src='/keystone/js/list.js')
+  script(src='/keystone/js/lib/underscore/underscore-min.js')
+  script(src='/keystone/js/lib/moment/moment-1.7.2.min.js')
+  moment-1.7.2.min.js
   script.
    function operateFormatter(value, row, index) {
         return [
@@ -103,9 +106,25 @@ block js
             console.log(value, row, index);
         }
     };
+   var data = !{JSON.stringify(sublist.results)};
+   //去除data里面的object值
+   data = _.map(data, function(obj){
+    return _.mapObject(obj, function(value,key){
+      if (typeof(value) == "object" && value.name)
+      {
+        return value.name;
+      }
+      else if (key == "publishedDate")
+      {
+        console.log(value);
+        return moment(value).format('YYYY-MM-DD');
+      }
+      return value;
+    })
+   });
    $('#table').bootstrapTable({
     columns: !{JSON.stringify(columns)},
-    data: !{JSON.stringify(sublist.results)},
+    data: data,
     clickToSelect:true,
     showColumns: true,
     showRefresh: true,
