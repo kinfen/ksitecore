@@ -17,4 +17,5 @@ Archive.add({
 	state : { type: Types.Select, numeric: true, options: [{ value: 1, label: 'availble' }, { value: 0, label: 'disable' }], default:1},
 	publishedDate: { type: Date, default: Date.now },
 });
+Archive.defaultColumns = 'name, publishedDate|15%';
 Archive.register();

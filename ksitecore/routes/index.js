@@ -82,12 +82,10 @@ exports = module.exports = function(app) {
 	
 	setAuth(app);
 
-	app.get('/ksitecore', routes.views.contentManager);
-	app.all('/ksitecore/templates', routes.views.templates);
+	app.get('/ksitecore', keystone_routes.views.contentManager);
 	app.get('/ksitecore/err', routes.views.err);
 	app.get('/ksitecore/welcome', keystone_routes.views.welcome);
 	app.all('/ksitecore/:list/list', initList(true), keystone_routes.views.list);
 	app.all('/ksitecore/:list/list/:id', initList(true), keystone_routes.views.list);
-	app.all('/ksitecore/:list/item/:id', initList(true), routes.views.item);
 
 };

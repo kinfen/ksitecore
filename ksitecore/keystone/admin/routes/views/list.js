@@ -35,27 +35,47 @@ exports = module.exports = function(req, res) {
 			};
 	var filters = req.list.processFilters(req.query.q),
 		cleanFilters = {},
-		queryFilters = req.list.getSearchFilters(req.query.search, filters);
-	
+		queryFilters = req.list.getSearchFilters(req.query.search, filters),
+		columns = (req.query.cols) ? sl.expandColumns(req.query.cols) : sl.defaultColumns,
+		populates = [],
+		fields = null;
+		
 	_.each(filters, function(filter, path) {
 		cleanFilters[path] = _.omit(filter, 'field');
 	});
-	
-	var columns = (req.query.cols) ? req.list.expandColumns(req.query.cols) : req.list.defaultColumns;
+	var getFields = function ()
+	{
+		var fieldsList = [];
+		for (var i = 0 ; i < columns.length; i++)
+		{
+			var obj = columns[i];
+			var item = {field:obj.path, title:obj.label};
+			if (obj.width){
+				item.width = obj.width;
+			}
+			if (obj.populate){
+				var str = obj.populate.path;
+				populates.push(str);
+			}
+			fieldsList.push(item);
+		}
+		return fieldsList;
+	}
+	fields = getFields();
 	var loadCa = function(cb)
 	{
 		var itemQuery = null;
-		itemQuery = req.params.id ? req.list.model.findById(req.params.id) : req.list.model.find();
-		
-		var itemQuery = req.list.model.findById(req.params.id);
-		if (req.list.tracking && req.list.tracking.createdBy) {
-			itemQuery.populate(req.list.tracking.createdBy);
+		if (!req.params.id)
+		{
+			//find root category when no id was translate to list
+			itemQuery = req.list.model.findOne({parent:undefined});
+		}
+		else
+		{
+			itemQuery = req.list.model.findById(req.params.id);
 		}
 		
-		if (req.list.tracking && req.list.tracking.updatedBy) {
-			itemQuery.populate(req.list.tracking.updatedBy);
-		}
-
+			
 		itemQuery.exec(function(err, item) {
 			if (!item) {
 				req.flash('error', 'Item could not be found.');
@@ -66,19 +86,38 @@ exports = module.exports = function(req, res) {
 		});	
 	}
 
-	console.log("path:" + req.list.initialFields);
-	
-
 	var loadList = function(cb)
 	{
 		if (category)
 		{
 			var listQuery = sl.paginate({page: req.page, perPage:req.pageSize }).where('parent', category._id).sort(sort.by);
+			for (var i = 0; i < populates.length; i++){
+				listQuery.populate(populates[i], "name");
+			}
 			listQuery.exec(function (err, list){
 				if (err) {
 					req.flash('error', 'List ' + req.params.item + ' could not be found.');
 					return res.redirect(req.path);
 				}
+				
+				var results = [];
+				
+				
+				for (var i = 0; i < list.results.length; i++){
+					var item = list.results[i];
+					var obj = {}
+					for (var key in item){
+						if (typeof(item[key]) == "object"){
+							obj[key] = item[key].name;
+						}
+						else{
+							obj[key] = item[key];
+						}
+					}
+					results.push(item)
+				}
+				list.results = results;
+				console.log(list);
 				sublist = list;
 				cb();
 	
@@ -89,7 +128,6 @@ exports = module.exports = function(req, res) {
 			cb();
 		}
 	}
-
 	var renderView = function() {
 				
 		// async.parallel(function(err) {
@@ -112,7 +150,7 @@ exports = module.exports = function(req, res) {
 				sort: sort,
 				filters: cleanFilters,
 				// search: req.query.search,
-				// columns: columns,
+				columns: fields,
 				colPaths: _.pluck(columns, 'path'),
 				submitted: req.body || {},
 				query: req.query
@@ -128,11 +166,6 @@ exports = module.exports = function(req, res) {
 			renderView();
 		});
 	}
-	
-
-
-
-
 	var checkCSRF = function() {
 		var pass = keystone.security.csrf.validate(req);
 		if (!pass) {

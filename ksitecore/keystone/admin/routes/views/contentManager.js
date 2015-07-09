@@ -1,9 +1,7 @@
-var keystone = require('../../keystone'),
+var keystone = require('../../../'),
 	_ = require('underscore'),
 	async = require('async'),
-	ksitecore = require('../../'),
 	Category = keystone.list('Category');
-
 
 
 exports = module.exports = function(req, res) {
@@ -26,9 +24,8 @@ exports = module.exports = function(req, res) {
         		var obj = categorys[i];
 				var tmp = {};
 				tmp._id = obj._id;
-        		tmp.text = obj.name;
-				var template = ksitecore.templateList.template[obj.template];
-				tmp.template  = template ? template : "categories";
+        			tmp.text = obj.name;
+				tmp.template  = obj.template || "Category";
         		var tag = obj.parent ? obj.parent + '' : 'root';
         		tmp.parent = tag;
         		if (hashData[tag] == null)
@@ -62,7 +59,7 @@ exports = module.exports = function(req, res) {
 			var menuData = reformData('root', hashData);
 			// console.log(menuData);
 
-        	ksitecore.render(req, res, 'contentManager', {
+        	keystone.render(req, res, 'contentManager', {
         		list: Category,
 				items:JSON.stringify(menuData)}
 			);

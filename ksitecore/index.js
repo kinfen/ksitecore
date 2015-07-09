@@ -10,8 +10,6 @@ var KSiteCore = function()
 {
 
 }
-
-KSiteCore.prototype.render = require('./lib/core/render');
 KSiteCore.prototype.init = function()
 {
 	keystone.init({
@@ -89,7 +87,6 @@ KSiteCore.prototype.init = function()
 }
 KSiteCore.prototype.start = function()
 {
-	KSiteCore.prototype.templateList = require('./lib/core/templatelist');
 	keystone.start();
 }
 
