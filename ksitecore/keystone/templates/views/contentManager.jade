@@ -5,6 +5,7 @@ block content
       .row
         .col-sm-3
           #treeview1 
+          button#loading_btn.btn.btn-primary.btn-lg.ladda-button(type="button", data-style="expand-right") Test Loading
         .col-sm-9
           iframe(id="content-frame" frameborder="0" src="/ksitecore/welcome")
     .footer
@@ -30,4 +31,18 @@ append js
         onNodeSelected: function(event, node) {
             $("#content-frame").attr("src", "/ksitecore/#{list.path}/list/" + node._id + "?type=" + node.template);
           }
+      });
+      $(function() {
+        $('#loading_btn').click(function(e){
+          e.preventDefault();
+          var l = Ladda.create(this);
+          l.start();
+          $.post("your-url", 
+              { data : data },
+            function(response){
+              console.log(response);
+            }, "json")
+          .always(function() { l.stop(); });
+          return false;
+        });
       });
