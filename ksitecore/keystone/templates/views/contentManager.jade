@@ -7,32 +7,18 @@ block content
           #treeview1 
         .col-sm-9
           iframe(id="content-frame" frameborder="0" src="/ksitecore/welcome")
-
-            // <div class="panel-footer">KStudio.</div>
     .footer
       .container
-        p.text-muted Copyright @ KStudio.  
-    #context-menu
-      ul.dropdown-menu(role='menu')
-        li
-          a(tabindex='-1') Action
-      
-        li
-          a(tabindex='-1') Another action
-     
-        li
-          a(tabindex='-1') Something else here
-        li.divider
-        li
-          a(tabindex='-1') Separated link
+        p.text-muted Copyright @ KStudio.
+    include ../layout/modal
     //
       Bootstrap core JavaScript
       ==================================================
     // Placed at the end of the document so the pages load faster
 append js
+    script(src='/keystone/js/packages.js')
     script(src='/js/bootstrap-treeview.js')
     script(src='/js/bootstrap-contextmenu.js')
-
     script(type='text/javascript').
 
       var menuData = !{items};

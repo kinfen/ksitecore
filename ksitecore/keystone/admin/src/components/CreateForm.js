@@ -69,8 +69,7 @@ var Form = React.createClass({
 		var errors = null,
 			form = {},
 			list = this.props.list,
-			type = this.props.type,
-			formAction = '/ksitecore/' + list.path + '/list/' + this.props.id + '?type=' + this.props.type,
+			formAction = '/ksitecore/categories/list/' + this.props.id + '?type=' + list.path,
 			nameField = this.props.list.nameField,
 			focusRef;
 		

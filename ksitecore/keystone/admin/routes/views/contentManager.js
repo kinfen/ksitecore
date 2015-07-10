@@ -25,7 +25,7 @@ exports = module.exports = function(req, res) {
 				var tmp = {};
 				tmp._id = obj._id;
         			tmp.text = obj.name;
-				tmp.template  = obj.template || "Category";
+				tmp.template  = obj.template || "categories";
         		var tag = obj.parent ? obj.parent + '' : 'root';
         		tmp.parent = tag;
         		if (hashData[tag] == null)

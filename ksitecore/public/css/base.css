@@ -8,6 +8,7 @@ body{
 
 }
 iframe{
+	border: 0;
 	width:100%;
 }
 .footer {
@@ -33,7 +34,7 @@ body > .container {
 }
 
 .category-table{
-		
+	
 }
 .category-table a:hover{
 	text-decoration:none;
@@ -55,4 +56,7 @@ body > .container {
 }
 code {
   font-size: 80%;
+}
+#item-frame{
+
 }

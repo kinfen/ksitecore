@@ -6,66 +6,61 @@ include ../mixins/pagination
 
 block content
  .panel.panel-default
-   .panel-heading #{sublisttype.path + ' list'}
+   .panel-heading #{template.path + ' list'}
    .panel-body
      .page-header
-       h1 #{item.name}
+       h1 #{category.name}
        .text-right 
-         label total #{sublist.total} items
+         label total #{items.total} items
      .tableBar
-       if !sublisttype.get('nocreate')
+       if !template.get('nocreate')
          .create-item
-           if sublisttype.get('autocreate')
+           if template.get('autocreate')
              .toolbar
                a(href='?new' + csrf_query).btn.btn-default.btn-create.btn-create-item
                  span.ion-plus-round
-                 |  Create #{sublisttype.singular}
+                 |  Create #{template.singular}
            else
-             form(method='post')
-               input(type='hidden', name='action', value='create')
-               input(type='hidden', name=csrf_token_key, value=csrf_token_value)
-               input(type='hidden', name='parent', value='#{item.id}')
-               input(type='hidden', name='list', value='#{sublisttype.path}')
-               
-               
                .toolbar
                  .row
                    .col-xs-6
                     #list-view
                    .col-xs-6
                        .btn-group.tableAction
-                         a.btn.btn-default(role="button" href="/keystone/#{list.path}/#{item.id}")
+                         a.btn.btn-default(role="button" href="/keystone/#{list.path}/#{category.id}")
                            span.glyphicon.glyphicon-edit
                            span  &nbsp;Edit 
-                         a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{item.id}?type=#{list.path}")
+                         a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{category.id}?type=#{list.path}")
                            span.glyphicon.glyphicon-list-alt
                            span  &nbsp;Edit Sub Categories
                        .clear
        br
      table#table
-     if sublist.results.length == 0
+     if items.results.length == 0
        .no-list
          h3 
            span.label.label-primary no content with this template!
      include ../component/pager
 
-block js
+     button(onclick="callItem(12)") Item
+
+block js 
   script(src='/keystone/js/views/list.js')
   script(src='/keystone/js/lib/browserified/querystring.js')
   script(src='/keystone/js/lib/browserified/queryfilter.js')
   script(src='/js/bootstrap-table.min.js')
   script.
     Keystone.list = !{JSON.stringify(list.getOptions())};
-    Keystone.sublist = "#{sublisttype.path}";
-    Keystone.sublist_id = "#{item.id}";
+    Keystone.template = !{JSON.stringify(template.getOptions())};
+    Keystone.category_id = "#{category.id}";
     Keystone.wysiwyg = { options: !{JSON.stringify(wysiwygOptions)} };
     //Support for the POST-based create process
     Keystone.showCreateForm = !{JSON.stringify(showCreateForm)};
     Keystone.createFormData = !{JSON.stringify(submitted)};
     Keystone.createFormErrors = !{JSON.stringify(createErrors || null)};
-    Keystone.list.cols = !{JSON.stringify(colPaths)};
-    Keystone.list.perPage = !{ Number(list.perPage) || 50 };
-    Keystone.items = !{ JSON.stringify(sublist.results) };
+    Keystone.template.cols = !{JSON.stringify(colPaths)};
+    Keystone.template.perPage = !{ Number(template.perPage) || 50 };
+    Keystone.items = !{ JSON.stringify(items.results) };
     Keystone.search = "#{search}";
     Keystone.filters = !{ JSON.stringify(filters) };
     Keystone.sort = "#{sort.by}";
@@ -76,7 +71,7 @@ block js
   script(src='/keystone/js/list.js')
   script(src='/keystone/js/lib/underscore/underscore-min.js')
   script(src='/keystone/js/lib/moment/moment-1.7.2.min.js')
-  moment-1.7.2.min.js
+  script(src='/js/bootstrap.min.js')
   script.
    function operateFormatter(value, row, index) {
         return [
@@ -92,21 +87,7 @@ block js
         ].join('');
     }
 
-    window.operateEvents = {
-        'click .like': function (e, value, row, index) {
-            alert('You click like icon, row: ' + JSON.stringify(row));
-            console.log(value, row, index);
-        },
-        'click .edit': function (e, value, row, index) {
-            alert('You click edit icon, row: ' + JSON.stringify(row));
-            console.log(value, row, index);
-        },
-        'click .remove': function (e, value, row, index) {
-            alert('You click remove icon, row: ' + JSON.stringify(row));
-            console.log(value, row, index);
-        }
-    };
-   var data = !{JSON.stringify(sublist.results)};
+   var data = Keystone.items;
    //去除data里面的object值
    data = _.map(data, function(obj){
     return _.mapObject(obj, function(value,key){
@@ -116,23 +97,34 @@ block js
       }
       else if (key == "publishedDate")
       {
-        console.log(value);
         return moment(value).format('YYYY-MM-DD');
       }
       return value;
     })
    });
+
    $('#table').bootstrapTable({
     columns: !{JSON.stringify(columns)},
     data: data,
     clickToSelect:true,
     showColumns: true,
     showRefresh: true,
-    minimumCountColumns: 2
-   });
+    minimumCountColumns: 2,
 
-   
+   }).on('click-row.bs.table', function (e, row, $element) {
+    console.log(row._id);
+    callItem(row._id);
+   })
 
-
+   var item_modal = parent.document.body.querySelector("#item-modal");
+   var item_frame = parent.document.body.querySelector("#item-frame");
+   function callItem(id)
+   {
+    $(item_frame).attr("height", $(window).height() - 180);
+    $(item_frame).attr("src", "/keystone/#{template.path}/" + id);
+    $(item_modal ).modal({
+    });
+   }
+   parent.document.all("content-frame").height=document.body.scrollHeight;
 block	css
  link(rel="stylesheet", href='/css/bootstrap-table.min.css')

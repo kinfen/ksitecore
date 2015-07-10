@@ -11,7 +11,7 @@ var Archive = new keystone.List('Archive');
 Archive.add({
 	name: { type: String, required: true },
 	subName : { type: String, default:''},
-	parent: { type: Types.Relationship, ref: 'Category' },
+	parent: { type: Types.Relationship, ref: 'Category',default:'' },
 	author: { type: String, default:''},
 	content : {type: Types.Textarea},
 	state : { type: Types.Select, numeric: true, options: [{ value: 1, label: 'availble' }, { value: 0, label: 'disable' }], default:1},
