@@ -13,17 +13,21 @@ var View = React.createClass({
 	},
 	
 	toggleCreate: function(visible) {
-		this.setState({
-			createIsVisible: visible,
-			animateCreateForm: true
-		});
+//		this.setState({
+//			createIsVisible: visible,
+//			animateCreateForm: true
+//		});
+		if (visible)
+		{
+			callPreCreateForm()
+		}
+		
 	},
-	
 	renderCreateButton: function() {
 		if (Keystone.list.autocreate) {
 			return (
 				<div className="toolbar">
-					<a href={'?new' + Keystone.csrf.query} className="btn btn-default btn-create btn-create-item">
+					<a href={'?new' + Keystone.csrf.query} className="btn btn-default">
 						<span className="ion-plus-round mr-5" />
 						Create {Keystone.template.singular}
 					</a>
@@ -32,7 +36,7 @@ var View = React.createClass({
 		}
 		return (
 			<div className="toolbar">
-				<button type="button" className="btn btn-default btn-create btn-create-item" onClick={this.toggleCreate.bind(this, true)}>
+				<button type="button" className="btn btn-default" onClick={this.toggleCreate.bind(this, true)}>
 					<span className="ion-plus-round mr-5" />
 					Create {Keystone.template.singular}
 				</button>
@@ -42,7 +46,7 @@ var View = React.createClass({
 	
 	renderCreateForm: function() {
 		if (!this.state.createIsVisible) return null;
-		return <CreateForm list={Keystone.template} id={Keystone.category_id} animate={this.state.animateCreateForm} onCancel={this.toggleCreate.bind(this, false)} values={Keystone.createFormData} err={Keystone.createFormErrors} />;
+		return <CreateForm list={Keystone.template} id={Keystone.category_id} onCancel={this.toggleCreate.bind(this, false)} values={Keystone.createFormData} err={Keystone.createFormErrors} />;
 	},
 	
 	render: function() {
@@ -50,7 +54,6 @@ var View = React.createClass({
 		return (
 			<div className="create-item">
 				{this.renderCreateButton()}
-				{this.renderCreateForm()}
 				<hr />
 			</div>
 		);
@@ -59,3 +62,6 @@ var View = React.createClass({
 });
 
 React.render(<View />, document.getElementById('list-view'));
+console.log(View);
+console.log(View.animateCreateForm);
+React.render(<CreateForm list={Keystone.template} id={Keystone.category_id} animate={true} values={Keystone.createFormData} err={Keystone.createFormErrors} />, parent.document.getElementById('item-view-modal'));

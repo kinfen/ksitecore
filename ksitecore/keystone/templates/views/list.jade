@@ -114,17 +114,12 @@ block js
    }).on('click-row.bs.table', function (e, row, $element) {
     console.log(row._id);
     callItem(row._id);
-   })
-
-   var item_modal = parent.document.body.querySelector("#item-modal");
-   var item_frame = parent.document.body.querySelector("#item-frame");
-   function callItem(id)
-   {
-    $(item_frame).attr("height", $(window).height() - 180);
-    $(item_frame).attr("src", "/keystone/#{template.path}/" + id);
-    $(item_modal ).modal({
-    });
-   }
+   });
+    function callPreCreateForm()
+    {
+      parent.$("#item-modal-pre" ).modal({
+      });
+    }
    parent.document.all("content-frame").height=document.body.scrollHeight;
 block	css
  link(rel="stylesheet", href='/css/bootstrap-table.min.css')

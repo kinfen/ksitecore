@@ -63,7 +63,13 @@ var Form = React.createClass({
 		props.mode = 'create';
 		return props;
 	},
-	
+	createItem:function(e){
+		var data = this.props.values;
+		data._csrf = Keystone.csrf.value;
+		data.action = "create";
+		parent.createItem(e.currentTarget, "/ksitecore/api/" + Keystone.template.path, data);
+
+	},
 	render: function() {
 		
 		var errors = null,
@@ -73,7 +79,7 @@ var Form = React.createClass({
 			nameField = this.props.list.nameField,
 			focusRef;
 		
-		var modalClass = 'modal modal-md' + (this.props.animate ? ' animate' : '');
+		var modalClass = 'modal fade';
 		
 		if (this.props.err && this.props.err.errors) {
 			var msgs = {};
@@ -120,11 +126,9 @@ var Form = React.createClass({
 		
 		return (
 			<div>
-				<div className={modalClass}>
-					<div className="modal-dialog">
-						<form className="modal-content" encType="multipart/form-data" method="post" action={formAction}>
-							<input type="hidden" name="action" value="create" />
-							<input type="hidden" name={Keystone.csrf.key} value={Keystone.csrf.value} />
+				<div className={modalClass} id="item-modal-pre">
+					<div className="modal-dialog modal-lg">
+						<div className="modal-content">
 							<div className="modal-header">
 								<button type="button" className="modal-close" onClick={this.props.onCancel}></button>
 								<div className="modal-title">Create a new {list.singular}</div>
@@ -134,13 +138,12 @@ var Form = React.createClass({
 								{form}
 							</div>
 							<div className="modal-footer">
-								<button type="submit" className="btn btn-create">Create</button>
-								<button type="button" className="btn btn-link btn-cancel" onClick={this.props.onCancel}>cancel</button>
+								<button type="submit" className="btn btn-primary ladda-button" data-style="expand-right" onClick={this.createItem.bind(this)}>Create</button>
+								<button type="button" className="btn btn-default" onClick={this.props.onCancel}>cancel</button>
 							</div>
-						</form>
+						</div>
 					</div>
 				</div>
-				<div className="modal-backdrop"></div>
 			</div>
 		);
 	}
