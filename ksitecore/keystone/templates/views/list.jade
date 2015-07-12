@@ -35,6 +35,7 @@ block content
                            span  &nbsp;Edit Sub Categories
                        .clear
        br
+     hr  
      table#table
      if items.results.length == 0
        .no-list
@@ -73,20 +74,6 @@ block js
   script(src='/keystone/js/lib/moment/moment-1.7.2.min.js')
   script(src='/js/bootstrap.min.js')
   script.
-   function operateFormatter(value, row, index) {
-        return [
-            '<a class="like" href="javascript:void(0)" title="Like">',
-                '<i class="glyphicon glyphicon-heart"></i>',
-            '</a>',
-            '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
-                '<i class="glyphicon glyphicon-edit"></i>',
-            '</a>',
-            '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
-                '<i class="glyphicon glyphicon-remove"></i>',
-            '</a>'
-        ].join('');
-    }
-
    var data = Keystone.items;
    //去除data里面的object值
    data = _.map(data, function(obj){
@@ -106,20 +93,13 @@ block js
    $('#table').bootstrapTable({
     columns: !{JSON.stringify(columns)},
     data: data,
-    clickToSelect:true,
     showColumns: true,
     showRefresh: true,
     minimumCountColumns: 2,
 
    }).on('click-row.bs.table', function (e, row, $element) {
-    console.log(row._id);
-    callItem(row._id);
+    parent.viewItem(Keystone.template.path, row._id);
    });
-    function callPreCreateForm()
-    {
-      parent.$("#item-modal-pre" ).modal({
-      });
-    }
    parent.document.all("content-frame").height=document.body.scrollHeight;
 block	css
  link(rel="stylesheet", href='/css/bootstrap-table.min.css')

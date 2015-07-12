@@ -18,8 +18,10 @@ var View = React.createClass({
 //			animateCreateForm: true
 //		});
 		if (visible)
-		{
-			callPreCreateForm()
+		{			
+
+     		 parent.$("#item-modal-pre" ).modal({});
+
 		}
 		
 	},
@@ -45,8 +47,8 @@ var View = React.createClass({
 	},
 	
 	renderCreateForm: function() {
-		if (!this.state.createIsVisible) return null;
-		return <CreateForm list={Keystone.template} id={Keystone.category_id} onCancel={this.toggleCreate.bind(this, false)} values={Keystone.createFormData} err={Keystone.createFormErrors} />;
+//		if (!this.state.createIsVisible) return null;
+		return <CreateForm list={Keystone.template} id={Keystone.category_id} values={Keystone.createFormData} err={Keystone.createFormErrors} />;
 	},
 	
 	render: function() {
@@ -54,7 +56,6 @@ var View = React.createClass({
 		return (
 			<div className="create-item">
 				{this.renderCreateButton()}
-				<hr />
 			</div>
 		);
 	}
@@ -62,6 +63,4 @@ var View = React.createClass({
 });
 
 React.render(<View />, document.getElementById('list-view'));
-console.log(View);
-console.log(View.animateCreateForm);
 React.render(<CreateForm list={Keystone.template} id={Keystone.category_id} animate={true} values={Keystone.createFormData} err={Keystone.createFormErrors} />, parent.document.getElementById('item-view-modal'));

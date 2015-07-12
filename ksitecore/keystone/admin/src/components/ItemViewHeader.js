@@ -135,7 +135,6 @@ var Header = React.createClass({
 		return (
 			<ul className="item-toolbar-info">
 				{this.renderKeyOrId()}
-				{this.renderCreateButton()}
 			</ul>
 		);
 	},

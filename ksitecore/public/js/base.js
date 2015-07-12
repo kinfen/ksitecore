@@ -23,36 +23,16 @@ Date.prototype.Format = function(fmt)
   fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
   return fmt;   
 }
-
-
-
-function createItem(btnRef, api_path, data)
+function viewItem(path, id)
 {
-  var l = Ladda.create(btnRef);
-  l.start();
-    $.ajax({ 
-      type: "POST", 
-      url: api_path, 
-      data: data, 
-      dataType: "json", 
-      success: function (data) { 
-        console.log(data);
-        l.stop();
-        if (data.state === 1)
-        {
-          console.log(this);
-
-          $("#item-form-frame").show();
-          $(".item-form-pre").hide();
-          $("#item-form-frame").attr("height", $(window).height() - 180);
-          $("#item-form-frame").attr("src", "/keystone/" + data.path + "/" + data.item._id);
-        }
-      }, 
-      error: function (message) { 
-        console.log("提交数据失败！"); 
-      } 
-    });
+	console.log('hihi');
+	$("#item-form-frame").attr("height", $(window).height() - 180);
+	$("#item-form-frame").attr("src", "/keystone/" + path + "/" + id);
+	$('#item-modal').modal();
 }
+
+
+
 
 
 

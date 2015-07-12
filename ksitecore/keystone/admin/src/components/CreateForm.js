@@ -6,7 +6,7 @@ var _ = require('underscore'),
 var Form = React.createClass({
 	
 	displayName: 'CreateForm',
-	
+	createSuccess : false,
 	getDefaultProps: function() {
 		return {
 			err: null,
@@ -49,8 +49,23 @@ var Form = React.createClass({
 		if (this.refs.focusTarget) {
 			this.refs.focusTarget.focus();
 		}
+		var self = this;
+		parent.$('#item-modal-pre').on('hidden.bs.modal', function (e) {
+		  // do something...
+			if (self.createSuccess)
+			{
+				parent.$('#item-modal').modal();
+			}
+			self.setState({
+				values:self.getInitialState()
+			})
+		});
+		parent.$('#item-modal').on('hidden.bs.modal', function(e){
+			self.createSuccess = false;
+		});
+		
 	},
-
+	
 	componentWillUnmount: function() {
 		document.body.style.overflow = this._bodyStyleOverflow;
 	},
@@ -64,11 +79,61 @@ var Form = React.createClass({
 		return props;
 	},
 	createItem:function(e){
+		var self = this;
 		var data = this.props.values;
 		data._csrf = Keystone.csrf.value;
 		data.action = "create";
-		parent.createItem(e.currentTarget, "/ksitecore/api/" + Keystone.template.path, data);
+		
+		var l = parent.Ladda.create(e.currentTarget);
+		l.start();
+	    $.ajax({ 
+	      type: "POST", 
+	      url: "/ksitecore/api/" + Keystone.template.path, 
+	      data: data, 
+	      dataType: "json", 
+	      success: function (data) { 
+	        console.log(data);
+	        l.stop();
+	        if (data.state === 1)
+	        {
+	        		self.createSuccess = true;
+	          	parent.$("#item-modal-pre").modal('hide');
+	          	parent.$("#item-form-frame").attr("height", parent.$(window).height() - 180);
+	          	parent.$("#item-form-frame").attr("src", "/keystone/" + data.path + "/" + data.item._id);
+	         
+	        }
+	      }, 
+	      error: function (message) { 
+	        console.log("提交数据失败！"); 
+	      } 
+	    });
 
+	},
+	closeModalWithID:function(id){
+		console.log(id);
+		parent.$(id).modal('hide');
+	},
+	renderToolbar: function() {
+		
+		var toolbar = {};
+		
+		if (!this.props.list.noedit) {
+			toolbar.save = <button type="submit" className="btn btn-primary">Save</button>;
+			// TODO: Confirm: Use React & Modal
+			toolbar.reset = <a href={parent.$('#item-form-frame').attr("src")} className="btn btn-link btn-cancel" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
+		}
+		
+		if (!this.props.list.noedit && !this.props.list.nodelete) {
+			// TODO: Confirm: Use React & Modal
+			//toolbar.del = <a href={'/ksitecore/categories/list/' + this.props.id + '?type=' + this.props.type + '&delete=' + this.props.data.id + Keystone.csrf.query} className="btn btn-link btn-cancel delete" data-confirm={'Are you sure you want to delete this?' + this.props.list.singular.toLowerCase()}>delete {this.props.list.singular.toLowerCase()}</a>;
+		}
+		
+		return (
+			<div>
+				{toolbar}
+			</div>
+		);
+		
 	},
 	render: function() {
 		
@@ -130,7 +195,7 @@ var Form = React.createClass({
 					<div className="modal-dialog modal-lg">
 						<div className="modal-content">
 							<div className="modal-header">
-								<button type="button" className="modal-close" onClick={this.props.onCancel}></button>
+								<button type="button" className="modal-close" onClick={this.closeModalWithID.bind(this, '#item-modal-pre')}></button>
 								<div className="modal-title">Create a new {list.singular}</div>
 							</div>
 							<div className="modal-body">
@@ -139,7 +204,23 @@ var Form = React.createClass({
 							</div>
 							<div className="modal-footer">
 								<button type="submit" className="btn btn-primary ladda-button" data-style="expand-right" onClick={this.createItem.bind(this)}>Create</button>
-								<button type="button" className="btn btn-default" onClick={this.props.onCancel}>cancel</button>
+								<button type="button" className="btn btn-default" onClick={this.closeModalWithID.bind(this, '#item-modal-pre')}>cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className={modalClass} id="item-modal">
+					<div className="modal-dialog modal-lg">
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="modal-close" onClick={this.closeModalWithID.bind(this, '#item-modal')}></button>
+								<div className="modal-title">Success Create a new {list.singular}</div>
+							</div>
+							<div className="modal-body">
+								<iframe id="item-form-frame"  src=""  width="100%" frameborder="0"></iframe>
+							</div>
+							<div className="modal-footer">
+								{this.renderToolbar()}
 							</div>
 						</div>
 					</div>
