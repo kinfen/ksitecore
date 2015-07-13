@@ -27,7 +27,7 @@ block content
                     #list-view
                    .col-xs-6
                        .btn-group.tableAction
-                         a.btn.btn-default(role="button" href="/keystone/#{list.path}/#{category.id}")
+                         a.btn.btn-default(role="button" onClick="parent.viewItem(Keystone.list.path, Keystone.category_id)")
                            span.glyphicon.glyphicon-edit
                            span  &nbsp;Edit 
                          a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{category.id}?type=#{list.path}")

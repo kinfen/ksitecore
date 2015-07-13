@@ -22,7 +22,7 @@ var View = React.createClass({
 	},
 
 	loadItemData: function() {
-		request.get('/keystone/api/' + Keystone.list.path + '/' + this.props.itemId + '?drilldown=true')
+		request.get('/keystone/api/' + Keystone.list.path + '/' + this.props.item_id + '?drilldown=true')
 			.set('Accept', 'application/json')
 			.end((err, res) => {
 				if (err || !res.ok) {
@@ -42,19 +42,17 @@ var View = React.createClass({
 			createIsVisible: visible
 		});
 	},
-	
-	renderCreateForm: function() {
-		if (!this.state.createIsVisible) return null;
-		return <CreateForm list={Keystone.list} type={Keystone.sublist} id={Keystone.sublist_id} animate onCancel={this.toggleCreate.bind(this, false)} />;
-	},
-	
+//	renderCreateForm: function() {
+//		if (!this.state.createIsVisible) return null;
+//		return <CreateForm list={Keystone.list} id={Keystone.category_id} animate onCancel={this.toggleCreate.bind(this, false) data-bind={formData}} />;
+//	},
+//	
 	render: function() {
 		if (!this.state.itemData) return <div />;
 		return (
 			<div>
-				{this.renderCreateForm()}
 				<Header list={this.state.list} data={this.state.itemData} toggleCreate={this.toggleCreate} />
-				<EditForm list={this.state.list} data={this.state.itemData} type={Keystone.sublist} id={Keystone.sublist_id} />
+				<EditForm list={this.state.list} data={this.state.itemData} />
 
 			</div>
 		);
@@ -62,4 +60,4 @@ var View = React.createClass({
 	
 });
 
-React.render(<View itemId={Keystone.itemId} />, document.getElementById('item-view'));
+React.render(<View item_id={Keystone.item_id} />, document.getElementById('item-view'));

@@ -11,11 +11,12 @@ var EditForm = React.createClass({
 	displayName: 'EditForm',
 	
 	getInitialState: function() {
+		var obj = _.clone(this.props.data.fields);
+		Keystone.formData = obj;
 		return {
-			values: _.clone(this.props.data.fields)
+			values: obj
 		};
 	},
-	
 	getFieldProps: function(field) {
 		var props = _.clone(field);
 		props.value = this.state.values[field.path];
@@ -31,6 +32,7 @@ var EditForm = React.createClass({
 		this.setState({
 			values: values
 		});
+		Keystone.formData = values;
 	},
 	
 	renderNameField: function() {
@@ -169,18 +171,13 @@ var EditForm = React.createClass({
 		return elements;
 		
 	},
-	
 	render: function() {
-		
 		return (
-			<form method="post" encType="multipart/form-data" className="item-details">
-				<input type="hidden" name="action" value="updateItem" />
-				<input type="hidden" name={Keystone.csrf.key} value={Keystone.csrf.value} />
+			<div>
 				{this.renderNameField()}
 				{this.renderTrackingMeta()}
 				{this.renderFormElements()}
-				{this.renderToolbar()}
-			</form>
+			</div>
 		);
 	}
 	

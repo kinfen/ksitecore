@@ -62,6 +62,7 @@ var Form = React.createClass({
 		});
 		parent.$('#item-modal').on('hidden.bs.modal', function(e){
 			self.createSuccess = false;
+	        parent.$("#item-form-frame").attr("src", "");
 		});
 		
 	},
@@ -81,14 +82,13 @@ var Form = React.createClass({
 	createItem:function(e){
 		var self = this;
 		var data = this.props.values;
-		data._csrf = Keystone.csrf.value;
-		data.action = "create";
+		data[Keystone.csrf.key] = Keystone.csrf.value;
 		
 		var l = parent.Ladda.create(e.currentTarget);
 		l.start();
 	    $.ajax({ 
 	      type: "POST", 
-	      url: "/ksitecore/api/" + Keystone.template.path, 
+	      url: "/ksitecore/api/" + Keystone.template.path + "/create", 
 	      data: data, 
 	      dataType: "json", 
 	      success: function (data) { 
@@ -109,6 +109,51 @@ var Form = React.createClass({
 	    });
 
 	},
+	saveItem(e)
+	{
+		var data = parent.$("#item-form-frame")[0].contentWindow.Keystone.formData;
+		var csrfKey = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.key;
+		var csrfValue = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.value;
+		var id = parent.$("#item-form-frame")[0].contentWindow.Keystone.item_id;
+		var list = parent.$("#item-form-frame")[0].contentWindow.Keystone.list;
+		var extendData = {action:"update"};
+		extendData[csrfKey] = csrfValue;
+		_.extend(data, extendData);
+		var l = parent.Ladda.create(e.currentTarget);
+		l.start();
+	    $.ajax({ 
+	      type: "POST", 
+	      url: "/ksitecore/api/" + list.path + "/update/" + id, 
+	      data: data, 
+	      dataType: "json", 
+	      success: function (data) { 
+	        console.log(data);
+	        console.log("haha");
+	        l.stop();
+	        if (data.state === 1)
+	        {
+	          	parent.$("#item-modal").modal('hide');
+	         
+	        }
+	      }, 
+	      error: function (message) { 
+	        console.log("提交数据失败！"); 
+	      } 
+	    });
+		
+		
+	},
+	deleteItem:function(e)
+	{
+		
+		var csrfKey = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.key;
+		var csrfValue = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.value;
+		var id = parent.$("#item-form-frame")[0].contentWindow.Keystone.item_id;
+		var list = parent.$("#item-form-frame")[0].contentWindow.Keystone.list;
+		var csrfObj = {};
+		csrfObj[csrfKey] = csrfValue;
+		parent.deleteItem(e.currentTarget, list.path, id, csrfObj);
+	},
 	closeModalWithID:function(id){
 		console.log(id);
 		parent.$(id).modal('hide');
@@ -118,14 +163,13 @@ var Form = React.createClass({
 		var toolbar = {};
 		
 		if (!this.props.list.noedit) {
-			toolbar.save = <button type="submit" className="btn btn-primary">Save</button>;
+			toolbar.save = <button type="submit" className="btn btn-primary ladda-button" data-style="expand-right" onClick={this.saveItem.bind(this)}>Save</button>;
 			// TODO: Confirm: Use React & Modal
-			toolbar.reset = <a href={parent.$('#item-form-frame').attr("src")} className="btn btn-link btn-cancel" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
+			toolbar.reset = <a href={parent.$('#item-form-frame').attr("src")} className="btn btn-warning" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
 		}
-		
 		if (!this.props.list.noedit && !this.props.list.nodelete) {
 			// TODO: Confirm: Use React & Modal
-			//toolbar.del = <a href={'/ksitecore/categories/list/' + this.props.id + '?type=' + this.props.type + '&delete=' + this.props.data.id + Keystone.csrf.query} className="btn btn-link btn-cancel delete" data-confirm={'Are you sure you want to delete this?' + this.props.list.singular.toLowerCase()}>delete {this.props.list.singular.toLowerCase()}</a>;
+			toolbar.del = <a className="btn btn-danger ladda-button" data-style="expand-right" onClick={this.deleteItem.bind(this)} data-confirm={'Are you sure you want to delete this?' + this.props.list.singular.toLowerCase()}>delete {this.props.list.singular.toLowerCase()}</a>;
 		}
 		
 		return (
@@ -214,7 +258,7 @@ var Form = React.createClass({
 						<div className="modal-content">
 							<div className="modal-header">
 								<button type="button" className="modal-close" onClick={this.closeModalWithID.bind(this, '#item-modal')}></button>
-								<div className="modal-title">Success Create a new {list.singular}</div>
+								<div className="modal-title">Modify Item</div>
 							</div>
 							<div className="modal-body">
 								<iframe id="item-form-frame"  src=""  width="100%" frameborder="0"></iframe>
