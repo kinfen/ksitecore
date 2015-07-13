@@ -54,7 +54,8 @@ var View = React.createClass({
 			<div>
 				{this.renderCreateForm()}
 				<Header list={this.state.list} data={this.state.itemData} toggleCreate={this.toggleCreate} />
-				<EditForm list={this.state.list} data={this.state.itemData} type={Keystone.sublist} id={Keystone.sublist_id} />
+				<EditForm list={this.state.list} data={this.state.itemData} type={Keystone.template} id={Keystone.category_id} />
+
 
 			</div>
 		);

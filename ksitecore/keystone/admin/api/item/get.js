@@ -25,11 +25,14 @@ module.exports = function(req, res) {
 		if (!item) return res.status(404).json({ err: 'not found', id: req.params.id });
 
 		var tasks = [];
+
 		var drilldown;
+
 		var relationships;
 
 		/* Drilldown (optional, provided if ?drilldown=true in querystring) */
 		if (req.query.drilldown === 'true' && req.list.get('drilldown')) {
+
 			drilldown = {
 				def: req.list.get('drilldown'),
 				items: []
