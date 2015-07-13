@@ -19,7 +19,7 @@ module.exports = function(req, res) {
 		})
 	}
 	var destList = req.list;
-	if (!destList.get('nocreate') && req.method === 'POST' && req.body.action === 'create') {
+	if (!destList.get('nocreate') && req.method === 'POST' && req.params.action === 'create') {
 		if (!checkCSRF()) return ERRORJSON("CSRF failure");
 		
 		var item = new req.list.model();
@@ -50,6 +50,50 @@ module.exports = function(req, res) {
 			});
 		});
 		
+	}
+	else if( req.method === 'POST' && req.params.action === 'update' && !req.list.get('noedit'))
+	{
+		if (!checkCSRF()) return ERRORJSON("CSRF failure");
+		var itemQuery = req.list.model.findById(req.params.id).select();
+
+		itemQuery.exec(function(err, item) {
+			item.getUpdateHandler(req).process(req.body, { flashErrors: true, logErrors: true }, function(err) {
+				if (err) {
+					return ERRORJSON(err);
+				}
+				return res.json({
+					state : 1,
+					msg : 'success , Your changes have been saved.',
+					item : item,
+					path:destList.path
+				});
+			});
+		});
+	}
+	else if (req.method === "POST" && req.params.action === "delete" && !destList.get("nodelete"))
+	{
+		if (!checkCSRF()) return ERRORJSON("CSRF failure");
+		
+		if (req.params.id === req.user.id) return ERRORJSON('error , You can\'t delete your own ' + destList.singular + '.');
+		
+		
+		destList.model.findById(req.params.id).exec(function (err, item) {
+		if (err) {
+			return ERRORJSON('database error', err);
+		}
+		if (!item) {
+			return ERRORJSON("can not find item");
+		}
+		item.remove(function (err) {
+			if (err) ERRORJSON('database error', err);
+			return res.json({
+				state:1,
+				msg : "Success remove Item",
+				item : item,
+				path : destList.path
+			});
+		});
+	});
 	}
 	else
 	{
