@@ -170,29 +170,6 @@ var EditForm = React.createClass({
 		
 	},
 	
-	renderToolbar: function() {
-		
-		var toolbar = {};
-		
-		if (!this.props.list.noedit) {
-			toolbar.save = <button type="submit" className="btn btn-save">Save</button>;
-			// TODO: Confirm: Use React & Modal
-			toolbar.reset = <a href={'/keystone/' + this.props.list.path + '/' + this.props.data.id} className="btn btn-link btn-cancel" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
-		}
-		
-		if (!this.props.list.noedit && !this.props.list.nodelete) {
-			// TODO: Confirm: Use React & Modal
-			toolbar.del = <a href={'/ksitecore/categories/list/' + this.props.id + '?type=' + this.props.type + '&delete=' + this.props.data.id + Keystone.csrf.query} className="btn btn-link btn-cancel delete" data-confirm={'Are you sure you want to delete this?' + this.props.list.singular.toLowerCase()}>delete {this.props.list.singular.toLowerCase()}</a>;
-		}
-		
-		return (
-			<Toolbar className="toolbar">
-				{toolbar}
-			</Toolbar>
-		);
-		
-	},
-	
 	render: function() {
 		
 		return (
