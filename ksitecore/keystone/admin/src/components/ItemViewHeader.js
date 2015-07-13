@@ -172,10 +172,6 @@ var Header = React.createClass({
 		return (
 			<div>
 				<div className="item-toolbar item-toolbar--header">
-					<ReactCSSTransitionGroup transitionName="ToolbarToggle" className="ToolbarToggle-wrapper" component="div">
-						{this.renderDrilldown()}
-						{this.renderSearch()}
-					</ReactCSSTransitionGroup>
 					{this.renderInfo()}
 				</div>
 			</div>

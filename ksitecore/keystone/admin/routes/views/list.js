@@ -21,7 +21,7 @@ var ListHandle = function(req, res)
 	function getFields()
 	{
 		//set table columns prototype,such as label, align, width
-		var fieldsList = [];
+		var fieldsList = [{field:"selected", title:"selected", checkbox:true}];
 		for (var i = 0 ; i < columns.length; i++)
 		{
 			var obj = columns[i];

@@ -77,6 +77,7 @@ block js
    var data = Keystone.items;
    //去除data里面的object值
    data = _.map(data, function(obj){
+    _.extend(obj, {checkbox : true});
     return _.mapObject(obj, function(value,key){
       if (typeof(value) == "object" && value.name)
       {
@@ -92,10 +93,12 @@ block js
 
    $('#table').bootstrapTable({
     columns: !{JSON.stringify(columns)},
+    classes : "table table-hover table-no-bordered",
+    striped : true,
+    clickToSelect : true,
     data: data,
     showColumns: true,
-    showRefresh: true,
-    minimumCountColumns: 2,
+    minimumCountColumns: 2
 
    }).on('click-row.bs.table', function (e, row, $element) {
     parent.viewItem(Keystone.template.path, row._id);
