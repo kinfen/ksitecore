@@ -45,12 +45,6 @@ var View = React.createClass({
 			</div>
 		);
 	},
-	
-	renderCreateForm: function() {
-//		if (!this.state.createIsVisible) return null;
-		return <CreateForm list={Keystone.template} id={Keystone.category_id} values={Keystone.createFormData} err={Keystone.createFormErrors} />;
-	},
-	
 	render: function() {
 		if (Keystone.template.nocreate) return null;
 		return (
@@ -63,4 +57,9 @@ var View = React.createClass({
 });
 
 React.render(<View />, document.getElementById('list-view'));
-React.render(<CreateForm list={Keystone.template} id={Keystone.category_id} animate={true} values={Keystone.createFormData} err={Keystone.createFormErrors} />, parent.document.getElementById('item-view-modal'));
+parent.$("#item-view-modal").empty();
+if (parent.react)
+{
+	React.unmountComponentAtNode(parent.$("#item-view-modal")[0])
+}
+parent.react = React.render(<CreateForm list={Keystone.template} id={Keystone.category_id} values={Keystone.createFormData} err={Keystone.createFormErrors} />, parent.$("#item-view-modal")[0]);

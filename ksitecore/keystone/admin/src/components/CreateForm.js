@@ -50,8 +50,13 @@ var Form = React.createClass({
 			this.refs.focusTarget.focus();
 		}
 		var self = this;
+		console.log(this);
+		parent.$('#item-modal-pre').on('shown.bs.modal', function (e) {
+			console.log("show");
+		});
 		parent.$('#item-modal-pre').on('hidden.bs.modal', function (e) {
 		  // do something...
+		  console.log("hide");
 			if (self.createSuccess)
 			{
 				parent.$('#item-modal').modal();
@@ -68,7 +73,10 @@ var Form = React.createClass({
 	},
 	
 	componentWillUnmount: function() {
+		console.log("unmount" + this);
 		document.body.style.overflow = this._bodyStyleOverflow;
+		parent.$('#item-modal-pre').on('hidden.bs.modal', null);
+		parent.$('#item-modal').on('hidden.bs.modal', null);
 	},
 	
 	getFieldProps: function(field) {
@@ -83,7 +91,7 @@ var Form = React.createClass({
 		var self = this;
 		var data = this.props.values;
 		data[Keystone.csrf.key] = Keystone.csrf.value;
-		
+		console.log(e);
 		var l = parent.Ladda.create(e.currentTarget);
 		l.start();
 	    $.ajax({ 
@@ -156,6 +164,7 @@ var Form = React.createClass({
 	},
 	closeModalWithID:function(id){
 		console.log(id);
+		console.log(window);
 		parent.$(id).modal('hide');
 	},
 	renderToolbar: function() {
