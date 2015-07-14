@@ -44,7 +44,7 @@ module.exports = function(req, res) {
 			}
 			return res.json({
 				state:1,
-				msg:'success' + 'New ' + destList.singular + ' ' + destList.getDocumentName(item) + ' created.',
+				msg:'success!' + ' New ' + destList.singular + ' ' + destList.getDocumentName(item) + ' created.',
 				item:item,
 				path:destList.path
 			});
@@ -63,7 +63,7 @@ module.exports = function(req, res) {
 				}
 				return res.json({
 					state : 1,
-					msg : 'success , Your changes have been saved.',
+					msg : 'success! Your changes have been saved.',
 					item : item,
 					path:destList.path
 				});
@@ -74,12 +74,12 @@ module.exports = function(req, res) {
 	{
 		if (!checkCSRF()) return ERRORJSON("CSRF failure");
 		
-		if (req.params.id === req.user.id) return ERRORJSON('error , You can\'t delete your own ' + destList.singular + '.');
+		if (req.params.id === req.user.id) return ERRORJSON('error! You can\'t delete your own ' + destList.singular + '.');
 		
 		
 		destList.model.findById(req.params.id).exec(function (err, item) {
 		if (err) {
-			return ERRORJSON('database error', err);
+			return ERRORJSON(err);
 		}
 		if (!item) {
 			return ERRORJSON("can not find item");

@@ -57,9 +57,10 @@ var View = React.createClass({
 });
 
 React.render(<View />, document.getElementById('list-view'));
-parent.$("#item-view-modal").empty();
-if (parent.react)
+if (parent.React)
 {
-	React.unmountComponentAtNode(parent.$("#item-view-modal")[0])
+	var b = parent.React.unmountComponentAtNode(parent.$("#item-view-modal")[0]);
+
 }
+parent.React = React;
 parent.react = React.render(<CreateForm list={Keystone.template} id={Keystone.category_id} values={Keystone.createFormData} err={Keystone.createFormErrors} />, parent.$("#item-view-modal")[0]);
