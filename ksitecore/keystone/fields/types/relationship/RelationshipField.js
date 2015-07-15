@@ -60,7 +60,7 @@ module.exports = Field.create({
 				value: input
 			});
 			superagent
-				.get('/keystone/api/' + self.props.refList.path + '/' + input + '?simple' + treeMode)
+				.get('/keystone/api/' + self.props.refList.path + '/' + input + '?simple')
 				.set('Accept', 'application/json')
 				.end(function (err, res) {
 					if (err) throw err;
@@ -116,9 +116,10 @@ module.exports = Field.create({
 	},
 
 	getOptions: function(input, callback) {
-		var treeMode = this.props.treeMode ? "treemode&id=" + Keystone.item_id : "";
+		var treeMode = this.props.treeMode ? "treemode"  : "";
+		var idStr = Keystone.item_id ? "&id=" + Keystone.item_id : ""
 		superagent
-			.get('/keystone/api/' + this.props.refList.path + '/autocomplete?' + this.buildOptionQuery(input) + treeMode)
+			.get('/keystone/api/' + this.props.refList.path + '/autocomplete?' + this.buildOptionQuery(input) + treeMode + idStr)
 			.set('Accept', 'application/json')
 			.end(function (err, res) {
 				if (err) throw err;

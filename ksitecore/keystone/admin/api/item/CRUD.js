@@ -1,5 +1,5 @@
 var keystone = require('../../../');
-
+var async = require("async");
 module.exports = function(req, res) {
 
 	
@@ -74,26 +74,61 @@ module.exports = function(req, res) {
 	{
 		if (!checkCSRF()) return ERRORJSON("CSRF failure");
 		
-		if (req.params.id === req.user.id) return ERRORJSON('error! You can\'t delete your own ' + destList.singular + '.');
+		var ids = eval(req.params.id);
 		
+		if (typeof(ids) == "string")
+		{
+			if (req.params.id === req.user.id) return ERRORJSON('error! You can\'t delete your own ' + destList.singular + '.');
 		
-		destList.model.findById(req.params.id).exec(function (err, item) {
-		if (err) {
-			return ERRORJSON(err);
-		}
-		if (!item) {
-			return ERRORJSON("can not find item");
-		}
-		item.remove(function (err) {
-			if (err) ERRORJSON('database error', err);
-			return res.json({
-				state:1,
-				msg : "Success remove Item",
-				item : item,
-				path : destList.path
+			destList.model.findById(req.params.id).exec(function (err, item) {
+				if (err) {
+					return ERRORJSON(err);
+				}
+				if (!item) {
+					return ERRORJSON("can not find item");
+				}
+				item.remove(function (err) {
+					if (err) ERRORJSON('database error', err);
+					return res.json({
+						state:1,
+						msg : "Success remove Item",
+						item : item,
+						path : destList.path
+					});
+				});
 			});
-		});
-	});
+		}
+		else if (typeof(ids) == "object")
+		{
+			if (ids.indexOf(req.user.id) != -1)
+			{
+				ids = ids.slice(ids.indexOf(req.user.id), 1);	
+			}
+			destList.model.find().where("_id").in(ids).exec(function (err, items) {
+				if (err) {
+					return ERRORJSON(err);
+				}
+				
+				var fun_list = [];
+				items.each(function(item) {
+					
+					fun_list.push(function(cb){
+						item.remove(function (err) {
+							if (err) ERRORJSON('database error', err);
+							cb();
+						});
+					});
+				})
+				async.waterfall(fun_list, function(err){
+					return res.json({
+						state:1,
+						msg:"succcess remove Items",
+						path : destList.path
+					});
+				});
+				
+			});
+		}
 	}
 	else
 	{
