@@ -134,13 +134,24 @@ var Form = React.createClass({
 	      data: data, 
 	      dataType: "json", 
 	      success: function (data) { 
-	        console.log(data);
-	        console.log("haha");
 	        l.stop();
 	        if (data.state === 1)
 	        {
-	          	parent.$("#item-modal").modal('hide');
+	        		var form_obj = parent.$("#item-form-frame")[0].contentWindow.Keystone.req_from;
+	        		if (_.has(form_obj, "req_from_path") && _.has(form_obj, "req_from_id"))
+	        		{
+	        			$(parent.$("#item-form-frame")[0].contentDocument.body.querySelector("#item-view")).prepend('<div class="alert alert-success" role="alert">' + data.msg + ' <a href="javascript:parent.$(\'#item-form-frame\')[0].contentWindow.history.back()" class="btn btn-link">Go Back</a></div>');
+	        			parent.$("#item-form-frame")[0].contentWindow.scrollTo(0, 0);
+	        		}
+	        		else
+	        		{
+	        			parent.$("#item-modal").modal('hide');
+	        		}
+	          	
 	         
+	        }
+	        else{
+	        		parent.$("#item-modal .modal-footer").prepend('<div class="alert alert-danger pull-left" role="alert">' + data.msg + '</div>');
 	        }
 	      }, 
 	      error: function (message) { 

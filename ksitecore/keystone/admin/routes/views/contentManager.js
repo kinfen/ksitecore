@@ -14,7 +14,7 @@ exports = module.exports = function(req, res) {
     .exec(function(err, categorys) {
         if (err)
         {
-        	req.flash('error', err);
+        		req.flash('error', err);
         }
         else
         {
@@ -22,10 +22,10 @@ exports = module.exports = function(req, res) {
         	for (var i = 0; i < categorys.length; i++)
         	{
         		var obj = categorys[i];
-				var tmp = {};
-				tmp._id = obj._id;
-        			tmp.text = obj.name;
-				tmp.template  = obj.template || "categories";
+			var tmp = {};
+			tmp._id = obj._id;
+    			tmp.text = obj.name;
+			tmp.template  = obj.template || "categories";
         		var tag = obj.parent ? obj.parent + '' : 'root';
         		tmp.parent = tag;
         		if (hashData[tag] == null)

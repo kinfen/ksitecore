@@ -3,6 +3,76 @@ var async = require('async');
 var keystone = require('../../');
 var jade = require('jade');
 
+
+function comcatNotInIDs(path, id, no_in_id_lsit, cb)
+{
+	var list = keystone.list(path);
+	query = list.model.find({"parent": id});
+	query.exec(function(err, items) {
+		if (err) 
+		{
+			console.log('database error when comcatNotInIDs');
+			cb();
+			return;
+		}
+		if (items.length == 0){
+			cb();
+		}
+		else{
+			var ;
+			items.map(function(i) {
+				no_in_id_lsit.push(i.id);
+				comcatNotInIDs(path, i.id, no_in_id_lsit);
+			});
+		}
+		
+	});
+}
+
+function autocompleteProcess (req, res, filters)
+{
+	var query = req.list.model.find(filters)
+				.where("_id").nin([])
+				.limit(limit)
+				.skip(skip)
+				.sort(req.list.defaultSort);
+
+	if (req.query.context === 'relationship') {
+		var srcList = keystone.list(req.query.list);
+		if (!srcList) return sendError('invalid list provided');
+
+		var field = srcList.fields[req.query.field];
+		if (!field) return sendError('invalid field provided');
+
+		_.each(req.query.filters, function(value, key) {
+			query.where(key).equals(value ? value : null);
+			count.where(key).equals(value ? value : null);
+		});
+	}
+	
+	count.exec(function(err, total) {
+
+		if (err) return sendError('database error', err);
+
+		query.exec(function(err, items) {
+
+			if (err) return sendError('database error', err);
+
+			sendResponse({
+				total: total,
+				items: items.map(function(i) {
+					return {
+						name: req.list.getDocumentName(i, false) || '(' + i.id + ')',
+						id: i.id
+					};
+				})
+			});
+
+		});
+
+	});
+}
+
 exports = module.exports = function(req, res) {
 
 	var sendResponse = function(status) {
@@ -27,51 +97,16 @@ exports = module.exports = function(req, res) {
 			var limit = req.query.limit || 50;
 			var page = req.query.page || 1;
 			var skip = limit * (page - 1);
-				
 			var filters = req.list.getSearchFilters(req.query.q);
-
 			var count = req.list.model.count(filters);
-			var query = req.list.model.find(filters)
-				.limit(limit)
-				.skip(skip)
-				.sort(req.list.defaultSort);
-
-			if (req.query.context === 'relationship') {
-				var srcList = keystone.list(req.query.list);
-				if (!srcList) return sendError('invalid list provided');
-
-				var field = srcList.fields[req.query.field];
-				if (!field) return sendError('invalid field provided');
-
-				_.each(req.query.filters, function(value, key) {
-					query.where(key).equals(value ? value : null);
-					count.where(key).equals(value ? value : null);
-				});
-			}
+			var no_in_idList = [req.query.id];
 			
-			count.exec(function(err, total) {
-
-				if (err) return sendError('database error', err);
-
-				query.exec(function(err, items) {
-
-					if (err) return sendError('database error', err);
-
-					sendResponse({
-						total: total,
-						items: items.map(function(i) {
-							return {
-								name: req.list.getDocumentName(i, false) || '(' + i.id + ')',
-								id: i.id
-							};
-						})
-					});
-
-				});
-
+			async.waterfall([function(cb){
+				comcatNotInIDs(req.list.path, req.query.id, no_in_idList, cb);
+				
+			}],function(err){
+				autocompleteProcess(req, res, filters);
 			});
-
-
 		break;
 
 		case 'order':

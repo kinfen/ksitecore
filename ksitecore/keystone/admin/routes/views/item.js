@@ -5,7 +5,13 @@ var keystone = require('../../../'),
 exports = module.exports = function(req, res) {
 
 	var itemQuery = req.list.model.findById(req.params.item).select();
-
+	
+	var req_from = null;
+	if (_.has(req.query, "req_from_path") && _.has(req.query, "req_from_id"))
+	{
+		req_from = {req_from_path:req.query["req_from_path"], req_from_id:req.query["req_from_id"]}
+	}
+	
 	itemQuery.exec(function(err, item) {
 
 		if (!item) {
@@ -61,6 +67,7 @@ exports = module.exports = function(req, res) {
 					list: req.list,
 					item: item,
 					relationships: relationships,
+					req_from:req_from ? req_from : {},
 					showRelationships: showRelationships
 				});
 

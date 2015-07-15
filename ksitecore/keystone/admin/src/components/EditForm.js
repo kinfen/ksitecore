@@ -163,7 +163,6 @@ var EditForm = React.createClass({
 				}
 
 				elements[field.path] = React.createElement(Fields[field.type], props);
-				
 			}
 			
 		}, this);

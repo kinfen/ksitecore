@@ -59,46 +59,46 @@ var Header = React.createClass({
 		);
 		/* eslint-enable */
 	},
-	
-	renderDrilldownItems: function() {
+	renderBackItems: function() {
 		
-		var list = this.props.list;
-		var items = this.props.data.drilldown ? this.props.data.drilldown.items : [];
-		
-		var els = items.map(function(dd) {
-			
-			var links = [];
-			
-			dd.items.forEach(function(el, i) {
-				links.push(<a key={'dd' + i} href={el.href} title={dd.list.singular}>{el.label}</a>);
-				if (i < dd.items.length - 1) {
-					links.push(<span key={'ds' + i} className="separator">,</span>);//eslint-disable-line comma-spacing
-				}
-			});
-			
-			var more = dd.more ? <span>...</span> : '';
-			
+//		var list = this.props.list;
+//		var items = this.props.data.drilldown ? this.props.data.drilldown.items : [];
+//		
+//		var els = items.map(function(dd) {
+//			
+//			var links = [];
+//			
+//			dd.items.forEach(function(el, i) {
+//				links.push(<a key={'dd' + i} href={el.href} title={dd.list.singular}>{el.label}</a>);
+//				if (i < dd.items.length - 1) {
+//					links.push(<span key={'ds' + i} className="separator">,</span>);//eslint-disable-line comma-spacing
+//				}
+//			});
+//			
+//			var more = dd.more ? <span>...</span> : '';
+//			
+//			return (
+//				<li>
+//					{links}
+//					{more}
+//				</li>
+//			);
+//			
+//		});
+
+		if (_.has(this.props.req_from, "req_from_path") && _.has(this.props.req_from, "req_from_id"))
+		{
+			var backIcon = <span className="mr-5 ion-arrow-left-c"></span>;
+			var path = this.props.req_from.req_from_path;
+			var id = this.props.req_from.req_from_id;
 			return (
-				<li>
-					{links}
-					{more}
-				</li>
-			);
-			
-		});
-		
-		// var backIcon = (!els.length) ? <span className="mr-5 ion-arrow-left-c"></span> : '';
-		
-		// els.push(
-		// 	<li key="back">
-		// 		<a href={'/keystone/' + list.path} title={'Back to ' + list.plural}>
-		// 			{backIcon}
-		// 			{list.plural}
-		// 		</a>
-		// 	</li>
-		// );
-		
-		return els;
+				<a href="javascript:history.back()" title={'Back to ' + this.props.req_from.req_from_path}>
+		 			{backIcon}
+		 		</a>
+			)
+		}
+
+		return "";
 		
 	},
 	
@@ -172,6 +172,7 @@ var Header = React.createClass({
 		return (
 			<div>
 				<div className="item-toolbar item-toolbar--header">
+					{this.renderBackItems()}
 					{this.renderInfo()}
 				</div>
 			</div>

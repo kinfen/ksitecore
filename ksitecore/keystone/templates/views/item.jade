@@ -12,6 +12,7 @@ block js
 		Keystone.parent_id = "#{item.parent}";
 		Keystone.wysiwyg = { options: !{JSON.stringify(wysiwygOptions)} };
 		Keystone.item_id = '!{item.id}';
+		Keystone.req_from = !{JSON.stringify(req_from)};
 		Keystone.formData = {};
 	script(src='/keystone/js/packages.js')
 	script(src='/keystone/js/fields.js')

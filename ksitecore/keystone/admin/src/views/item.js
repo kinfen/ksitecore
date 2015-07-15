@@ -51,7 +51,7 @@ var View = React.createClass({
 		if (!this.state.itemData) return <div />;
 		return (
 			<div>
-				<Header list={this.state.list} data={this.state.itemData} toggleCreate={this.toggleCreate} />
+				<Header list={this.state.list} data={this.state.itemData} toggleCreate={this.toggleCreate} req_from={Keystone.req_from} />
 				<EditForm list={this.state.list} data={this.state.itemData} />
 
 			</div>

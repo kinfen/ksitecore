@@ -45,7 +45,6 @@ module.exports = Field.create({
 		var expandedValues = [];
 		var inputs = _.compact([].concat(input));
 		var self = this;
-		
 		var finish = function () {
 			self.setState({
 				ready: true,
@@ -61,7 +60,7 @@ module.exports = Field.create({
 				value: input
 			});
 			superagent
-				.get('/keystone/api/' + self.props.refList.path + '/' + input + '?simple')
+				.get('/keystone/api/' + self.props.refList.path + '/' + input + '?simple' + treeMode)
 				.set('Accept', 'application/json')
 				.end(function (err, res) {
 					if (err) throw err;
@@ -117,8 +116,9 @@ module.exports = Field.create({
 	},
 
 	getOptions: function(input, callback) {
+		var treeMode = this.props.treeMode ? "treemode&id=" + Keystone.item_id : "";
 		superagent
-			.get('/keystone/api/' + this.props.refList.path + '/autocomplete?' + this.buildOptionQuery(input))
+			.get('/keystone/api/' + this.props.refList.path + '/autocomplete?' + this.buildOptionQuery(input) + treeMode)
 			.set('Accept', 'application/json')
 			.end(function (err, res) {
 				if (err) throw err;
@@ -180,12 +180,11 @@ module.exports = Field.create({
 		
 		if (!this.props.many && this.props.value) {
 			body.push(
-				<a href={'/keystone/' + this.props.refList.path + '/' + this.props.value} className='btn btn-link btn-goto-linked-item'>
+				<a href={'/keystone/' + this.props.refList.path + '/' + this.props.value + "?req_from_path=" + Keystone.list.path + "&req_from_id=" + Keystone.item_id} className='btn btn-link btn-goto-linked-item'>
 					view {this.props.refList.singular.toLowerCase()}
 				</a>
 			);
 		}
-		
 		return body;
 	}
 	

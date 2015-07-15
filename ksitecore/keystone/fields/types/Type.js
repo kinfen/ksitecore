@@ -27,6 +27,7 @@ function Field(list, path, options) {
 	this.type = this.constructor.name;
 	this.options = utils.options(this.defaults, options);
 	this.label = options.label || utils.keyToLabel(this.path);
+	this.treeMode = options.treeMode || false;
 	this.typeDescription = options.typeDescription || this.typeDescription || this.type;
 
 	// Add the field to the schema
@@ -73,6 +74,7 @@ Field.prototype.getOptions = function() {
 		this.__options = {};
 		
 		var optionKeys = [
+			'treeMode',
 			'path',
 			'paths',
 			'type',
