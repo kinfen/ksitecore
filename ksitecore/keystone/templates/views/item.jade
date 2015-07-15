@@ -9,10 +9,10 @@ block css
 block js
 	script.
 		Keystone.list = !{JSON.stringify(list.getOptions())};
-		Keystone.sublist = "#{list.path}";
-		Keystone.sublist_id = "#{item.parent}";
+		Keystone.parent_id = "#{item.parent}";
 		Keystone.wysiwyg = { options: !{JSON.stringify(wysiwygOptions)} };
-		Keystone.itemId = '!{item.id}';
+		Keystone.item_id = '!{item.id}';
+		Keystone.formData = {};
 	script(src='/keystone/js/packages.js')
 	script(src='/keystone/js/fields.js')
 	script(src='/keystone/js/item.js')
@@ -20,6 +20,8 @@ block js
 block content
 	// Attach point for new React View
 	div#item-view
+
+	script.
 	
 	if showRelationships
 		h2.relationship-heading.form-heading Relationships

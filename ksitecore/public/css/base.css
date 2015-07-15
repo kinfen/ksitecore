@@ -57,6 +57,9 @@ body > .container {
 code {
   font-size: 80%;
 }
-#item-frame{
-
+.item-form-pre{
+	width: 100%;
+}
+#item-form-frame{
+	width: 100%;
 }

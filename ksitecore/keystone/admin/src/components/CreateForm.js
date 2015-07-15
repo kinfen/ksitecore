@@ -6,7 +6,7 @@ var _ = require('underscore'),
 var Form = React.createClass({
 	
 	displayName: 'CreateForm',
-	
+	createSuccess : false,
 	getDefaultProps: function() {
 		return {
 			err: null,
@@ -49,10 +49,28 @@ var Form = React.createClass({
 		if (this.refs.focusTarget) {
 			this.refs.focusTarget.focus();
 		}
+		var self = this;
+		parent.$('#item-modal-pre').on('hidden.bs.modal', function (e) {
+		  // do something...
+			if (self.createSuccess)
+			{
+				parent.$('#item-modal').modal();
+			}
+			self.setState({
+				values:self.getInitialState()
+			})
+		});
+		parent.$('#item-modal').on('hidden.bs.modal', function(e){
+			self.createSuccess = false;
+	        parent.$("#item-form-frame").attr("src", "");
+		});
+		
 	},
-
+	
 	componentWillUnmount: function() {
 		document.body.style.overflow = this._bodyStyleOverflow;
+		parent.$('#item-modal-pre').on('hidden.bs.modal', null);
+		parent.$('#item-modal').on('hidden.bs.modal', null);
 	},
 	
 	getFieldProps: function(field) {
@@ -63,7 +81,112 @@ var Form = React.createClass({
 		props.mode = 'create';
 		return props;
 	},
-	
+	createItem:function(e){
+		var self = this;
+		var data = this.props.values;
+		data[Keystone.csrf.key] = Keystone.csrf.value;
+		var l = parent.Ladda.create(e.currentTarget);
+		l.start();
+	    $.ajax({ 
+	      type: "POST", 
+	      url: "/ksitecore/api/" + Keystone.template.path + "/create", 
+	      data: data, 
+	      dataType: "json", 
+	      success: function (data) { 
+	        console.log(data);
+	        l.stop();
+	        if (data.state === 1)
+	        {
+	        		self.createSuccess = true;
+	        		//parent.$("#item-modal-pre .modal-footer").prepend('<div class="alert alert-danger pull-left" role="alert">' + data.msg + '</div>');
+	          	parent.$("#item-modal-pre").modal('hide');
+	          	parent.$("#item-form-frame").attr("height", parent.$(window).height() - 180);
+	          	parent.$("#item-form-frame").attr("src", "/keystone/" + data.path + "/" + data.item._id);
+	         
+	        }
+	        else
+	        {
+	        		self.createSuccess = false;
+	        		parent.$("#item-modal-pre .modal-footer").prepend('<div class="alert alert-danger pull-left" role="alert">' + data.msg + '</div>');
+	        }
+	      }, 
+	      error: function (message) { 
+	        console.log("提交数据失败！"); 
+	      } 
+	    });
+
+	},
+	saveItem(e)
+	{
+		var data = parent.$("#item-form-frame")[0].contentWindow.Keystone.formData;
+		var csrfKey = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.key;
+		var csrfValue = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.value;
+		var id = parent.$("#item-form-frame")[0].contentWindow.Keystone.item_id;
+		var list = parent.$("#item-form-frame")[0].contentWindow.Keystone.list;
+		var extendData = {action:"update"};
+		extendData[csrfKey] = csrfValue;
+		_.extend(data, extendData);
+		var l = parent.Ladda.create(e.currentTarget);
+		l.start();
+	    $.ajax({ 
+	      type: "POST", 
+	      url: "/ksitecore/api/" + list.path + "/update/" + id, 
+	      data: data, 
+	      dataType: "json", 
+	      success: function (data) { 
+	        console.log(data);
+	        console.log("haha");
+	        l.stop();
+	        if (data.state === 1)
+	        {
+	          	parent.$("#item-modal").modal('hide');
+	         
+	        }
+	      }, 
+	      error: function (message) { 
+	        console.log("提交数据失败！"); 
+	      } 
+	    });
+		
+		
+	},
+	deleteItem:function(e)
+	{
+		
+		var csrfKey = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.key;
+		var csrfValue = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.value;
+		var id = parent.$("#item-form-frame")[0].contentWindow.Keystone.item_id;
+		var list = parent.$("#item-form-frame")[0].contentWindow.Keystone.list;
+		var csrfObj = {};
+		csrfObj[csrfKey] = csrfValue;
+		parent.deleteItem(e.currentTarget, list.path, id, csrfObj);
+	},
+	closeModalWithID:function(id){
+		console.log(id);
+		console.log(window);
+		parent.$(id).modal('hide');
+	},
+	renderToolbar: function() {
+		
+		var toolbar = {};
+		
+		if (!this.props.list.noedit) {
+			toolbar.save = <button type="submit" className="btn btn-primary ladda-button" data-style="expand-right" onClick={this.saveItem.bind(this)}>Save</button>;
+			// TODO: Confirm: Use React & Modal
+			toolbar.reset = <a href={parent.$('#item-form-frame').attr("src")} className="btn btn-warning" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
+		}
+		if (!this.props.list.noedit && !this.props.list.nodelete) {
+			// TODO: Confirm: Use React & Modal
+			toolbar.del = <a className="btn btn-danger ladda-button" data-style="expand-right" onClick={this.deleteItem.bind(this)} data-confirm={'Are you sure you want to delete this?' + this.props.list.singular.toLowerCase()}>delete {this.props.list.singular.toLowerCase()}</a>;
+		}
+		
+		return (
+			<div>
+				{toolbar}
+			</div>
+		);
+		
+	},
 	render: function() {
 		
 		var errors = null,
@@ -73,7 +196,7 @@ var Form = React.createClass({
 			nameField = this.props.list.nameField,
 			focusRef;
 		
-		var modalClass = 'modal modal-md' + (this.props.animate ? ' animate' : '');
+		var modalClass = 'modal fade';
 		
 		if (this.props.err && this.props.err.errors) {
 			var msgs = {};
@@ -120,13 +243,11 @@ var Form = React.createClass({
 		
 		return (
 			<div>
-				<div className={modalClass}>
-					<div className="modal-dialog">
-						<form className="modal-content" encType="multipart/form-data" method="post" action={formAction}>
-							<input type="hidden" name="action" value="create" />
-							<input type="hidden" name={Keystone.csrf.key} value={Keystone.csrf.value} />
+				<div className={modalClass} id="item-modal-pre">
+					<div className="modal-dialog modal-lg">
+						<div className="modal-content">
 							<div className="modal-header">
-								<button type="button" className="modal-close" onClick={this.props.onCancel}></button>
+								<button type="button" className="modal-close" onClick={this.closeModalWithID.bind(this, '#item-modal-pre')}></button>
 								<div className="modal-title">Create a new {list.singular}</div>
 							</div>
 							<div className="modal-body">
@@ -134,13 +255,28 @@ var Form = React.createClass({
 								{form}
 							</div>
 							<div className="modal-footer">
-								<button type="submit" className="btn btn-create">Create</button>
-								<button type="button" className="btn btn-link btn-cancel" onClick={this.props.onCancel}>cancel</button>
+								<button type="submit" className="btn btn-primary ladda-button" data-style="expand-right" onClick={this.createItem.bind(this)}>Create</button>
+								<button type="button" className="btn btn-default" onClick={this.closeModalWithID.bind(this, '#item-modal-pre')}>cancel</button>
 							</div>
-						</form>
+						</div>
 					</div>
 				</div>
-				<div className="modal-backdrop"></div>
+				<div className={modalClass} id="item-modal">
+					<div className="modal-dialog modal-lg">
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="modal-close" onClick={this.closeModalWithID.bind(this, '#item-modal')}></button>
+								<div className="modal-title">Modify Item</div>
+							</div>
+							<div className="modal-body">
+								<iframe id="item-form-frame"  src=""  width="100%" frameborder="0"></iframe>
+							</div>
+							<div className="modal-footer">
+								{this.renderToolbar()}
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}

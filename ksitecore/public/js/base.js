@@ -22,5 +22,50 @@ Date.prototype.Format = function(fmt)
     if(new RegExp("("+ k +")").test(fmt))   
   fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
   return fmt;   
-}  
+}
+function viewItem(path, id)
+{
+	console.log('hihi');
+	$("#item-form-frame").attr("height", $(window).height() - 180);
+	$("#item-form-frame").attr("src", "/keystone/" + path + "/" + id);
+	$('#item-modal').modal();
+}
+function deleteItem(btnRef, path, id, csrfObj)
+{
+	//delete function can appear anywhere, so I pick it out from createform.js
+	
+	if (!confirm('do you want to remove ' + path + " " + id))
+	{
+		return;
+	}
+	
+	var extendData = {action:"delete"};
+	_.extend(extendData, csrfObj);
+	var l = parent.Ladda.create(btnRef);
+	l.start();
+    $.ajax({ 
+      type: "POST", 
+      url: "/ksitecore/api/" + path + "/delete/" + id, 
+      data: extendData, 
+      dataType: "json", 
+      success: function (data) { 
+        console.log(data);
+        console.log("haha");
+        l.stop();
+        if (data.state === 1)
+        {
+          	$("#item-modal").modal('hide');
+        }
+      }, 
+      error: function (message) { 
+        console.log("提交数据失败！"); 
+        l.stop();
+      } 
+    });
+}
+
+
+
+
+
 

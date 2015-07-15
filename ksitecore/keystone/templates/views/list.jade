@@ -1,130 +1,129 @@
 extends ../layout/base
-
 include ../mixins/rows
 include ../mixins/pagination
-
-
 block content
- .panel.panel-default
-   .panel-heading #{template.path + ' list'}
-   .panel-body
-     .page-header
-       h1 #{category.name}
-       .text-right 
-         label total #{items.total} items
-     .tableBar
-       if !template.get('nocreate')
-         .create-item
-           if template.get('autocreate')
-             .toolbar
-               a(href='?new' + csrf_query).btn.btn-default.btn-create.btn-create-item
-                 span.ion-plus-round
-                 |  Create #{template.singular}
-           else
-               .toolbar
-                 .row
-                   .col-xs-6
-                    #list-view
-                   .col-xs-6
-                       .btn-group.tableAction
-                         a.btn.btn-default(role="button" href="/keystone/#{list.path}/#{category.id}")
-                           span.glyphicon.glyphicon-edit
-                           span  &nbsp;Edit 
-                         a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{category.id}?type=#{list.path}")
-                           span.glyphicon.glyphicon-list-alt
-                           span  &nbsp;Edit Sub Categories
-                       .clear
-       br
-     table#table
-     if items.results.length == 0
-       .no-list
-         h3 
-           span.label.label-primary no content with this template!
-     include ../component/pager
+	.panel.panel-default
+		.panel-heading #{template.path + ' list'}
+		.panel-body
+			.page-header
+				h1 #{category.name}
+				.text-right
+					label total #{items.total} items
+				.tableBar
+					if !template.get('nocreate')
+						.create-item
+							if template.get('autocreate')
+								.toolbar
+									a(href='?new' + csrf_query).btn.btn-default.btn-create.btn-create-item
+									span.ion-plus-round
+										|  Create #{template.singular}
+							else
+								.toolbar
+									.row
+										.col-xs-6
+											#list-view
+										.col-xs-6
+											.btn-group.tableAction.pull-right
+												a.btn.btn-default(role="button" onClick="parent.viewItem(Keystone.list.path, Keystone.category_id)")
+													span.glyphicon.glyphicon-edit
+													span  &nbsp;Edit
+												a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{category.id}?type=#{list.path}")
+													span.glyphicon.glyphicon-list-alt
+													span  &nbsp;Edit Sub Categories
+												.clear
+			include ../component/table_toolbar
+			table#table
+			if items.results.length == 0
+				.no-list
+					h3 
+						span.label.label-primary no content with this template!
+			include ../component/pager
 
-     button(onclick="callItem(12)") Item
+			button(onclick="callItem(12)") Item
 
-block js 
-  script(src='/keystone/js/views/list.js')
-  script(src='/keystone/js/lib/browserified/querystring.js')
-  script(src='/keystone/js/lib/browserified/queryfilter.js')
-  script(src='/js/bootstrap-table.min.js')
-  script.
-    Keystone.list = !{JSON.stringify(list.getOptions())};
-    Keystone.template = !{JSON.stringify(template.getOptions())};
-    Keystone.category_id = "#{category.id}";
-    Keystone.wysiwyg = { options: !{JSON.stringify(wysiwygOptions)} };
-    //Support for the POST-based create process
-    Keystone.showCreateForm = !{JSON.stringify(showCreateForm)};
-    Keystone.createFormData = !{JSON.stringify(submitted)};
-    Keystone.createFormErrors = !{JSON.stringify(createErrors || null)};
-    Keystone.template.cols = !{JSON.stringify(colPaths)};
-    Keystone.template.perPage = !{ Number(template.perPage) || 50 };
-    Keystone.items = !{ JSON.stringify(items.results) };
-    Keystone.search = "#{search}";
-    Keystone.filters = !{ JSON.stringify(filters) };
-    Keystone.sort = "#{sort.by}";
-    Keystone.query = "#{query}";
-    Keystone.csrf_query = "!{csrf_query}";
-  script(src='/keystone/js/packages.js')
-  script(src='/keystone/js/fields.js')
-  script(src='/keystone/js/list.js')
-  script(src='/keystone/js/lib/underscore/underscore-min.js')
-  script(src='/keystone/js/lib/moment/moment-1.7.2.min.js')
-  script(src='/js/bootstrap.min.js')
-  script.
-   function operateFormatter(value, row, index) {
-        return [
-            '<a class="like" href="javascript:void(0)" title="Like">',
-                '<i class="glyphicon glyphicon-heart"></i>',
-            '</a>',
-            '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
-                '<i class="glyphicon glyphicon-edit"></i>',
-            '</a>',
-            '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
-                '<i class="glyphicon glyphicon-remove"></i>',
-            '</a>'
-        ].join('');
-    }
+block js
+	script(src='/keystone/js/views/list.js')
+	script(src='/keystone/js/lib/browserified/querystring.js')
+	script(src='/keystone/js/lib/browserified/queryfilter.js')
+	script(src='/js/bootstrap-table.min.js')
+	script.
+		Keystone.list = !{JSON.stringify(list.getOptions())};
+		Keystone.template = !{JSON.stringify(template.getOptions())};
+		Keystone.category_id = "#{category.id}";
+		Keystone.wysiwyg = { options: !{JSON.stringify(wysiwygOptions)} };
+		//Support for the POST-based create process
+		Keystone.showCreateForm = !{JSON.stringify(showCreateForm)};
+		Keystone.createFormData = !{JSON.stringify(submitted)};
+		Keystone.createFormErrors = !{JSON.stringify(createErrors || null)};
+		Keystone.template.cols = !{JSON.stringify(colPaths)};
+		Keystone.template.perPage = !{ Number(template.perPage) || 50 };
+		Keystone.items = !{ JSON.stringify(items.results) };
+		Keystone.search = "#{search}";
+		Keystone.filters = !{ JSON.stringify(filters) };
+		Keystone.sort = "#{sort.by}";
+		Keystone.query = "#{query}";
+		Keystone.csrf_query = "!{csrf_query}";
+	script(src='/keystone/js/packages.js')
+	script(src='/keystone/js/fields.js')
+	script(src='/keystone/js/list.js')
+	script(src='/keystone/js/lib/underscore/underscore-min.js')
+	script(src='/keystone/js/lib/moment/moment-1.7.2.min.js')
+	script.
+		var data = Keystone.items;
+		data = _.map(data, function(obj){
+			return _.mapObject(obj, function(value,key){
+					if (typeof(value) == "object" && value.name)
+					{
+						return value.name;
+					}
+					else if (key == "publishedDate")
+					{
+						return moment(value).format('YYYY-MM-DD');
+					}
+					return value;
+				})
+		});
+		$('#table').bootstrapTable({
+			columns: !{JSON.stringify(columns)},
+			classes : "table table-hover table-no-bordered",
+			striped : true,
+			clickToSelect : true,
+			minimumCountColumns: 1,
+			showColumns: true,
+			toolbar : "#tool-bar",
+			data: data
+		}).on('click-row.bs.table', function (e, row, $element) {
+				//- console.log(this);
+				//- console.log($(this).bootstrapTable("getSelections"));
+				//- console.log(e);
+				//- console.log(row);
+				//- console.log($element);
+		});
+		$("#table").on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
+			console.log("hoho");
+			var selections = $("#table").bootstrapTable("getSelections");
+			if (selections.length == 1){
+				$('#tool-bar li.edit').removeClass("disabled");
+				$('#tool-bar li.edit a').css("pointer-events", "");
+				
+			}
+			else{
+				$('#tool-bar li.edit').addClass("disabled");
+				$('#tool-bar li.edit a').css("pointer-events", "none");
 
-   var data = Keystone.items;
-   //去除data里面的object值
-   data = _.map(data, function(obj){
-    return _.mapObject(obj, function(value,key){
-      if (typeof(value) == "object" && value.name)
-      {
-        return value.name;
-      }
-      else if (key == "publishedDate")
-      {
-        return moment(value).format('YYYY-MM-DD');
-      }
-      return value;
-    })
-   });
+			}
+		})
+		function editItemHandler()
+		{
+			var selections = $("#table").bootstrapTable("getSelections");
+			if (selections.length == 1){
+				//- $('.action-sheet').dropdown('toggle');
+				var obj = selections[0];
+				parent.viewItem(Keystone.template.path, obj._id);
+			}
+			console.log(selections);
+		}
 
-   $('#table').bootstrapTable({
-    columns: !{JSON.stringify(columns)},
-    data: data,
-    clickToSelect:true,
-    showColumns: true,
-    showRefresh: true,
-    minimumCountColumns: 2,
-
-   }).on('click-row.bs.table', function (e, row, $element) {
-    console.log(row._id);
-    callItem(row._id);
-   })
-
-   var item_modal = parent.document.body.querySelector("#item-modal");
-   var item_frame = parent.document.body.querySelector("#item-frame");
-   function callItem(id)
-   {
-    $(item_frame).attr("height", $(window).height() - 180);
-    $(item_frame).attr("src", "/keystone/#{template.path}/" + id);
-    $(item_modal ).modal({
-    });
-   }
-   parent.document.all("content-frame").height=document.body.scrollHeight;
+		parent.document.all("content-frame").height=document.body.scrollHeight;
 block	css
- link(rel="stylesheet", href='/css/bootstrap-table.min.css')
+	link(rel="stylesheet", href='/css/bootstrap-table.min.css')
