@@ -19,15 +19,20 @@ html(lang='en')
     script(src='/keystone/js/sitecore/ladda/ladda.min.js')
 
   body
-    include ../component/nav
-
-    block content
-    script(src='/keystone/js/sitecore/jquery-2.1.3.min.js')
-    script(src='/keystone/js/sitecore/bootstrap.min.js')
-    script(src='/keystone/js/lib/underscore/underscore-min.js')
-    script(src='/keystone/js/sitecore/bootstrap-treeview.min.js')
-    script(src='/keystone/js/sitecore/base.js')
-    
-    block js
+    #auto
+        #menu-content.pull-left
+            #tree-view0
+        #site-content.pull-right
+            .static-content
+                include ../component/nav
+                block content
+                script(src='/keystone/js/sitecore/jquery-2.1.3.min.js')
+                script(src='/keystone/js/sitecore/bootstrap.min.js')
+                script(src='/keystone/js/lib/underscore/underscore-min.js')
+                script(src='/keystone/js/sitecore/bootstrap-treeview.min.js')
+                script(src='/keystone/js/sitecore/jquery.transit.js')
+                script(src='/keystone/js/sitecore/base.js')
+                
+                block js
 
 

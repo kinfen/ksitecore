@@ -27,9 +27,8 @@ html
 	body(id='page-' + page)
 		include ../layout/loading
 		#wrap
-			#body: .container
+			#body: .container-fluid
 				block intro
-				+flash-messages(messages)
 				block content
 
 		//- Common

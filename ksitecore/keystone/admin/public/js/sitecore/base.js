@@ -5,7 +5,25 @@
 // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423   
 // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18  
 
-
+$('#site-content .static-content').width($(window).width());
+$('#menu-content #tree-view0').width($(window).width() * .8);
+var leftMenuFold = true;
+function toggleLeftMenu()
+{
+	if (leftMenuFold)
+	{
+		$("#menu-content").transit({width:"80%"});
+		$("#site-content").transit({width:"20%"});
+	}
+	else{
+		$("#menu-content").transit({width:"0"});
+		$("#site-content").transit({width:"100%"});
+	}
+	
+	leftMenuFold = !leftMenuFold;
+	
+	
+}
 
 function viewItem(path, id)
 {

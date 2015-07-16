@@ -7,6 +7,9 @@ body{
 	margin-bottom: 60px;
 
 }
+#auto{
+	overflow: hidden;
+}
 iframe{
 	border: 0;
 	width:100%;
@@ -68,5 +71,35 @@ code {
 	margin-top: 0;
 }
 #content-frame{
-	height: 500px;
+	height: 300px;
+}
+
+#body > .container-fluid{
+	padding: 0;
+}
+
+
+#menu-content{
+	width: 0;
+	overflow: hidden;
+}
+#site-content{
+	width: 100%;
+}
+#site-content .static-content{
+	width: 768px;
+}
+.navbar-leftmenu{
+	float: left;
+}
+@media (min-width: 768px){
+	#menu-content{
+		width: 0%;
+	}
+	#site-content{
+		width: 100%;
+	}
+	#site-content .static-content{
+		width: 100%;
+	}
 }

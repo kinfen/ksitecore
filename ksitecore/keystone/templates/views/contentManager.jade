@@ -8,7 +8,7 @@ block content
         .col-sm-9
           iframe(id="content-frame" frameborder="0" src="/ksitecore/welcome")
     .footer
-      .container
+      .container-fluid
         p.text-muted Copyright @ KStudio.
     #item-view-modal
     //
@@ -18,18 +18,19 @@ block content
 append js
     script(src='/keystone/js/packages.js')
     script(type='text/javascript').
-
+      var treeview_tag = $(window).width() < 768 ? "#tree-view0" : "#treeview1";
+      
       var menuData = eval(!{items});
-      $('#treeview1').treeview({
+      $(treeview_tag).treeview({
         data: menuData,
         levels:0,
         selectedColor: "white",
         selectedBackColor: "#333333",
         onNodeSelected: function(event, node) {
-          console.log(event);
+            if (!leftMenuFold)
+            {
+              toggleLeftMenu();
+            }
             $("#content-frame").attr("src", "/ksitecore/#{list.path}/list/" + node._id + "?type=" + node.template);
           }
-      });
-      var node = _.find(menuData, function(obj){
-        return obj._id === '559ce3882b48e8870d12058a';
       });
