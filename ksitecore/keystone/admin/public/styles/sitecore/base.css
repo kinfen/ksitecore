@@ -67,3 +67,6 @@ code {
 	visibility:hidden;
 	margin-top: 0;
 }
+#content-frame{
+	height: 500px;
+}
