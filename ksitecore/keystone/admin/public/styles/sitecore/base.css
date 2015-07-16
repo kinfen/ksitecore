@@ -63,3 +63,7 @@ code {
 #item-form-frame{
 	width: 100%;
 }
+#body{
+	visibility:hidden;
+	margin-top: 0;
+}

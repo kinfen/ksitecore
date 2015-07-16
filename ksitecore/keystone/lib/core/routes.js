@@ -113,8 +113,7 @@ function routes(app) {
 	app.post('/keystone/api/:list/delete', initList(), require('../../admin/api/list/delete'));
 	app.get('/keystone/api/:list/:id', initList(), require('../../admin/api/item/get'));
 	app.post('/keystone/api/:list/:id/delete', initList(), require('../../admin/api/item/delete'));
-	app.all('/ksitecore/api/:list/:action(update|delete)/:id', initList(), require('../../admin/api/item/CRUD'));
-	app.all('/ksitecore/api/:list/:action(create)', initList(), require('../../admin/api/item/CRUD'));
+	app.all('/ksitecore/api/:list/:action(create|delete|update)', initList(), require('../../admin/api/item/CRUD'));
 	debug('setting generic Lists download route');
 	app.all('/keystone/download/:list', initList(), require('../../admin/api/download'));
 

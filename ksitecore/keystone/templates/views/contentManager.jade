@@ -18,20 +18,25 @@ block content
     // Placed at the end of the document so the pages load faster
 append js
     script(src='/keystone/js/packages.js')
-    script(src='/js/bootstrap-treeview.js')
-    script(src='/js/bootstrap-contextmenu.js')
     script(type='text/javascript').
 
-      var menuData = !{items};
+      var menuData = eval(!{items});
       $('#treeview1').treeview({
         data: menuData,
         levels:0,
         selectedColor: "white",
         selectedBackColor: "#333333",
         onNodeSelected: function(event, node) {
+          console.log(event);
             $("#content-frame").attr("src", "/ksitecore/#{list.path}/list/" + node._id + "?type=" + node.template);
           }
       });
+      var node = _.find(menuData, function(obj){
+        return obj._id === '559ce3882b48e8870d12058a';
+      });
+      console.log($('#treeview1').treeview('getNode', 2));
+
+      $('#treeview1').treeview('selectNode', 2);
       $(function() {
         $('#loading_btn').click(function(e){
           e.preventDefault();

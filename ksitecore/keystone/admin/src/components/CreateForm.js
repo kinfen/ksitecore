@@ -7,6 +7,7 @@ var Form = React.createClass({
 	
 	displayName: 'CreateForm',
 	createSuccess : false,
+	didAction : false,
 	getDefaultProps: function() {
 		return {
 			err: null,
@@ -15,7 +16,6 @@ var Form = React.createClass({
 			type: null
 		};
 	},
-	
 	getInitialState: function() {
 		
 		var values = this.props.values;
@@ -63,6 +63,20 @@ var Form = React.createClass({
 		parent.$('#item-modal').on('hidden.bs.modal', function(e){
 			self.createSuccess = false;
 	        parent.$("#item-form-frame").attr("src", "");
+	        console.log(self.didAction);
+	        if (self.didAction)
+	        {
+		        	if (Keystone.template.path === "categories")
+				{
+					parent.window.location.reload();
+				}
+				else
+				{
+					window.location.reload();
+				}
+	        }
+	        
+	        
 		});
 		
 	},
@@ -81,10 +95,17 @@ var Form = React.createClass({
 		props.mode = 'create';
 		return props;
 	},
+	refreshFormFrame:function(e)
+	{
+		parent.$('#item-form-frame')[0].contentWindow.location.reload();
+	},
 	createItem:function(e){
 		var self = this;
 		var data = this.props.values;
-		data[Keystone.csrf.key] = Keystone.csrf.value;
+		var extendData = {};
+		extendData[Keystone.csrf.key] = Keystone.csrf.value;
+		extendData.parent = Keystone.category_id;
+		_.extend(data, extendData);
 		var l = parent.Ladda.create(e.currentTarget);
 		l.start();
 	    $.ajax({ 
@@ -98,60 +119,65 @@ var Form = React.createClass({
 	        if (data.state === 1)
 	        {
 	        		self.createSuccess = true;
+	        		self.didAction = true;
 	        		//parent.$("#item-modal-pre .modal-footer").prepend('<div class="alert alert-danger pull-left" role="alert">' + data.msg + '</div>');
 	          	parent.$("#item-modal-pre").modal('hide');
 	          	parent.$("#item-form-frame").attr("height", parent.$(window).height() - 180);
 	          	parent.$("#item-form-frame").attr("src", "/keystone/" + data.path + "/" + data.item._id);
-	         
+	         	
 	        }
 	        else
 	        {
 	        		self.createSuccess = false;
-	        		parent.$("#item-modal-pre .modal-footer").prepend('<div class="alert alert-danger pull-left" role="alert">' + data.msg + '</div>');
+	        		parent.showMsgWithModal('#item-modal-pre', 'danger', data.msg);
+	        		
 	        }
 	      }, 
-	      error: function (message) { 
-	        console.log("提交数据失败！"); 
+	      error: function (message) {
+	      	parent.showMsgWithModal('#item-modal-pre', 'danger', data.msg);
 	      } 
 	    });
 
 	},
 	saveItem(e)
 	{
+		var self = this;
 		var data = parent.$("#item-form-frame")[0].contentWindow.Keystone.formData;
 		var csrfKey = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.key;
 		var csrfValue = parent.$("#item-form-frame")[0].contentWindow.Keystone.csrf.value;
 		var id = parent.$("#item-form-frame")[0].contentWindow.Keystone.item_id;
 		var list = parent.$("#item-form-frame")[0].contentWindow.Keystone.list;
-		var extendData = {action:"update"};
+		var extendData = {action:"update", id:id};
 		extendData[csrfKey] = csrfValue;
 		_.extend(data, extendData);
+		data = JSON.stringify(data) 
 		var l = parent.Ladda.create(e.currentTarget);
 		l.start();
-	    $.ajax({ 
+	    $.ajax({
+	    	  contentType: "application/json; charset=utf-8",
 	      type: "POST", 
-	      url: "/ksitecore/api/" + list.path + "/update/" + id, 
+	      url: "/ksitecore/api/" + list.path + "/update", 
 	      data: data, 
 	      dataType: "json", 
 	      success: function (data) { 
 	        l.stop();
 	        if (data.state === 1)
 	        {
+	        		self.didAction = true;
 	        		var form_obj = parent.$("#item-form-frame")[0].contentWindow.Keystone.req_from;
 	        		if (_.has(form_obj, "req_from_path") && _.has(form_obj, "req_from_id"))
 	        		{
-	        			$(parent.$("#item-form-frame")[0].contentDocument.body.querySelector("#item-view")).prepend('<div class="alert alert-success" role="alert">' + data.msg + ' <a href="javascript:parent.$(\'#item-form-frame\')[0].contentWindow.history.back()" class="btn btn-link">Go Back</a></div>');
+	        			parent.showMsgWithModal("#item-form-frame", 'success', data.msg + ' <a href="javascript:parent.$(\'#item-form-frame\')[0].contentWindow.history.back()" class="btn btn-link">Go Back</a>');
 	        			parent.$("#item-form-frame")[0].contentWindow.scrollTo(0, 0);
 	        		}
 	        		else
 	        		{
 	        			parent.$("#item-modal").modal('hide');
 	        		}
-	          	
-	         
 	        }
 	        else{
-	        		parent.$("#item-modal .modal-footer").prepend('<div class="alert alert-danger pull-left" role="alert">' + data.msg + '</div>');
+	        		parent.showMsgWithModal('#item-form-frame', 'danger', data.msg);
+
 	        }
 	      }, 
 	      error: function (message) { 
@@ -170,11 +196,17 @@ var Form = React.createClass({
 		var list = parent.$("#item-form-frame")[0].contentWindow.Keystone.list;
 		var csrfObj = {};
 		csrfObj[csrfKey] = csrfValue;
-		parent.deleteItem(e.currentTarget, list.path, id, csrfObj);
+		parent.deleteItem(e.currentTarget, list.path, id, csrfObj, function(result){
+			if (result)
+			{
+				parent.$("#item-modal").modal('hide');
+			}
+			else{
+				parent.showMsgWithModal("#item-form-frame", "danger", "提交数据失败！");
+			}
+		});
 	},
 	closeModalWithID:function(id){
-		console.log(id);
-		console.log(window);
 		parent.$(id).modal('hide');
 	},
 	renderToolbar: function() {
@@ -184,7 +216,7 @@ var Form = React.createClass({
 		if (!this.props.list.noedit) {
 			toolbar.save = <button type="submit" className="btn btn-primary ladda-button" data-style="expand-right" onClick={this.saveItem.bind(this)}>Save</button>;
 			// TODO: Confirm: Use React & Modal
-			toolbar.reset = <a href={parent.$('#item-form-frame').attr("src")} className="btn btn-warning" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
+			toolbar.reset = <a onClick={this.refreshFormFrame.bind(this)} className="btn btn-warning" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
 		}
 		if (!this.props.list.noedit && !this.props.list.nodelete) {
 			// TODO: Confirm: Use React & Modal

@@ -1,5 +1,6 @@
 var keystone = require('../../../');
 var async = require("async");
+var _ = require("underscore");
 module.exports = function(req, res) {
 
 	
@@ -54,10 +55,10 @@ module.exports = function(req, res) {
 	else if( req.method === 'POST' && req.params.action === 'update' && !req.list.get('noedit'))
 	{
 		if (!checkCSRF()) return ERRORJSON("CSRF failure");
-		var itemQuery = req.list.model.findById(req.params.id).select();
+		var itemQuery = req.list.model.findById(req.body.id).select();
 
 		itemQuery.exec(function(err, item) {
-			item.getUpdateHandler(req).process(req.body, { flashErrors: true, logErrors: true }, function(err) {
+			item.getUpdateHandler(req).process(req.body, { logErrors: true }, function(err) {
 				if (err) {
 					return ERRORJSON(err);
 				}
@@ -74,13 +75,12 @@ module.exports = function(req, res) {
 	{
 		if (!checkCSRF()) return ERRORJSON("CSRF failure");
 		
-		var ids = eval(req.params.id);
-		
-		if (typeof(ids) == "string")
+		var id = req.body.id;
+		if (typeof(id) == "string")
 		{
-			if (req.params.id === req.user.id) return ERRORJSON('error! You can\'t delete your own ' + destList.singular + '.');
+			if (id === req.user.id) return ERRORJSON('error! You can\'t delete your own ' + destList.singular + '.');
 		
-			destList.model.findById(req.params.id).exec(function (err, item) {
+			destList.model.findById(id).exec(function (err, item) {
 				if (err) {
 					return ERRORJSON(err);
 				}
@@ -98,19 +98,21 @@ module.exports = function(req, res) {
 				});
 			});
 		}
-		else if (typeof(ids) == "object")
+		else if (typeof(id) == "object")
 		{
-			if (ids.indexOf(req.user.id) != -1)
+			if (id.indexOf(req.user.id) != -1)
 			{
-				ids = ids.slice(ids.indexOf(req.user.id), 1);	
+				id = ids.slice(id.indexOf(req.user.id), 1);	
 			}
-			destList.model.find().where("_id").in(ids).exec(function (err, items) {
+			destList.model.find().where("_id").in(id).exec(function (err, items) {
 				if (err) {
 					return ERRORJSON(err);
 				}
-				
+				console.log("ready for items");
+				console.log(items);
 				var fun_list = [];
-				items.each(function(item) {
+				
+				_.each(items, function (item){
 					
 					fun_list.push(function(cb){
 						item.remove(function (err) {
@@ -119,6 +121,7 @@ module.exports = function(req, res) {
 						});
 					});
 				})
+				console.log("ready for waterfall")
 				async.waterfall(fun_list, function(err){
 					return res.json({
 						state:1,

@@ -31,15 +31,10 @@ block content
 													span.glyphicon.glyphicon-list-alt
 													span  &nbsp;Edit Sub Categories
 												.clear
+			#msg
 			include ../component/table_toolbar
 			table#table
-			if items.results.length == 0
-				.no-list
-					h3 
-						span.label.label-primary no content with this template!
 			include ../component/pager
-
-			button(onclick="callItem(12)") Item
 
 block js
 	script(src='/keystone/js/views/list.js')
@@ -63,67 +58,16 @@ block js
 		Keystone.sort = "#{sort.by}";
 		Keystone.query = "#{query}";
 		Keystone.csrf_query = "!{csrf_query}";
+
+		var columns = !{JSON.stringify(columns)};
 	script(src='/keystone/js/packages.js')
 	script(src='/keystone/js/fields.js')
 	script(src='/keystone/js/list.js')
 	script(src='/keystone/js/lib/underscore/underscore-min.js')
 	script(src='/keystone/js/lib/moment/moment-1.7.2.min.js')
+	script(src='/keystone/js/sitecore/table_list_handle.js')
+	script(src='/keystone/js/sitecore/inner.js')
 	script.
-		var data = Keystone.items;
-		data = _.map(data, function(obj){
-			return _.mapObject(obj, function(value,key){
-					if (typeof(value) == "object" && value.name)
-					{
-						return value.name;
-					}
-					else if (key == "publishedDate")
-					{
-						return moment(value).format('YYYY-MM-DD');
-					}
-					return value;
-				})
-		});
-		$('#table').bootstrapTable({
-			columns: !{JSON.stringify(columns)},
-			classes : "table table-hover table-no-bordered",
-			striped : true,
-			clickToSelect : true,
-			minimumCountColumns: 1,
-			showColumns: true,
-			toolbar : "#tool-bar",
-			data: data
-		}).on('click-row.bs.table', function (e, row, $element) {
-				//- console.log(this);
-				//- console.log($(this).bootstrapTable("getSelections"));
-				//- console.log(e);
-				//- console.log(row);
-				//- console.log($element);
-		});
-		$("#table").on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
-			console.log("hoho");
-			var selections = $("#table").bootstrapTable("getSelections");
-			if (selections.length == 1){
-				$('#tool-bar li.edit').removeClass("disabled");
-				$('#tool-bar li.edit a').css("pointer-events", "");
-				
-			}
-			else{
-				$('#tool-bar li.edit').addClass("disabled");
-				$('#tool-bar li.edit a').css("pointer-events", "none");
-
-			}
-		})
-		function editItemHandler()
-		{
-			var selections = $("#table").bootstrapTable("getSelections");
-			if (selections.length == 1){
-				//- $('.action-sheet').dropdown('toggle');
-				var obj = selections[0];
-				parent.viewItem(Keystone.template.path, obj._id);
-			}
-			console.log(selections);
-		}
-
-		parent.document.all("content-frame").height=document.body.scrollHeight;
+		parent.$("iframe#content-frame").height(document.body.scrollHeight);
 block	css
 	link(rel="stylesheet", href='/css/bootstrap-table.min.css')

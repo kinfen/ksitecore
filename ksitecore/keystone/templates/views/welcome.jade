@@ -23,6 +23,8 @@ block js
     Keystone.createFormErrors = !{JSON.stringify(createErrors || null)};
     Keystone.query = "#{query}";
     Keystone.csrf_query = "!{csrf_query}";
+    parent.$("iframe#content-frame").height($(parent.window).height());
  script(src='/keystone/js/packages.js')
  script(src='/keystone/js/fields.js')
  script(src='/keystone/js/list.js')
+ script(src='/keystone/js/sitecore/inner.js')
