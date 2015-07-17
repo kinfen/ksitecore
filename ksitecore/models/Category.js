@@ -17,5 +17,5 @@ Category.add({
 	publishedDate: {label:"发布日期", type: Types.Datetime, default: Date.now }
 });
 
-Category.defaultColumns = 'name, state|20%, parent|20%, publishedDate|15%';
+Category.defaultColumns = 'name, state|20%,  publishedDate|15%';
 Category.register();

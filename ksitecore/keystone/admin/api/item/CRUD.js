@@ -14,9 +14,12 @@ module.exports = function(req, res) {
 	};
 	function ERRORJSON(msg)
 	{
+		var msgstr;
+		msgstr = typeof(msg) == "object" ? msg.message : msg;
+		
 		return res.json({
 			state:0,
-			msg:msg
+			msg:msgstr
 		})
 	}
 	var destList = req.list;

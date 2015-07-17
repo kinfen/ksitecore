@@ -63,7 +63,7 @@ var Form = React.createClass({
 		parent.$('#item-modal').on('hidden.bs.modal', function(e){
 			self.createSuccess = false;
 	        parent.$("#item-form-frame").attr("src", "");
-	        console.log(self.didAction);
+
 	        if (self.didAction)
 	        {
 		        	if (Keystone.template.path === "categories")
@@ -114,7 +114,6 @@ var Form = React.createClass({
 	      data: data, 
 	      dataType: "json", 
 	      success: function (data) { 
-	        console.log(data);
 	        l.stop();
 	        if (data.state === 1)
 	        {
@@ -176,12 +175,14 @@ var Form = React.createClass({
 	        		}
 	        }
 	        else{
+
 	        		parent.showMsgWithModal('#item-form-frame', 'danger', data.msg);
 
 	        }
 	      }, 
 	      error: function (message) { 
-	        console.log("提交数据失败！"); 
+	      	parent.showMsgWithModal('#item-form-frame', 'danger', data.msg);
+
 	      } 
 	    });
 		
@@ -213,21 +214,43 @@ var Form = React.createClass({
 		
 		var toolbar = {};
 		
-		if (!this.props.list.noedit) {
-			toolbar.save = <button type="submit" className="btn btn-primary ladda-button" data-style="expand-right" onClick={this.saveItem.bind(this)}>Save</button>;
-			// TODO: Confirm: Use React & Modal
-			toolbar.reset = <a onClick={this.refreshFormFrame.bind(this)} className="btn btn-warning" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
+		if (this.props.isMobileMode)
+		{
+			if (!this.props.list.noedit) {
+				toolbar.save = <li className="list-group-item list-group-item-success ladda-button" data-style="expand-right" onClick={this.saveItem.bind(this)}>Save</li>;
+				// TODO: Confirm: Use React & Modal
+				toolbar.reset = <li className="list-group-item list-group-item-warning" onClick={this.refreshFormFrame.bind(this)}>reset changes</li>;
+			}
+			if (!this.props.list.noedit && !this.props.list.nodelete) {
+				// TODO: Confirm: Use React & Modal
+				toolbar.del = <li className="list-group-item list-group-item-danger ladda-button" data-style="expand-right" onClick={this.deleteItem.bind(this)}>delete {this.props.list.singular.toLowerCase()}</li>;
+			}
+	
+			return (
+				<ul className="list-group">
+					{toolbar}
+				</ul>
+			);
 		}
-		if (!this.props.list.noedit && !this.props.list.nodelete) {
-			// TODO: Confirm: Use React & Modal
-			toolbar.del = <a className="btn btn-danger ladda-button" data-style="expand-right" onClick={this.deleteItem.bind(this)} data-confirm={'Are you sure you want to delete this?' + this.props.list.singular.toLowerCase()}>delete {this.props.list.singular.toLowerCase()}</a>;
+		else{
+			if (!this.props.list.noedit) {
+				toolbar.save = <button type="submit" className="btn btn-primary ladda-button" data-style="expand-right" onClick={this.saveItem.bind(this)}>Save</button>;
+				// TODO: Confirm: Use React & Modal
+				toolbar.reset = <a onClick={this.refreshFormFrame.bind(this)} className="btn btn-warning" data-confirm="Are you sure you want to reset your changes?">reset changes</a>;
+			}
+			if (!this.props.list.noedit && !this.props.list.nodelete) {
+				// TODO: Confirm: Use React & Modal
+				toolbar.del = <a className="btn btn-danger ladda-button" data-style="expand-right" onClick={this.deleteItem.bind(this)}>delete {this.props.list.singular.toLowerCase()}</a>;
+			}
+	
+			return (
+				<div>
+					{toolbar}
+				</div>
+			);
 		}
 		
-		return (
-			<div>
-				{toolbar}
-			</div>
-		);
+		
 		
 	},
 	render: function() {

@@ -18,5 +18,5 @@ Archive.add({
 	state : {label:"状态", type: Types.Select, options: config.category_states, default:config.CATEGORY_STATE_NORMAL},
 	publishedDate: {label:"发布日期", type: Date, default: Date.now },
 });
-Archive.defaultColumns = 'name, publishedDate|15%';
+Archive.defaultColumns = 'name, author|20%, publishedDate|20%';
 Archive.register();

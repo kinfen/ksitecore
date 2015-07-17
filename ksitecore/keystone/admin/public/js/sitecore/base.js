@@ -4,9 +4,21 @@
 // 例子：   
 // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423   
 // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18  
+function resizeLayout()
+{
+	if (isMobileMode())
+	{
+		$('#site-content .static-content').width($(window).width());
+		$('#menu-content #tree-view0').width($(window).width() * .8);
+		$('#menu-content #tree-view0').height(Math.max($(window).height(), $($("#content-frame")[0].contentWindow).height()));
+	}
+}
 
-$('#site-content .static-content').width($(window).width());
-$('#menu-content #tree-view0').width($(window).width() * .8);
+
+function isMobileMode(){
+	return $(window).width() < 768;
+}
+
 var leftMenuFold = true;
 function toggleLeftMenu()
 {
@@ -46,7 +58,7 @@ function deleteItem(btnRef, path, id, csrfObj, callback)
 	}
 	if (btnRef)
 	{
-		var l = parent.Ladda.create(btnRef);
+		l = Ladda.create(btnRef);
 		l.start();
 	}
 	else{
@@ -66,7 +78,7 @@ function deleteItem(btnRef, path, id, csrfObj, callback)
 		success: function (data) { 
 			if (btnRef)
 			{
-				l.shop();
+				l.stop();
 			}
 			else{
 				$("#content-frame")[0].contentWindow.hideLoading();
@@ -81,7 +93,7 @@ function deleteItem(btnRef, path, id, csrfObj, callback)
 			callback(false)
 			if (btnRef)
 			{
-				l.shop();
+				l.stop();
 			}
 			else{
 				$("#content-frame")[0].contentWindow.hideLoading();

@@ -34,58 +34,11 @@ var keystone_routes = {
 var routes = {
 	views: importRoutes('./views')
 };
-
-var initList = function(protect) {
-		return function(req, res, next) {
-			req.list = keystone.list(req.params.list);
-			if (!req.list || (protect && req.list.get('hidden'))) {
-				req.flash('error', 'List ' + req.params.list + ' could not be found.');
-				return res.redirect('/ksitecore');
-			}
-			req.page = req.query.page ? req.query.page : 1;
-			req.pageSize = req.query.perPage ? req.query.perPage : 10;
-			next();
-		};
-	};
-
-var setAuth = function (app)
-{
-	keystone.set('view cache', keystone.get('env') === 'production');
-	
-	if (keystone.get('auth') === true) {
-		
-		if (!keystone.get('signout url')) {
-			keystone.set('signout url', '/ksitecore/signout');
-		}
-		if (!keystone.get('signin url')) {
-			keystone.set('signin url', '/ksitecore/signin');
-		}
-		
-		if (!keystone.nativeApp || !keystone.get('session')) {
-			app.all('/keystone*', keystone.session.persist);
-		}
-		
-		app.all('/ksitecore/signin', require('../routes/views/signin'));
-		app.all('/ksitecore/signout', require('../routes/views/signout'));
-		app.all('/ksitecore*', keystone.session.keystoneAuth);
-		
-	} else if ('function' === typeof keystone.get('auth')) {
-		app.all('/ksitecore*', keystone.get('auth'));
-	}
-}
-
 // Setup Route Bindings
 exports = module.exports = function(app) {
 	
 	// Views
 	// Cache compiled view templates if we are in Production mode
 	
-	setAuth(app);
-
-	app.get('/ksitecore', keystone_routes.views.contentManager);
-	app.get('/ksitecore/err', routes.views.err);
-	app.get('/ksitecore/welcome', keystone_routes.views.welcome);
-	app.all('/ksitecore/:list/list', initList(true), keystone_routes.views.list);
-	app.all('/ksitecore/:list/list/:id', initList(true), keystone_routes.views.list);
 
 };

@@ -18,7 +18,7 @@ KSiteCore.prototype.init = function()
 		'brand': 'KeystoneJS',
 
 		'less': 'public',
-		'env' : "development",
+		'env' : "production",
 		'static': 'public',
 		'favicon': 'favicon.ico',
 		'views': '/templates/views',
@@ -77,13 +77,10 @@ KSiteCore.prototype.init = function()
 
 	// Configure the navigation bar in Keystone's Admin UI
 
-	keystone.set('nav', {
-		'posts': ['posts', 'post-categories'],
-		'galleries': 'galleries',
-		'enquiries': 'enquiries',
-		'users': 'users'
-		// 'categorys': 'categorys'
-	});
+//	keystone.set('nav', {
+//		'users': 'users'
+//		// 'categorys': 'categorys'
+//	});
 }
 KSiteCore.prototype.start = function()
 {

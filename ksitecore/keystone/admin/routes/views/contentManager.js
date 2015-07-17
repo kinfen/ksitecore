@@ -8,7 +8,7 @@ exports = module.exports = function(req, res) {
 	
 	var view = new keystone.View(req, res),
 		locals = res.locals;
-	
+	console.log("ho");
 
 	var itemQuery = Category.model.find()
     .exec(function(err, categorys) {

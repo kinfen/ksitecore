@@ -4,7 +4,7 @@ html
   	min-height: 100%;
 }
 body{
-	margin-bottom: 60px;
+	/*margin-bottom: 60px;*/
 
 }
 #auto{
@@ -15,7 +15,7 @@ iframe{
 	width:100%;
 }
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
@@ -82,9 +82,13 @@ code {
 #menu-content{
 	width: 0;
 	overflow: hidden;
+	background-color: #333333;
+	position: fixed;
+	top: 0;
 }
 #site-content{
 	width: 100%;
+	overflow: hidden;
 }
 #site-content .static-content{
 	width: 768px;
@@ -92,6 +96,14 @@ code {
 .navbar-leftmenu{
 	float: left;
 }
+#list-view .btn-group-vertical{
+	width: 100%;
+	padding: 0;
+}
+.modal-footer ul{
+	text-align: left;
+}
+
 @media (min-width: 768px){
 	#menu-content{
 		width: 0%;

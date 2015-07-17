@@ -9,7 +9,7 @@ block content
 				h1 #{category.name}
 				.text-right
 					label total #{items.total} items
-				.tableBar
+				div
 					if !template.get('nocreate')
 						.create-item
 							if template.get('autocreate')
@@ -19,18 +19,8 @@ block content
 										|  Create #{template.singular}
 							else
 								.toolbar
-									.row
-										.col-xs-6
-											#list-view
-										.col-xs-6
-											.btn-group.tableAction.pull-right
-												a.btn.btn-default(role="button" onClick="parent.viewItem(Keystone.list.path, Keystone.category_id)")
-													span.glyphicon.glyphicon-edit
-													span  &nbsp;Edit
-												a.btn.btn-default(role="button" href="/ksitecore/#{list.path}/list/#{category.id}?type=#{list.path}")
-													span.glyphicon.glyphicon-list-alt
-													span  &nbsp;Edit Sub Categories
-												.clear
+									#list-view
+										
 			#msg
 			include ../component/table_toolbar
 			table#table
@@ -40,7 +30,7 @@ block js
 	script(src='/keystone/js/views/list.js')
 	script(src='/keystone/js/lib/browserified/querystring.js')
 	script(src='/keystone/js/lib/browserified/queryfilter.js')
-	script(src='/js/bootstrap-table.min.js')
+	script(src='/keystone/js/sitecore/bootstrap-table.min.js')
 	script.
 		Keystone.list = !{JSON.stringify(list.getOptions())};
 		Keystone.template = !{JSON.stringify(template.getOptions())};
@@ -67,7 +57,6 @@ block js
 	script(src='/keystone/js/lib/moment/moment-1.7.2.min.js')
 	script(src='/keystone/js/sitecore/table_list_handle.js')
 	script(src='/keystone/js/sitecore/inner.js')
-	script.
-		parent.$("iframe#content-frame").height(document.body.scrollHeight);
+	
 block	css
-	link(rel="stylesheet", href='/css/bootstrap-table.min.css')
+	link(rel="stylesheet", href='/keystone/styles/sitecore/bootstrap-table.min.css')

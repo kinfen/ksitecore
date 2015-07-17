@@ -1,5 +1,4 @@
 var debug = require('debug')('keystone:core:routes');
-
 /**
  * Adds bindings for the keystone routes
  *
@@ -12,6 +11,7 @@ var debug = require('debug')('keystone:core:routes');
  * @param {Express()} app
  * @api public
  */
+
 function routes(app) {
 	this.app = app;
 	var keystone = this;
@@ -39,16 +39,17 @@ function routes(app) {
 		}
 
 		if (!this.nativeApp || !this.get('session')) {
-			app.all('/keystone*', this.session.persist);
+			app.all('/ksitecore*', this.session.persist);
 		}
 		//set route to ksitecore views
-		app.all('/keystone/signin', require('../../../routes/views/signin'));
-		app.all('/keystone/signout', require('../../../routes/views/signout'));
+		app.all('/ksitecore/signin', require('../../admin/routes/views/signin'));
+		app.all('/ksitecore/signout', require('../../admin/routes/views/signout'));
+		app.all('/ksitecore*', this.session.keystoneAuth);
 		app.all('/keystone*', this.session.keystoneAuth);
 
 	} else if ('function' === typeof this.get('auth')) {
 		debug('setting up auth');
-		app.all('/keystone*', this.get('auth'));
+		app.all('/ksitecore*', this.get('auth'));
 	}
 
 	function initList(respectHiddenOption) {
@@ -67,7 +68,6 @@ function routes(app) {
 	}
 
 	debug('setting keystone Admin Route');
-	app.all('/keystone', require('../../../routes/index'));
 
 	// Email test routes
 	if (this.get('email tests')) {
@@ -121,7 +121,13 @@ function routes(app) {
 	debug('setting list and item details admin routes');
 	app.all('/keystone/:list/:page([0-9]{1,5})?', initList(true), require('../../admin/routes/views/list'));
 	app.all('/keystone/:list/:item', initList(true), require('../../admin/routes/views/item'));
-
+	
+	app.get('/ksitecore', require('../../admin/routes/views/contentManager'));
+//	app.get('/ksitecore/err', require('../../admin/routes/views/err'));
+	app.get('/ksitecore/welcome', require('../../admin/routes/views/welcome'));
+	app.all('/ksitecore/:list/list', initList(true), require('../../admin/routes/views/list'));
+	app.all('/ksitecore/:list/list/:id', initList(true), require('../../admin/routes/views/list'));
+	
 	return this;
 }
 
