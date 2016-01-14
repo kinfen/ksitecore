@@ -1,6 +1,7 @@
 var crypto = require('crypto');
 var keystone = require('../');
 var scmp = require('scmp');
+var utils = require('keystone-utils');
 
 /**
  * Creates a hash of str with Keystone's cookie secret.
@@ -44,7 +45,6 @@ function signinWithUser(user, req, res, onSuccess) {
 	if ('function' !== typeof onSuccess) {
 		throw new Error('keystone.session.signinWithUser requires onSuccess to be a function.');
 	}
-
 	req.session.regenerate(function() {
 		req.user = user;
 		req.session.userId = user.id;
@@ -55,14 +55,13 @@ function signinWithUser(user, req, res, onSuccess) {
 		}
 		onSuccess(user);
 	});
-
 }
 
 exports.signinWithUser = signinWithUser;
 
 var postHookedSigninWithUser = function(user, req, res, onSuccess, onFail) {
-	keystone.callHook(user, 'post:signin', function(err){
-		if(err){
+	keystone.callHook(user, 'post:signin', function(err) {
+		if (err) {
 			return onFail(err);
 		}
 		exports.signinWithUser(user, req, res, onSuccess, onFail);
@@ -85,14 +84,20 @@ var doSignin = function(lookup, req, res, onSuccess, onFail) {
 	}
 	var User = keystone.list(keystone.get('user model'));
 	if ('string' === typeof lookup.email && 'string' === typeof lookup.password) {
+		// ensure that it is an email, we don't want people being able to sign in by just using "\." and a haphazardly correct password.
+		if (!utils.isEmail(lookup.email)) {
+			return onFail(new Error('Incorrect email or password'));
+		}
+		// create regex for email lookup with special characters escaped
+		var emailRegExp = new RegExp('^' + utils.escapeRegExp(lookup.email) + '$', 'i');
 		// match email address and password
-		User.model.findOne({ email: new RegExp(lookup.email, 'i') }).exec(function(err, user) {
+		User.model.findOne({ email: emailRegExp }).exec(function(err, user) {
 			if (user) {
 				user._.password.compare(lookup.password, function(err, isMatch) {
 					if (!err && isMatch) {
 						postHookedSigninWithUser(user, req, res, onSuccess, onFail);
 					} else {
-						onFail(err);
+						onFail(err || new Error('Incorrect email or password'));
 					}
 				});
 			} else {
@@ -102,21 +107,21 @@ var doSignin = function(lookup, req, res, onSuccess, onFail) {
 	} else {
 		lookup = '' + lookup;
 		// match the userId, with optional password check
-		var userId = (lookup.indexOf(':') > 0) ? lookup.substr(0, lookup.indexOf(':')) : lookup,
-			passwordCheck = (lookup.indexOf(':') > 0) ? lookup.substr(lookup.indexOf(':') + 1) : false;
+		var userId = (lookup.indexOf(':') > 0) ? lookup.substr(0, lookup.indexOf(':')) : lookup;
+		var passwordCheck = (lookup.indexOf(':') > 0) ? lookup.substr(lookup.indexOf(':') + 1) : false;
 		User.model.findById(userId).exec(function(err, user) {
 			if (user && (!passwordCheck || scmp(passwordCheck, hash(user.password)))) {
 				postHookedSigninWithUser(user, req, res, onSuccess, onFail);
 			} else {
-				onFail(err);
+				onFail(err || new Error('Incorrect user or password'));
 			}
 		});
 	}
 };
 
 exports.signin = function(lookup, req, res, onSuccess, onFail) {
-	keystone.callHook({}, 'pre:signin', function(err){
-		if(err){
+	keystone.callHook({}, 'pre:signin', function(err) {
+		if (err) {
 			return onFail(err);
 		}
 		doSignin(lookup, req, res, onSuccess, onFail);
@@ -132,14 +137,12 @@ exports.signin = function(lookup, req, res, onSuccess, onFail) {
  */
 
 exports.signout = function(req, res, next) {
-
 	keystone.callHook(req.user, 'pre:signout', function(err) {
 		if (err) {
 			console.log("An error occurred in signout 'pre' middleware", err);
 		}
 		res.clearCookie('keystone.uid');
 		req.user = null;
-
 		req.session.regenerate(function(err) {
 			if (err) {
 				return next(err);
@@ -152,7 +155,6 @@ exports.signout = function(req, res, next) {
 			});
 		});
 	});
-
 };
 
 /**
@@ -176,7 +178,9 @@ exports.persist = function(req, res, next) {
 		exports.signin(req.signedCookies['keystone.uid'], req, res, function() {
 			next();
 		}, function(err) {
-			next(err);
+			res.clearCookie('keystone.uid');
+			req.user = null;
+			next();
 		});
 	} else if (req.session.userId) {
 		User.model.findById(req.session.userId).exec(function(err, user) {
@@ -210,7 +214,8 @@ exports.persist = function(req, res, next) {
 
 exports.keystoneAuth = function(req, res, next) {
 	if (!req.user || !req.user.canAccessKeystone) {
-		var from = new RegExp('^\/keystone\/?$', 'i').test(req.url) ? '' : '?from=' + req.url;
+		var regex = new RegExp('^\/' + keystone.get('admin path') + '\/?$', 'i');
+		var from = regex.test(req.url) ? '' : '?from=' + req.url;
 		return res.redirect(keystone.get('signin url') + from);
 	}
 	next();
