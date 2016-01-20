@@ -1,6 +1,6 @@
 
 // Require keystone
-var ksitecore = require('./ksitecore');
+var ksitecore = require('./admin');
 
 module.exports = exports = new function()
 {
