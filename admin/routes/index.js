@@ -18,7 +18,7 @@
  * http://expressjs.com/api.html#app.VERB
  */
 
-var keystone = require('../keystone'),
+var keystone = require("../").getAdminClass(),
 	importRoutes = keystone.importer(__dirname);
 
 var routes = {
@@ -30,6 +30,7 @@ exports = module.exports = function(app) {
 	// Views
 	// Cache compiled view templates if we are in Production mode
 	// Views
-	app.get('/', routes.views.index);
+	console.log("here");
+	app.get('/sigina', routes.views.index);
 
 };

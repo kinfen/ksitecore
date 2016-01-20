@@ -1,6 +1,6 @@
 
 // Require keystone
-var keystone = require('./keystone');
+var keystone;
 
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
@@ -8,7 +8,19 @@ var keystone = require('./keystone');
 
 var KSiteCore = function()
 {
-	
+	keystone = this.getAdminClass();
+}
+KSiteCore.prototype.getAdminClass = function()
+{
+	var admin;
+	//try {
+	//	admin = require("keystone");
+	//}
+	//catch 
+	//{
+		admin = require('./keystone');
+	//}
+	return admin;
 }
 KSiteCore.prototype.init = function()
 {
@@ -16,7 +28,7 @@ KSiteCore.prototype.init = function()
 
 		'name': 'KeystoneJS',
 		'brand': 'KeystoneJS',
-
+		'admin path': 'admincore',
 		'less': 'public',
 		'env' : "production",
 		'static': 'public',
@@ -66,7 +78,7 @@ KSiteCore.prototype.init = function()
 		editable: keystone.content.editable
 	});
 	// Load your project's Routes
-	//keystone.set('routes', require('./routes'));
+	keystone.set('routes', require('./core/routes'));
 
 
 	var email_hostname = process.env.EMAIL_HOSTNAME || 'localhost:3000';
@@ -80,15 +92,16 @@ KSiteCore.prototype.init = function()
 //		'users': 'users'
 //		// 'categorys': 'categorys'
 //	});
-	KSiteCore.prototype.route = require("./core/routes");
+//	KSiteCore.prototype.route = require("./core/routes");
 }
 
 KSiteCore.prototype.start = function()
 {
 	
 	keystone.start();
-	this.route();
+	//this.route();
 }
+KSiteCore.prototype.render = require('./core/render');
 
 var ksitecore = new KSiteCore();
 
