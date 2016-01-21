@@ -18,6 +18,10 @@ html
 				user: !{JSON.stringify(user || null)},
 				userCanAccessKeystone: !{user && user.canAccessKeystone ? 'true' : 'false'},
 			};
+			var KSiteAdm = {
+				adminPath:!{JSON.stringify(adminPath_SiteAdm)}
+			};
+
 		script(src='#{adminPath}/js/signin.js')
 		//- Google Analytics
 		if env == 'production' && ga.property && ga.domain

@@ -10,6 +10,20 @@ var paths = {
 	'src':['./models/**/*.js','./routes/**/*.js', 'keystone.js', 'package.json']
 };
 
+/**
+ * Build Tasks
+ */
+
+gulp.task('build-packages', function() {
+	var packages = require('./client/packages');
+	var b = browserify();
+	packages.forEach(function(i) { b.require(i); });
+	b = b.bundle().pipe(source('packages.js'));
+	if (process.env.NODE_ENV === 'production') {
+		b.pipe(streamify(uglify()));
+	}
+	return b.pipe(gulp.dest('./admin/public/js'));
+});
 
 // gulp lint
 gulp.task('lint', function(){

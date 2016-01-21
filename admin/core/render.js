@@ -14,7 +14,7 @@ var templateCache = {};
 function render(req, res, view, ext) {
 
 	var keystone = this.getAdminClass();
-	var templatePath = __dirname + '/../templates/views/' + view + '.jade';
+	var templatePath = __dirname + '/../templates/' + view + '.jade';
 	var jadeOptions = {
 		filename: templatePath,
 		pretty: keystone.get('env') !== 'production'
@@ -24,17 +24,17 @@ function render(req, res, view, ext) {
 	};
 	var template = templateCache[view] || (templateCache[view] = compileTemplate());
 
-	if (!res.req.flash) {
-		console.error('\nKeystoneJS Runtime Error:\n\napp must have flash middleware installed. Try adding "connect-flash" to your express instance.\n');
-		process.exit(1);
-	}
-	var flashMessages = {
-		info: res.req.flash('info'),
-		success: res.req.flash('success'),
-		warning: res.req.flash('warning'),
-		error: res.req.flash('error'),
-		hilight: res.req.flash('hilight'),
-	};
+	//if (!res.req.flash) {
+	//	console.error('\nKeystoneJS Runtime Error:\n\napp must have flash middleware installed. Try adding "connect-flash" to your express instance.\n');
+	//	process.exit(1);
+	//}
+	//var flashMessages = {
+	//	info: res.req.flash('info'),
+	//	success: res.req.flash('success'),
+	//	warning: res.req.flash('warning'),
+	//	error: res.req.flash('error'),
+	//	hilight: res.req.flash('hilight'),
+	//};
 
 	var lists = {};
 	_.each(keystone.lists, function(list, key) {
@@ -47,13 +47,14 @@ function render(req, res, view, ext) {
 		brand: keystone.get('brand'),
 		appversion : keystone.get('appversion'),
 		nav: keystone.nav,
-		messages: _.any(flashMessages, function(msgs) { return msgs.length; }) ? flashMessages : false,
+		//messages: _.any(flashMessages, function(msgs) { return msgs.length; }) ? flashMessages : false,
 		lists: lists,
 		userModel: keystone.get('user model'),
 		user: req.user,
 		title: 'Keystone',
 		signout: keystone.get('signout url') || null,
 		adminPath: '/' + keystone.get('admin path'),
+		adminPath_SiteAdm: '/' + this.getAdminPath,
 		backUrl: keystone.get('back url') || '/',
 		section: {},
 		version: keystone.version,

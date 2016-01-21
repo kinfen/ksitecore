@@ -6,11 +6,12 @@ var keystone;
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
 
-var KSiteCore = function()
+var KSiteAdm = function()
 {
 	keystone = this.getAdminClass();
+	this.adminPath = "admin";
 }
-KSiteCore.prototype.getAdminClass = function()
+KSiteAdm.prototype.getAdminClass = function()
 {
 	var admin;
 	//try {
@@ -22,7 +23,7 @@ KSiteCore.prototype.getAdminClass = function()
 	//}
 	return admin;
 }
-KSiteCore.prototype.init = function()
+KSiteAdm.prototype.init = function()
 {
 	keystone.init({
 
@@ -51,8 +52,8 @@ KSiteCore.prototype.init = function()
 		utils: keystone.utils,
 		editable: keystone.content.editable
 	});
-	//keystone.set('signout url', '/ksitecore/signout');
-	//keystone.set('signin url', '/ksitecore/signin');
+	//keystone.set('signout url', '/KSiteAdm/signout');
+	//keystone.set('signin url', '/KSiteAdm/signin');
 		
 	// Load your project's Models
 	keystone.import('models');
@@ -92,19 +93,19 @@ KSiteCore.prototype.init = function()
 //		'users': 'users'
 //		// 'categorys': 'categorys'
 //	});
-//	KSiteCore.prototype.route = require("./core/routes");
+//	KSiteAdm.prototype.route = require("./core/routes");
 }
 
-KSiteCore.prototype.start = function()
+KSiteAdm.prototype.start = function()
 {
 	
 	keystone.start();
 	//this.route();
 }
-KSiteCore.prototype.render = require('./core/render');
+KSiteAdm.prototype.render = require('./core/render');
 
-var ksitecore = new KSiteCore();
+var KSiteAdm = new KSiteAdm();
 
-module.exports = exports = ksitecore;
+module.exports = exports = KSiteAdm;
 
 

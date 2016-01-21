@@ -2,8 +2,8 @@
  * Created by kinfen on 16/1/19.
  */
 
-
-var keystone = require('../').getAdminClass(),
+var ksiteadm = require('../'),
+	keystone = ksiteadm.getAdminClass(),
 	importRoutes = keystone.importer(__dirname),
 	express = require('express');
 
@@ -18,8 +18,7 @@ exports = module.exports = function(req, res) {
 	// Views
 	var app = keystone.app;
 	var routes = express.Router();
-	routes.all('/signin', require('../routes/views/signin'));
-	console.log('abc');
+	routes.all('/' + ksiteadm.adminPath + '/signin', require('../routes/views/signin'));
 	app.use('/', routes);
 
 };
