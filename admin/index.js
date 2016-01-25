@@ -2,14 +2,20 @@
 // Require keystone
 var keystone;
 
+var _ = require("underscore");
+
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
 
 var KSiteAdm = function()
 {
-	keystone = this.getAdminClass();
-	this.adminPath = "admin";
+	this._options = {
+		"siteAdmPath":"admin",
+		"adminModule":this.getAdminClass()
+	}
+	;
+	keystone = this.get("adminModule");
 }
 KSiteAdm.prototype.getAdminClass = function()
 {
@@ -25,6 +31,7 @@ KSiteAdm.prototype.getAdminClass = function()
 }
 KSiteAdm.prototype.init = function()
 {
+	
 	keystone.init({
 
 		'name': 'KeystoneJS',
@@ -79,7 +86,7 @@ KSiteAdm.prototype.init = function()
 		editable: keystone.content.editable
 	});
 	// Load your project's Routes
-	keystone.set('routes', require('./core/routes'));
+	//keystone.set('routes', require('./core/routes'));
 
 
 	var email_hostname = process.env.EMAIL_HOSTNAME || 'localhost:3000';
@@ -95,6 +102,7 @@ KSiteAdm.prototype.init = function()
 //	});
 //	KSiteAdm.prototype.route = require("./core/routes");
 }
+_.extend(KSiteAdm.prototype, require('./core/options')());
 KSiteAdm.prototype.prebuild = require('./prebuild/buildClientJs');
 KSiteAdm.prototype.start = function()
 {
@@ -104,7 +112,10 @@ KSiteAdm.prototype.start = function()
 	this.prebuild();
 	
 }
+KSiteAdm.prototype.routes = require('./core/routes');
 KSiteAdm.prototype.render = require('./core/render');
+
+
 
 var KSiteAdm = new KSiteAdm();
 

@@ -49,11 +49,11 @@ module.exports = exports = function () {
 	//router.use('/styles', less(path.resolve(__dirname + '../../../public/styles'), lessOptions));
 	//router.use('/styles/fonts', express.static(path.resolve(__dirname + '../../../public/js/lib/tinymce/skins/keystone/fonts')));
 	//router.get('/js/fields.js', bundles.fields.serve);
-	router.get('/js/signin.js', bundles.signin.serve);
+	//router.get('/js/signin.js', bundles.signin.serve);
 	//router.get('/js/home.js', bundles.home.serve);
 	//router.get('/js/item.js', bundles.item.serve);
 	//router.get('/js/list.js', bundles.list.serve);
-	router.use(express.static(path.resolve(__dirname + '../../../public')));
+	//router.use(express.static(path.resolve(__dirname + '../../../public')));
     
-	return router;
+	//return router;
 };
