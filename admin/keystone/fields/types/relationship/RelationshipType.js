@@ -12,18 +12,10 @@ var utils = require('keystone-utils');
 function relationship(list, path, options) {
 	this.many = (options.many) ? true : false;
 	this.filters = options.filters;
-<<<<<<< HEAD:ksitecore/keystone/fields/types/relationship/RelationshipType.js
 	this._defaultSize = 'full';
 	this._nativeType = keystone.mongoose.Schema.Types.ObjectId;
 	this._underscoreMethods = ['format'];
 	this._properties = ['isValid', 'many', 'filters'];
-=======
-	this.createInline = (options.createInline) ? true : false;
-	this._defaultSize = 'full';
-	this._nativeType = keystone.mongoose.Schema.Types.ObjectId;
-	this._underscoreMethods = ['format'];
-	this._properties = ['isValid', 'many', 'filters', 'createInline'];
->>>>>>> 8158b69f1c8da1466fe1b7aef0ae602032293ed4:admin/keystone/fields/types/relationship/RelationshipType.js
 	relationship.super_.call(this, list, path, options);
 }
 util.inherits(relationship, FieldType);

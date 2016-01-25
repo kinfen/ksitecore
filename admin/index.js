@@ -95,12 +95,14 @@ KSiteAdm.prototype.init = function()
 //	});
 //	KSiteAdm.prototype.route = require("./core/routes");
 }
-
+KSiteAdm.prototype.prebuild = require('./prebuild/buildClientJs');
 KSiteAdm.prototype.start = function()
 {
 	
 	keystone.start();
 	//this.route();
+	this.prebuild();
+	
 }
 KSiteAdm.prototype.render = require('./core/render');
 
