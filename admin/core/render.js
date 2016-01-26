@@ -54,7 +54,7 @@ function render(req, res, view, ext) {
 		title: 'Keystone',
 		signout: keystone.get('signout url') || null,
 		adminPath: '/' + keystone.get('admin path'),
-		adminPath_SiteAdm: '/' + this.getAdminPath,
+		adminPathEx: '/' + this.get('siteAdmPath'),
 		backUrl: keystone.get('back url') || '/',
 		section: {},
 		version: keystone.version,

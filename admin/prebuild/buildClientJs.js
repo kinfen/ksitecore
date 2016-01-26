@@ -5,12 +5,12 @@
 
 
 var browserify = require('./middleware/browserify');
-//var express = require('express');
+var express = require('express');
 //var less = require('less-middleware');
 //var path = require('path');
 
 module.exports = exports = function () {
-	//var router = express.Router();
+	var router = express.Router();
 
 	/* Prepare browserify bundles */
 	var bundles = {
@@ -49,11 +49,11 @@ module.exports = exports = function () {
 	//router.use('/styles', less(path.resolve(__dirname + '../../../public/styles'), lessOptions));
 	//router.use('/styles/fonts', express.static(path.resolve(__dirname + '../../../public/js/lib/tinymce/skins/keystone/fonts')));
 	//router.get('/js/fields.js', bundles.fields.serve);
-	//router.get('/js/signin.js', bundles.signin.serve);
+	router.get('/js/signin.js', bundles.signin.serve);
 	//router.get('/js/home.js', bundles.home.serve);
 	//router.get('/js/item.js', bundles.item.serve);
 	//router.get('/js/list.js', bundles.list.serve);
 	//router.use(express.static(path.resolve(__dirname + '../../../public')));
     
-	//return router;
+	return router;
 };

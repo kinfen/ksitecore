@@ -17,6 +17,7 @@ var KSiteAdm = function()
 	;
 	keystone = this.get("adminModule");
 }
+_.extend(KSiteAdm.prototype, require('./core/options')());
 KSiteAdm.prototype.getAdminClass = function()
 {
 	var admin;
@@ -44,13 +45,14 @@ KSiteAdm.prototype.init = function()
 		'views': '/templates/views',
 		'view engine': 'jade',
 		'emails': 'templates/emails',
-		
 		'auto update': true,
 		'session': true,
 		'session store': 'mongo',
 		'auth': true,
 		'user model': 'User',
-		'signin logo': '/images/logo.png'
+		'signin logo': '/images/logo.png',
+		'adminExtend':this
+		
 		
 	});
 	keystone.set('locals', {
@@ -59,9 +61,7 @@ KSiteAdm.prototype.init = function()
 		utils: keystone.utils,
 		editable: keystone.content.editable
 	});
-	//keystone.set('signout url', '/KSiteAdm/signout');
-	//keystone.set('signin url', '/KSiteAdm/signin');
-		
+
 	// Load your project's Models
 	keystone.import('models');
 	
@@ -86,7 +86,7 @@ KSiteAdm.prototype.init = function()
 		editable: keystone.content.editable
 	});
 	// Load your project's Routes
-	//keystone.set('routes', require('./core/routes'));
+	keystone.set('routes', require('./routes'));
 
 
 	var email_hostname = process.env.EMAIL_HOSTNAME || 'localhost:3000';
@@ -102,17 +102,14 @@ KSiteAdm.prototype.init = function()
 //	});
 //	KSiteAdm.prototype.route = require("./core/routes");
 }
-_.extend(KSiteAdm.prototype, require('./core/options')());
 KSiteAdm.prototype.prebuild = require('./prebuild/buildClientJs');
 KSiteAdm.prototype.start = function()
 {
 	
 	keystone.start();
-	//this.route();
-	this.prebuild();
 	
 }
-KSiteAdm.prototype.routes = require('./core/routes');
+
 KSiteAdm.prototype.render = require('./core/render');
 
 
