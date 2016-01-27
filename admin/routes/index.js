@@ -9,11 +9,13 @@ var ksiteadm = require('../index');
 // Setup Route Bindings
 exports = module.exports = function(app) {
 	var serverRoutes = require("./serverRoutes")();
-	var staticRoutes = require("../prebuild/buildClientJs")();
+	var jsRoutes = require("../prebuild/buildClientJs")();
+	var staticRoutes = require("./staticRoutes")();
 	if (ksiteadm.get("routes"))
 	{
 		ksiteadm.get("routes")(app);
 	}
 	app.use ("/" + ksiteadm.get("siteAdmPath"), serverRoutes);
+	app.use ("/" + ksiteadm.get("siteAdmPath"), jsRoutes);
 	app.use ("/" + ksiteadm.get("siteAdmPath"), staticRoutes);
 }
