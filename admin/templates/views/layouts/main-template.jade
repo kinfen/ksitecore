@@ -1,0 +1,22 @@
+doctype html
+html
+	head
+		include ../includes/head
+		block head	
+	body.hold-transition.skin-blue.sidebar-mini
+		.wrapper
+			include ../includes/header
+			// Left side column. contains the logo and sidebar
+			include ../includes/sidebar
+			// Content Wrapper. Contains page content
+			.content-wrapper
+				block content
+			// /.content-wrapper
+			include ../includes/footer
+			// Control Sidebar
+			include ../includes/control-sidebar
+		// ./wrapper
+		include ../includes/endjs
+		block endjs
+			
+
