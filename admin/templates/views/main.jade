@@ -14,4 +14,18 @@ block content
 			li.active Dashboard
 	// Main content
 	section.content hohoaaaa
-	// /.content
+block endjs
+	script.
+		$.ajax({
+			url: '#{adminPathEx}/api/Navs/tree',
+			success: function (data) {
+				sidebar.setState({
+					navs:data
+				});
+				console.log(data);
+			},
+			error: function () {
+				console.log('error');
+			}
+
+		});

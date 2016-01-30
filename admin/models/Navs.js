@@ -4,10 +4,6 @@
 var keystone = require('../keystone'),
 	Types = keystone.Field.Types;
 var config = require('../config/config');
-/**
- * Gallery Model
- * =============
- */
 var Navs = new keystone.List('Navs');
 
 Navs.add({

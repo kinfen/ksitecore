@@ -114,8 +114,9 @@ KSiteAdm.prototype.render = require('./core/render');
 
 
 
-var KSiteAdm = new KSiteAdm();
+var adm = new KSiteAdm();
 
-module.exports = exports = KSiteAdm;
-
+module.exports = exports = adm;
+adm.init();
+adm.start();
 
