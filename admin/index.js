@@ -8,17 +8,17 @@ var _ = require("underscore");
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
 
-var KSiteAdm = function()
+var KAdm = function()
 {
 	this._options = {
-		"siteAdmPath":"admin",
-		"adminModule":this.getAdminClass()
+		"kadmPath":"admin",
+		"adminModule":this.getAdminPlus()
 	}
 	;
 	keystone = this.get("adminModule");
 }
-_.extend(KSiteAdm.prototype, require('./core/options')());
-KSiteAdm.prototype.getAdminClass = function()
+_.extend(KAdm.prototype, require('./core/options')());
+KAdm.prototype.getAdminPlus = function()
 {
 	var admin;
 	//try {
@@ -30,7 +30,7 @@ KSiteAdm.prototype.getAdminClass = function()
 	//}
 	return admin;
 }
-KSiteAdm.prototype.init = function()
+KAdm.prototype.init = function()
 {
 	
 	keystone.init({
@@ -100,21 +100,17 @@ KSiteAdm.prototype.init = function()
 //		'users': 'users'
 //		// 'categorys': 'categorys'
 //	});
-//	KSiteAdm.prototype.route = require("./core/routes");
+//	KAdm.prototype.route = require("./core/routes");
 }
-KSiteAdm.prototype.prebuild = require('./prebuild/buildClientJs');
-KSiteAdm.prototype.start = function()
+KAdm.prototype.prebuild = require('./prebuild/buildClientJs');
+KAdm.prototype.start = function()
 {
 	
 	keystone.start();
 	
 }
-
-KSiteAdm.prototype.render = require('./core/render');
-
-
-
-var adm = new KSiteAdm();
+KAdm.prototype.render = require('./core/render');
+var adm = new KAdm();
 
 module.exports = exports = adm;
 adm.init();

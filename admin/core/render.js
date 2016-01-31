@@ -13,7 +13,7 @@ var templateCache = {};
 
 function render(req, res, view, ext) {
 
-	var keystone = this.getAdminClass();
+	var keystone = this.getAdminPlus();
 	var templatePath = __dirname + '/../templates/' + view + '.jade';
 	var jadeOptions = {
 		filename: templatePath,
@@ -54,7 +54,7 @@ function render(req, res, view, ext) {
 		title: 'Keystone',
 		signout: keystone.get('signout url') || null,
 		adminPath: '/' + keystone.get('admin path'),
-		adminPathEx: '/' + this.get('siteAdmPath'),
+		adminPathEx: '/' + this.get('kadmPath'),
 		backUrl: keystone.get('back url') || '/',
 		section: {},
 		version: keystone.version,

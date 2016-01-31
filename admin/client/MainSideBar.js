@@ -55,20 +55,22 @@ var MainSideBar = React.createClass({
 			_.each(navs, function(element, index){
 				let cn = level == 0 ?'treeview':'';
 				let subNods;
+				let rightItem;
 				if (element.childs && element.childs.length > 0)
 				{
 					subNods = (<ul className="treeview-menu">
 								{self.renderTreeMenu(element.childs, level + 1, key)}
 								</ul>);
+					rightItem = <i className="fa fa-angle-left pull-right"></i>
 					
 				}
 				list.push(
 					<li className={cn} key={index}>
 						<a href="#">
-							<i className="fa fa-dashboard"></i> <span>{element.name}</span> <i className="fa fa-angle-left pull-right"></i>
+							<i className="fa fa-dashboard"></i><span>{element.name}</span>{rightItem}
 						</a>
 						{subNods}
-					</li>	
+					</li>
 				);
 			});
 		}

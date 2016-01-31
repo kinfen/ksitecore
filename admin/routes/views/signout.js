@@ -1,5 +1,5 @@
 var ksiteadm = require('../../'),
-keystone = ksiteadm.getAdminClass(),
+keystone = ksiteadm.getAdminPlus(),
 session = keystone.session;
 
 module.exports = function(req, res) {
@@ -9,7 +9,7 @@ module.exports = function(req, res) {
 		} else if ('function' === typeof keystone.get('signout redirect')) {
 			return keystone.get('signout redirect')(req, res);
 		} else {
-			return res.redirect('/' + ksiteadm.get('siteAdmPath') + '/signin?signedout');
+			return res.redirect('/' + ksiteadm.get('kadmPath') + '/signin?signedout');
 		}
 	});
 };

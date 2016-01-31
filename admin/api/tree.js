@@ -7,7 +7,7 @@ var _ = require('underscore');
 var async = require('async');
 var _ = require('underscore');
 var Base = require('./global/Base'); 
-var keystone = require('../').getAdminClass();
+var keystone = require('../').getAdminPlus();
 
 module.exports = function(req, res) {
 	

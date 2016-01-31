@@ -4,7 +4,7 @@
  */
 var	express = require('express');
 var ksiteadm = require('../');
-var keystone = ksiteadm.getAdminClass();
+var keystone = ksiteadm.getAdminPlus();
 var initList = require("./middleWare/initList")(keystone);
 exports = module.exports = function() {
 	
@@ -12,6 +12,7 @@ exports = module.exports = function() {
 	routes.all('/', require('./views/main'));
 	routes.all('/signin', require('./views/signin'));
 	routes.all('/signout', require('./views/signout'));
+	routes.all('/category/:model', require('./views/listWithCa'));
 	routes.get('/api/:model/tree', initList(), require('../api/tree'));
 	routes.all('/test', function(req, res, next){
 		console.log("test");
