@@ -3,8 +3,8 @@
  * 处理所有后台路由
  */
 var	express = require('express');
-var ksiteadm = require('../');
-var keystone = ksiteadm.getAdminPlus();
+var kadm = require('../');
+var keystone = kadm.getAdminPlus();
 var initList = require("./middleWare/initList")(keystone);
 exports = module.exports = function() {
 	

@@ -10,7 +10,7 @@ import _ from 'underscore';
 var Category = React.createClass({
 	getInitialState () {
 		return {
-			navs:''
+			data:''
 		};
 	},
 	componentDidMount () {
@@ -33,23 +33,26 @@ var Category = React.createClass({
 			<div className="box box-solid">
 				{this.renderHeader()}
 				<div className="box-body no-padding">
-					<ul className="nav nav-pills nav-stacked">
-						<li className="active treeview">
-							<a href="#"><i className="fa fa-inbox"></i> Inbox
-							<span className="label label-primary pull-right">12</span></a></li>
-							<ul className="treeview-menu">
-								<li className="treeview">
-									<a href="#">
-										<i className="fa fa-dashboard"></i><span>abc</span>
-									</a>
-								</li>
-							</ul>
-						<li><a href="#"><i className="fa fa-envelope-o"></i> Sent</a></li>
-						<li><a href="#"><i className="fa fa-file-text-o"></i> Drafts</a></li>
-						<li><a href="#"><i className="fa fa-filter"></i> Junk <span className="label label-warning pull-right">65</span></a>
-						</li>
-						<li><a href="#"><i className="fa fa-trash-o"></i> Trash</a></li>
-					</ul>
+					<section className="menubar">
+						<ul className="nav nav-pills nav-stacked sidebar-menu">
+							<li className="active treeview">
+								<a href="#"><i className="fa fa-inbox"></i> Inbox
+								<span className="label label-primary pull-right">12</span></a>
+								<ul className="treeview-menu">
+									<li className="treeview">
+										<a href="#">
+											<i className="fa fa-dashboard"></i><span>abc</span>
+										</a>
+									</li>
+								</ul>
+							</li>	
+							<li><a href="#"><i className="fa fa-envelope-o"></i> Sent</a></li>
+							<li><a href="#"><i className="fa fa-file-text-o"></i> Drafts</a></li>
+							<li><a href="#"><i className="fa fa-filter"></i> Junk <span className="label label-warning pull-right">65</span></a>
+							</li>
+							<li><a href="#"><i className="fa fa-trash-o"></i> Trash</a></li>
+						</ul>
+					</section>
 				</div>
 			</div>
 		);
