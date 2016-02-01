@@ -17,6 +17,9 @@ module.exports = exports = function () {
 		//fields: browserify('fields.js', 'FieldTypes'),
 		signin: browserify('signin.js'),
 		MainSideBar: browserify('MainSideBar.js'),
+		MainLoading: browserify('MainLoading.js'),
+		//MainContent: browserify('MainContent.js'),
+		Category: browserify('Category.js'),
 		//home: browserify('views/home.js'),
 		//item: browserify('views/item.js'),
 		//list: browserify('views/list.js'),
@@ -28,6 +31,8 @@ module.exports = exports = function () {
 		//bundles.fields.build();
 		bundles.signin.build();
 		bundles.MainSideBar.build();
+		bundles.MainLoading.build();
+		bundles.Category.build();
 		//bundles.home.build();
 		//bundles.item.build();
 		//bundles.list.build();
@@ -51,8 +56,10 @@ module.exports = exports = function () {
 	//router.use('/styles', less(path.resolve(__dirname + '../../../public/styles'), lessOptions));
 	//router.use('/styles/fonts', express.static(path.resolve(__dirname + '../../../public/js/lib/tinymce/skins/keystone/fonts')));
 	//router.get('/js/fields.js', bundles.fields.serve);
-	router.get('/js/signin.js', bundles.signin.serve);
-	router.get('/js/MainSideBar.js', bundles.MainSideBar.serve);
+	router.get('/script/signin.js', bundles.signin.serve);
+	router.get('/script/MainSideBar.js', bundles.MainSideBar.serve);
+	router.get('/script/MainLoading.js', bundles.MainLoading.serve);
+	router.get('/script/Category.js', bundles.Category.serve);
 	//router.get('/js/home.js', bundles.home.serve);
 	//router.get('/js/item.js', bundles.item.serve);
 	//router.get('/js/list.js', bundles.list.serve);

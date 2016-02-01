@@ -2,31 +2,9 @@ extends ./layouts/main-template
 
 block content
 	// Content Header (Page header)
-	section.content-header
-		h1
-			| Dashboard
-			small Control panel
-		ol.breadcrumb
-			li
-				a(href='#')
-					i.fa.fa-dashboard
-					|  Home
-			li.active Dashboard
-	// Main content
-	section.content hohoaaaa
+	include  ./includes/loading	
+	#content
 				
 block endjs
-	script.
-		$.ajax({
-			url: '#{adminPathEx}/api/Navs/tree',
-			success: function (data) {
-				sidebar.setState({
-					navs:data
-				});
-				console.log(data);
-			},
-			error: function () {
-				console.log('error');
-			}
-
-		});
+	script(src='script/kadm.js')
+		

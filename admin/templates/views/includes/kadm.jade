@@ -1,0 +1,21 @@
+script.
+	var KAdm = {};
+	KAdm.adminPath = !{JSON.stringify(adminPathEx)};
+	KAdm.backUrl = !{JSON.stringify(backUrl)};
+	KAdm.user = !{JSON.stringify(user)};
+	KAdm.version = !{JSON.stringify(version)};
+	KAdm.devMode = !{process.env.KEYSTONE_DEV ? 'true' : 'false'};
+
+	KAdm.brand = !{JSON.stringify(brand)};
+	KAdm.nav = !{JSON.stringify(nav)};
+	KAdm.nav.currentSection = !{JSON.stringify(section)};
+	//KAdm.messages = !{JSON.stringify(messages)};
+	KAdm.signoutUrl = !{JSON.stringify(signout)};
+	KAdm.csrf = function(obj) {
+		obj['#{csrf_token_key}'] = "#{csrf_token_value}";
+		return obj;
+	};
+	KAdm.csrf.header = { "!{csrf_header_key}": "!{csrf_token_value}" };
+	KAdm.csrf.key = "#{csrf_token_key}";
+	KAdm.csrf.value = "#{csrf_token_value}";
+	KAdm.csrf.query = "!{csrf_query}";
