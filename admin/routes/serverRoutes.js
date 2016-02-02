@@ -14,6 +14,7 @@ exports = module.exports = function() {
 	routes.all('/signout', require('./views/signout'));
 	routes.all('/category/:model', require('./views/listWithCa'));
 	routes.get('/api/:model/tree', initList(), require('../api/tree'));
+	routes.get('/api/:model/list', initList(), require('../api/list'));
 	routes.all('/test', function(req, res, next){
 		console.log("test");
 		next();

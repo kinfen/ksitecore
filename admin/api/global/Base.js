@@ -17,7 +17,7 @@ Base.prototype.error = function (res, key, err, msg)
 		console.log(err);
 	}
 	res.status(500);
-	this.json(res, { error: key || 'error', detail: err ? err.message : '' });	
+	this.json(res, { status:0,  error: key || 'error', detail: err ? err.message : '' });	
 
 }
 

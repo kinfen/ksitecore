@@ -75,6 +75,9 @@ module.exports = function(req, res) {
 		}
 		var root = parent ? parent : 'root';
 		var treeData = childList(root, hashData);
-		Base.json(res, treeData);
+		Base.json(res, {
+			status:1,
+			list:treeData
+		});
 	});
 };

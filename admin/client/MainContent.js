@@ -54,6 +54,6 @@ var MainContent = React.createClass({
 
 });
 
-mainContent = ReactDOM.render(
+KAdm.mainContent = ReactDOM.render(
 	<MainContent/>, $("#content")[0]
 );

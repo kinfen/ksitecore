@@ -5,7 +5,6 @@ script.
 	KAdm.user = !{JSON.stringify(user)};
 	KAdm.version = !{JSON.stringify(version)};
 	KAdm.devMode = !{process.env.KEYSTONE_DEV ? 'true' : 'false'};
-
 	KAdm.brand = !{JSON.stringify(brand)};
 	KAdm.nav = !{JSON.stringify(nav)};
 	KAdm.nav.currentSection = !{JSON.stringify(section)};
@@ -19,3 +18,7 @@ script.
 	KAdm.csrf.key = "#{csrf_token_key}";
 	KAdm.csrf.value = "#{csrf_token_value}";
 	KAdm.csrf.query = "!{csrf_query}";
+	
+	KAdm.sidebar;
+	KAdm.mainLoading;
+	KAdm.category;

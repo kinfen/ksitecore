@@ -40,7 +40,7 @@ var MainLoading = React.createClass({
 		
 });
 
-mainLoading = ReactDOM.render(
+KAdm.mainLoading = ReactDOM.render(
 	<MainLoading />,
 	$('#loading')[0]
 );

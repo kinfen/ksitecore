@@ -40,7 +40,6 @@ function render(req, res, view, ext) {
 	_.each(keystone.lists, function(list, key) {
 		lists[key] = list.getOptions();
 	});
-
 	var locals = {
 		_: _,
 		env: keystone.get('env'),
@@ -49,6 +48,7 @@ function render(req, res, view, ext) {
 		nav: keystone.nav,
 		//messages: _.any(flashMessages, function(msgs) { return msgs.length; }) ? flashMessages : false,
 		lists: lists,
+		model:req.params.model ? keystone.list(req.params.model) : '',
 		userModel: keystone.get('user model'),
 		user: req.user,
 		title: 'Keystone',

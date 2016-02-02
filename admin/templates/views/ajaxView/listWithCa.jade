@@ -1,4 +1,5 @@
-include ../includes/kadm
+//include ../includes/kadm
+include ../includes/kadmEx
 section.content-header
 	h1
 		| Dashboard
@@ -12,12 +13,31 @@ section.content-header
 // Main content
 section.content
 	.row
-		.col-xs-3#category
+		.col-sm-3
 			.box.box-solid
-				|hoho
-		.col-xs-9
-			|hoho
-script(src="#{adminPathEx}/script/content.js")
+				.box-header.with-border
+					h3.box-title 栏目组
+					.box-tools
+						button(data-widget="collapse").btn.btn-box-tool
+							i.fa.fa-minus
+							
+				.box-body.no-padding
+					#category
+		.col-sm-9
+			.box.box-primary
+				.box-header.with-border
+					h3.box-title 栏目组
+					.box-tools
+						button(data-widget="collapse").btn.btn-box-tool
+							i.fa.fa-minus
+
+				.box-body.no-padding
+					#table1
+						
+script(src="#{adminPathEx}/dist/js/bootstrap-table.js")
 script(src="#{adminPathEx}/dist/js/bootstrap-treeview.min.js")
+script(src='#{adminPathEx}/script/MainTable.js')
+script(src="#{adminPathEx}/script/inner.js")
+
 //script(src="#{adminPathEx}/script/Category.js")
 

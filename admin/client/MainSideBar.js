@@ -66,7 +66,7 @@ var MainSideBar = React.createClass({
 				}
 				list.push(
 					<li className={cn} key={index}>
-						<a href="#">
+						<a href='#' data-url={element.link}>
 							<i className="fa fa-dashboard"></i><span>{element.name}</span>{rightItem}
 						</a>
 						{subNods}
@@ -91,7 +91,7 @@ var MainSideBar = React.createClass({
 	},
 });
 
-sidebar = ReactDOM.render(
+KAdm.sidebar = ReactDOM.render(
 	<MainSideBar
 	userHead="dist/img/user2-160x160.jpg"
 	userName="Kinfen"

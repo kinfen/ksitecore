@@ -60,6 +60,6 @@ var Category = React.createClass({
 
 });
 
-category = ReactDOM.render(
+KAdm.category = ReactDOM.render(
 	<Category />, $("#category")[0]
 );
