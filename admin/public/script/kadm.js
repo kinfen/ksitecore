@@ -3,6 +3,7 @@
  */
 
 var table = {
+	sector:"#table",
 	tableList:function(data) {
 		data = _.map(data, function (obj) {
 			return _.mapObject(obj, function (value, key) {
@@ -17,7 +18,6 @@ var table = {
 			})
 
 		});
-		console.log(data);
 		return data;
 	},
 	fields:function(fields, fieldsStr){
@@ -52,84 +52,149 @@ var table = {
 		return fieldsList;
 		
 	},
-	init:function(sector, data) {
-		console.log(data);
+	refresh:function(data) {
+		if (!this.sector)
+		{
+			console.log('table view need a sector');
+			return;
+		}
 		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
-		//console.log(columns);
-		//console.log('init Table');
-		//$(sector).bootstrapTable({
-		//	columns:columns,
-		//	classes : "table table-hover table-no-bordered",
-		//	striped : false,
-		//	clickToSelect : true,
-		//	minimumCountColumns: 1,
-		//	showColumns: true,
-		//	toolbar : "#tool-bar",
-		//	data: this.tableList(data)
-		//}).on('click-row.bs.table', function (e, row, $element) {
-		//	//- console.log(this);
-		//	//- console.log($(this).bootstrapTable("getSelections"));
-		//	//- console.log(e);
-		//	//- console.log(row);
-		//	//- console.log($element);
-		//});
-		//$("#table").on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
-		//	//console.log("hoho");
-		//	//var selections = $("#table").bootstrapTable("getSelections");
-		//	//if (selections.length == 1){
-		//	//	$('#tool-bar li.edit').removeClass("disabled");
-		//	//	$('#tool-bar li.edit a').css("pointer-events", "");
-         //   //
-		//	//}
-		//	//else{
-		//	//	$('#tool-bar li.edit').addClass("disabled");
-		//	//	$('#tool-bar li.edit a').css("pointer-events", "none");
-         //   //
-		//	//}
-		//});
-		
-		KAdm.mainTable.setState({
+		//destory the old table;
+		$(this.sector).bootstrapTable('destroy');
+		$(this.sector).bootstrapTable({
 			columns:columns,
-			data:this.tableList(data)
+			classes : "table table-hover table-no-bordered",
+			striped : false,
+			clickToSelect : true,
+			minimumCountColumns: 1,
+			showColumns: true,
+			toolbar : ".list-tool-bar",
+			data: this.tableList(data)
+		}).on('click-row.bs.table', function (e, row, $element) {
+			//- console.log(this);
+			//- console.log($(this).bootstrapTable("getSelections"));
+			//- console.log(e);
+			//- console.log(row);
+			//- console.log($element);
+		});
+		$(this.sector).on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
+			var selections = $(this.sector).bootstrapTable("getSelections");
+			if (selections.length == 1){
+				$('.list-tool-bar li.edit').removeClass("disabled");
+				$('.list-tool-bar li.edit a').css("pointer-events", "");
+            
+			}
+			else{
+				$('.list-tool-bar li.edit').addClass("disabled");
+				$('.list-tool-bar li.edit a').css("pointer-events", "none");
+            
+			}
 		});
 		
-		//$('#tool-bar li.edit').on("click", this.editItemHandler);
-		//$('#tool-bar li.delete').on("click", this.removeItemHandler);
+		$('.list-tool-bar li.edit').on("click", this.editItemHandler);
+		$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
 	},
-	//editItemHandler:function(e)
-	//{
-	//	var selections = $("#table").bootstrapTable("getSelections");
-	//	if (selections.length == 1){
-	//		//- $('.action-sheet').dropdown('toggle');
-	//		var obj = selections[0];
-	//		parent.viewItem(Keystone.template.path, obj._id);
-	//	}
-	//},
-	//removeItemHandler:function (e)
-	//{
-	//	var selections = $("#table").bootstrapTable("getSelections");
-	//	var ids = _.pluck(selections, "_id");
-	//	var csrfObj = {};
-	//	csrfObj[Keystone.csrf.key] = Keystone.csrf.value;
-	//
-	//	parent.deleteItem(null, Keystone.template.path, ids, csrfObj, function(result){
-	//		if (result)
-	//		{
-	//			if (Keystone.template.path === "categories")
-	//			{
-	//				parent.window.location.reload();
-	//			}
-	//			else
-	//			{
-	//				window.location.reload();
-	//			}
-	//		}
-	//		else{
-	//			$("div#msg").append('<div class="alert alert-danger">删除数据失败</div>');
-	//		}
-	//	});
-	//}
+	editItemHandler:function(e)
+	{
+		var selections = $(this.sector).bootstrapTable("getSelections");
+		if (selections.length == 1){
+			//- $('.action-sheet').dropdown('toggle');
+			var obj = selections[0];
+			parent.viewItem(Keystone.template.path, obj._id);
+		}
+	},
+	removeItemHandler:function (e)
+	{
+		var selections = $(this.sector).bootstrapTable("getSelections");
+		var ids = _.pluck(selections, "_id");
+		var csrfObj = {};
+		csrfObj[Keystone.csrf.key] = Keystone.csrf.value;
+	
+		//parent.deleteItem(null, Keystone.template.path, ids, csrfObj, function(result){
+		//	if (result)
+		//	{
+		//		if (Keystone.template.path === "categories")
+		//		{
+		//			parent.window.location.reload();
+		//		}
+		//		else
+		//		{
+		//			window.location.reload();
+		//		}
+		//	}
+		//	else{
+		//		$("div#msg").append('<div class="alert alert-danger">删除数据失败</div>');
+		//	}
+		//});
+	}
+};
+var category = {
+	createHandler:function(e){
+		console.log(e);
+	},
+	removeHandler:function(e){
+		console.log(e);
+	},
+	onNodeSelected: function(event, node){
+		console.log(this);
+		KAdm.control.api({
+			url:KAdm.adminPath + "/api/Archive/list?cat=" + node.id + "&p=1&ps=10",
+			success:function(data)
+			{
+				KAdm.control.table.refresh(data.info.results);
+				
+			}
+		});
+	},
+	activeCategory:function(){
+		//KAdm.category.props = {
+		//	createHandler:this.createHandler,
+		//	removeHandler:this.removeHandler
+		//};
+		//KAdm.category.render();
+	}
 }
+var boxEx = {
+	//sector_
+	mainSector:".box",
+	toolSectors: {
+		edit:'[data-widget="edit"]',
+		create:'[data-widget="create"]',
+		delete:'[data-widget="delete"]',
+		commit:'[data-widget="commit"]'
+	},
+	edit:function(obj){
+		//console.log('haha1');
+		//console.log(obj);
+		$(this.mainSector).find(".tools-hidden").show();
+		$(this.mainSector).find(".tools-show").hide();
+		$("#category").treeview("showCheckbox")
+	},
+	create:function(obj){
+		console.log(obj);
+	},
+	delete:function(obj){
+		console.log(obj);
+	},
+	commit:function(obj){
+		$(this.mainSector).find(".tools-hidden").hide();
+		$(this.mainSector).find(".tools-show").show();
+	},
+	activeBox:function(){
+		var self = this;
+		$(self.mainSector).find(".tools-hidden").hide();
+		$(self.mainSector).find(".tools-show").show();
+		console.log(this.toolSectors);
+		_.each(this.toolSectors, function(secctor, key){
+			$(self.mainSector).on("click", secctor, function(e){
+				e.preventDefault();
+				//console.log(key);
+				self[key]($(this));
+			})
+		});
+	}
+	
+};
 
 KAdm.control = {
 	init:function()
@@ -237,22 +302,28 @@ KAdm.control = {
 				var list = _.map(data.list, function(value){
 					return formNode(value);
 				});
-				$('#category').treeview({
-					showBorder:false,
-					onNodeSelected: function(event, node) {
-						KAdm.control.api({
-							url:KAdm.adminPath + "/api/Archive/list?cat=" + node.id + "&p=1&ps=10",
-							success:function(data)
-							{
-								console.log(data);
-								KAdm.control.table.init("#table", data.info.results);
-							}
-						});
-						//console.log(node);
-						//$("#content-frame").attr("src", "/ksitecore/#{list.path}/list/" + node._id + "?type=" + node.template);
-					},
+				
+				KAdm.mainCategory.setState({
 					data:list
 				});
+				
+				//$('#category').treeview({
+				//	showBorder:false,
+				//	onNodeSelected: function(event, node) {
+				//		//KAdm.control.showLoading(true);
+				//		KAdm.control.api({
+				//			url:KAdm.adminPath + "/api/Archive/list?cat=" + node.id + "&p=1&ps=10",
+				//			success:function(data)
+				//			{
+				//				KAdm.control.table.refresh(data.info.results);
+				//				
+				//			}
+				//		});
+				//		console.log($('[data-widget="collapse"]'));
+				//		//$("#content-frame").attr("src", "/ksitecore/#{list.path}/list/" + node._id + "?type=" + node.template);
+				//	},
+				//	data:list
+				//});
 			},
 			error:function(xhr, error)
 			{
@@ -261,7 +332,9 @@ KAdm.control = {
 
 		});
 	},
-	table:table
+	table:table,
+	box:boxEx,
+	category:category
 };
 console.log('init kadm');
 KAdm.control.init();

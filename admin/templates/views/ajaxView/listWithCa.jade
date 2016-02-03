@@ -14,15 +14,7 @@ section.content-header
 section.content
 	.row
 		.col-sm-3
-			.box.box-solid
-				.box-header.with-border
-					h3.box-title 栏目组
-					.box-tools
-						button(data-widget="collapse").btn.btn-box-tool
-							i.fa.fa-minus
-							
-				.box-body.no-padding
-					#category
+			#category
 		.col-sm-9
 			.box.box-primary
 				.box-header.with-border
@@ -31,13 +23,28 @@ section.content
 						button(data-widget="collapse").btn.btn-box-tool
 							i.fa.fa-minus
 
-				.box-body.no-padding
-					#table1
+				.box-body
+					.list-tool-bar
+						.action-sheet.dropdown.btn-group(title="Actions")
+							button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="true")
+								span.glyphicon.glyphicon-th-list
+								span.caret
+							ul.dropdown-menu(role="menu")
+								li.edit.disabled
+									a(type="button")
+										span.glyphicon.glyphicon-edit
+										label Edit
+								li.delete
+									a(type="button")
+										span.glyphicon.glyphicon-trash
+										label Remove
+					table#table
 						
 script(src="#{adminPathEx}/dist/js/bootstrap-table.js")
 script(src="#{adminPathEx}/dist/js/bootstrap-treeview.min.js")
-script(src='#{adminPathEx}/script/MainTable.js')
+script(src="#{adminPathEx}/script/Category.js")
 script(src="#{adminPathEx}/script/inner.js")
+
 
 //script(src="#{adminPathEx}/script/Category.js")
 

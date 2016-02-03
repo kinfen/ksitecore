@@ -3,5 +3,7 @@
  */
 KAdm.control.showLoading(false, 1000);
 KAdm.control.loadCategory();
+KAdm.control.box.activeBox();
+KAdm.control.category.activeCategory();
 
 
