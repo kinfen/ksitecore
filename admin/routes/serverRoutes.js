@@ -7,8 +7,11 @@ var kadm = require('../');
 var keystone = kadm.getAdminPlus();
 var initList = require("./middleWare/initList")(keystone);
 exports = module.exports = function() {
-	
 	var routes = express.Router();
+	if (!keystone.nativeApp || !keystone.get('session')) {
+		console.log('*');
+		routes.all('*', keystone.session.persist);
+	}
 	routes.all('/', require('./views/main'));
 	routes.all('/signin', require('./views/signin'));
 	routes.all('/signout', require('./views/signout'));
@@ -18,6 +21,6 @@ exports = module.exports = function() {
 	routes.all('/test', function(req, res, next){
 		console.log("test");
 		next();
-	})
+	});
 	return routes;
 };

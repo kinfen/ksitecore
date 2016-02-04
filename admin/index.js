@@ -105,14 +105,11 @@ KAdm.prototype.init = function()
 KAdm.prototype.prebuild = require('./prebuild/buildClientJs');
 KAdm.prototype.start = function()
 {
-	
 	keystone.start();
-	
 }
 KAdm.prototype.render = require('./core/render');
 var adm = new KAdm();
 
 module.exports = exports = adm;
-adm.init();
-adm.start();
+
 
