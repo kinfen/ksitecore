@@ -27,12 +27,12 @@ var MainLoading = React.createClass({
 					<div className="dot2" />
 				</div>
 			);
-			$('#loading').show();
+			$('.content-wrapper > .loading').show();
 		}
 		else {
 			node = null;
 			
-			$('#loading').hide();
+			$('.content-wrapper > .loading').hide();
 		}
 
 		return node;
@@ -42,5 +42,5 @@ var MainLoading = React.createClass({
 
 KAdm.mainLoading = ReactDOM.render(
 	<MainLoading />,
-	$('#loading')[0]
+	$('.content-wrapper > .loading')[0]
 );

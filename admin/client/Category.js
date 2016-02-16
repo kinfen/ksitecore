@@ -14,13 +14,11 @@ var Category = React.createClass({
 		return {
 			title:"栏目组",
 			editMode:false,
-			remind:{},
 			data:{}
 		};
 	},
 	componentDidMount () {
 		$(ReactDOM.findDOMNode(this)).find("#category-create").hide();
-		$(ReactDOM.findDOMNode(this)).find(".category-remind").hide();
 	},
 	enterEditMode(e){
 		this.setState({
@@ -37,7 +35,6 @@ var Category = React.createClass({
 	createHandler(e){
 		e.preventDefault();
 		var node = this.treeTarget.treeview('getSelected');
-		console.log(node);
 		if (node.length == 0)
 		{
 			this.setState({
@@ -88,8 +85,17 @@ var Category = React.createClass({
 		}
 	},
 	onCatetoryNodeChecked(e, node){
-		console.log('check!');
-		console.log(node);
+		//console.log('check!');
+		//console.log(node);
+	},
+	updateTrees(){
+		this.treeTarget = $(ReactDOM.findDOMNode(this)).find('.box-body .tree-group').treeview({
+			showCheckbox:this.state.editMode,
+			showBorder:false,
+			onNodeSelected:this.onNodeSelected,
+			onNodeChecked:this.onCatetoryNodeChecked,
+			data:this.state.data
+		})
 	},
 	renderHeader(){
 		let toolsNormal = (<button type="button" className="btn btn-box-tool" onClick={this.enterEditMode}><i className="glyphicon glyphicon-edit"></i>
@@ -129,18 +135,17 @@ var Category = React.createClass({
 			</div>	
 		);
 	},
-	renderRemind(){
-		return (
-			<div className="callout callout-info category-remind">
-				<h4>{this.state.remind.title}</h4>
-				{this.state.remind.content}
-			</div>	
-		);
-	},
+	//renderRemind(){
+	//	return (
+	//		<div className="callout callout-info category-remind">
+	//			<h4>{this.state.remind.title}</h4>
+	//			{this.state.remind.content}
+	//		</div>	
+	//	);
+	//},
 	render(){
 		return (
 			<div>
-				{this.renderRemind()}
 				<div className="box box-solid">
 						{this.renderHeader()}
 					<div className="box-body">
@@ -152,14 +157,9 @@ var Category = React.createClass({
 			</div>	
 		);
 	},
-	componentDidUpdate(){
-		this.treeTarget = $(ReactDOM.findDOMNode(this)).find('.box-body .tree-group').treeview({
-			showCheckbox:this.state.editMode,
-			showBorder:false,
-			onNodeSelected:this.onNodeSelected,
-			onNodeChecked:this.onCatetoryNodeChecked,
-			data:this.state.data
-		})
+	componentDidUpdate(preProps, preState){
+		
+		console.log('did update');
 	}
 
 });

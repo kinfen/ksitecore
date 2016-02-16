@@ -18,7 +18,7 @@ module.exports = exports = function () {
 		signin: browserify('signin.js'),
 		MainSideBar: browserify('MainSideBar.js'),
 		MainLoading: browserify('MainLoading.js'),
-		//MainContent: browserify('MainContent.js'),
+		CateContent: browserify('CateContent.js'),
 		Category: browserify('Category.js'),
 		//home: browserify('views/home.js'),
 		//item: browserify('views/item.js'),
@@ -32,6 +32,7 @@ module.exports = exports = function () {
 		bundles.signin.build();
 		bundles.MainSideBar.build();
 		bundles.MainLoading.build();
+		bundles.CateContent.build();
 		bundles.Category.build();
 		//bundles.home.build();
 		//bundles.item.build();
@@ -59,6 +60,7 @@ module.exports = exports = function () {
 	router.get('/script/signin.js', bundles.signin.serve);
 	router.get('/script/MainSideBar.js', bundles.MainSideBar.serve);
 	router.get('/script/MainLoading.js', bundles.MainLoading.serve);
+	router.get('/script/CateContent.js', bundles.CateContent.serve);
 	router.get('/script/Category.js', bundles.Category.serve);
 	//router.get('/js/home.js', bundles.home.serve);
 	//router.get('/js/item.js', bundles.item.serve);

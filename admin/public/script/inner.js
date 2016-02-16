@@ -6,4 +6,10 @@ KAdm.control.loadCategory();
 KAdm.control.box.activeBox();
 KAdm.control.category.activeCategory();
 
+var ListWithCat = {
+	showLoading:function(){
+		
+	}
+};
+
 

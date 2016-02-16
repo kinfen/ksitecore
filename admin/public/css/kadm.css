@@ -1,4 +1,4 @@
-#loading{
+.loading{
 	width: 100%;
 	background-color: #ecf0f5;
 	padding-top: 150px;
@@ -50,3 +50,31 @@
 		  -webkit-transform: scale(1.0);
 	  }
 }
+
+
+/*//kadmin css*/
+
+
+
+/*@media (min-width:768px) {*/
+	/*.ka-category-group{*/
+		/*width:230px;*/
+	/*}*/
+	/*.ka-content-group{*/
+		/*width: -moz-calc(100% - 200px);*/
+		/*width: -webkit-calc(100% - 200px);*/
+		/*width: calc(100% - 200px);*/
+	/*}*/
+	/**/
+/*}*/
+
+/*@media (max-width:767px) {*/
+	/*.ka-category-group{*/
+		/*width:100%*/
+	/*}*/
+	/*.ka-content-group{*/
+		/*width:100%*/
+	/*}*/
+
+/*}*/
+
