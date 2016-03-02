@@ -75,7 +75,7 @@ var CateContent = React.createClass({
 			clickToSelect : true,
 			minimumCountColumns: 1,
 			showColumns: true,
-			toolbar : ".list-tool-bar",
+			toolbar : "#table-toolbar",
 			data: this.tableList(data)
 		}).on('click-row.bs.table', function (e, row, $element) {
 			//- console.log(this);
@@ -144,7 +144,20 @@ var CateContent = React.createClass({
 	},
 	renderToolBar(){
 		return(
-			<div className="list-tool-bar">
+			<div id="table-toolbar" className="btn-toolbar" role="toolbar" aria-label="...">
+				<div className="btn-group" role="group" aria-label="...">
+					<button type="button" className="btn btn-default"><i className="glyphicon glyphicon-plus"></i></button>
+					<button type="button" className="btn btn-default"><i className="glyphicon glyphicon-trash"></i></button>
+				</div>
+				<div className="input-group search-group" role="group">
+					<input type="text" className="form-control" placeholder="名称"/>
+						<div className="input-group-btn">
+							<button type="button" className="btn btn-primary ladda-button" data-style="expand-left">
+								<span className="ladda-labble">查询</span>
+							</button>
+						</div>
+				</div>
+				
 				
 			</div>
 		);	
