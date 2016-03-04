@@ -6,6 +6,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
 import _ from 'underscore';
 
 var CateContent = React.createClass({
@@ -101,6 +102,26 @@ var CateContent = React.createClass({
 		$('.list-tool-bar li.edit').on("click", this.editItemHandler);
 		$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
 	},
+	createItemHandler:function(e)
+	{
+		console.log('test');
+		var node = (
+			<div className="input-group create-input-group">
+				<input type="text" className="form-control" placeholder="名称"/>
+				<div className="input-group-btn">
+					<button type="button" className="btn btn-primary ladda-button" data-style="expand-left">
+						<span className="ladda-labble">查询</span>
+					</button>
+				</div>
+			</div>
+		);
+		$('.fixed-table-header').after(ReactDOMServer.renderToString(node));
+		var searchBar = $('.fixed-table-container .create-input-group');
+		console.log(searchBar);
+		//searchBar.hide();
+		searchBar.slideDown(300);
+		
+	},
 	editItemHandler:function(e)
 	{
 		var selections = $(this.sector).bootstrapTable("getSelections");
@@ -145,20 +166,10 @@ var CateContent = React.createClass({
 	renderToolBar(){
 		return(
 			<div id="table-toolbar" className="btn-toolbar" role="toolbar" aria-label="...">
-				<div className="btn-group" role="group" aria-label="...">
-					<button type="button" className="btn btn-default"><i className="glyphicon glyphicon-plus"></i></button>
+				<div className="btn-group" role="group">
+					<button type="button" className="btn btn-default" onClick={this.createItemHandler}><i className="glyphicon glyphicon-plus"></i></button>
 					<button type="button" className="btn btn-default"><i className="glyphicon glyphicon-trash"></i></button>
 				</div>
-				<div className="input-group search-group" role="group">
-					<input type="text" className="form-control" placeholder="名称"/>
-						<div className="input-group-btn">
-							<button type="button" className="btn btn-primary ladda-button" data-style="expand-left">
-								<span className="ladda-labble">查询</span>
-							</button>
-						</div>
-				</div>
-				
-				
 			</div>
 		);	
 	},

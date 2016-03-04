@@ -33,15 +33,19 @@
 	animation-delay: -1.0s;
 }
 
+.create-input-group{
+	display: hidden;
+}
 /*#table-toolbar{*/
-	/*width:60%;*/
+	/*width: 400px;*/
+	/**/
 /*}*/
-#table-toolbar .search-group input{
-	width:40%;
-}
-#table-toolbar .search-group .input-group-btn{
-	float: left;
-}
+/*#table-toolbar .search-group input{*/
+	/*!*width:40%;*!*/
+/*}*/
+/*#table-toolbar .search-group .input-group-btn{*/
+	/*!*float: left;*!*/
+/*}*/
 
 @-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
 @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
