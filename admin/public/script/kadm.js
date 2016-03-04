@@ -2,7 +2,6 @@
  * Created by kinfen on 16/2/1.
  */
 
-
 var category = {
 	createHandler:function(e){
 		console.log(e);
@@ -73,7 +72,9 @@ var boxEx = {
 	}
 	
 };
-
+KAdm.config = {
+	animateSpeed:300
+};
 KAdm.control = {
 	init:function()
 	{

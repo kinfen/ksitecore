@@ -2,8 +2,6 @@
  * Created by kinfen on 16/2/1.
  */
 'use strict';
-
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
@@ -104,22 +102,29 @@ var CateContent = React.createClass({
 	},
 	createItemHandler:function(e)
 	{
-		console.log('test');
 		var node = (
-			<div className="input-group create-input-group">
-				<input type="text" className="form-control" placeholder="名称"/>
-				<div className="input-group-btn">
-					<button type="button" className="btn btn-primary ladda-button" data-style="expand-left">
-						<span className="ladda-labble">查询</span>
-					</button>
+			<div className="create-input-group">
+				<div className="input-group">
+					<input type="text" className="form-control" placeholder="名称"/>
+					<div className="input-group-btn">
+						<button type="button" className="btn btn-primary ladda-button" data-style="expand-left">
+							<span className="ladda-labble">创建</span>
+						</button>
+					</div>
 				</div>
 			</div>
 		);
-		$('.fixed-table-header').after(ReactDOMServer.renderToString(node));
-		var searchBar = $('.fixed-table-container .create-input-group');
-		console.log(searchBar);
-		//searchBar.hide();
-		searchBar.slideDown(300);
+		var createField = $(ReactDOM.findDOMNode(this)).find(".create-input-group");
+		if ($(ReactDOM.findDOMNode(this)).find(".create-input-group").length == 0)
+		{
+			//insert the create item next to the fixed-table-header
+			$(ReactDOM.findDOMNode(this)).find('.fixed-table-header').after(ReactDOMServer.renderToString(node));
+			createField = $(ReactDOM.findDOMNode(this)).find(".create-input-group");
+			createField.hide();
+		}
+		createField.slideToggle(KAdm.config.animateSpeed);
+		
+		
 		
 	},
 	editItemHandler:function(e)
