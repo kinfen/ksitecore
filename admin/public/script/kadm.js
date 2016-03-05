@@ -79,22 +79,27 @@ KAdm.control = {
 	init:function()
 	{
 		this.loadSideBarMenu();
-		this.loadPage('http://localhost:3000/admin/Category/Archive');
+		this.loadPage('http://localhost:3000/admin/Category/Archive', "56ab8d55d5ac429506d72260");
 		$(".sidebar").on('click', 'li a', function (e) {
 			var ele = $(this).next();
 			if (!ele.is('.treeview-menu')){
 				var url = $(this).data("url");
+				var navs = $(this).data("id");
 				if (url.trim().length > 0)
 				{
-					KAdm.control.loadPage(url);
+					KAdm.control.loadPage(url, navs);
 				}
 				
 			}
 			
 		});
 	},
-	api:function(opt)
+	api:function(opt, isNeedCsrfVaild)
 	{
+		if (isNeedCsrfVaild)
+		{
+			opt.data[KAdm.csrf.key] = KAdm.csrf.value;
+		}
 		$.ajax(opt);
 	},
 	showLoading:function(b, delay){
@@ -143,10 +148,13 @@ KAdm.control = {
 
 		});
 	},
-	loadPage:function(url){
+	loadPage:function(url, navs){
 		this.showLoading(true);
-		$.ajax({
+		KAdm.control.api({
 			url:url,
+			data:{
+				navs:navs	
+			},
 			dataType:"html",
 			success:function(data)
 			{
@@ -155,61 +163,6 @@ KAdm.control = {
 			error:function(){
 
 			}
-		});
-	},
-	loadCategory:function(){
-		function formNode(obj)
-		{
-			var node = {};
-			node.text = obj.name;
-			node.link = obj.link;
-			obj.name= undefined;
-			node.id=obj._id;
-			if (obj.childs)
-			{
-				node.nodes = _.map(obj.childs, function(value){
-					return formNode(value);
-				});
-				obj.childs = undefined;
-			}
-			return node;
-		}
-		this.api({
-			url:KAdm.adminPath + "/api/Category/tree",
-			dataType:"json",
-			success:function(data){
-				var list = _.map(data.list, function(value){
-					return formNode(value);
-				});
-				
-				KAdm.mainCategory.setState({
-					data:list
-				});
-				KAdm.mainCategory.updateTrees();
-				
-				//$('#category').treeview({
-				//	showBorder:false,
-				//	onNodeSelected: function(event, node) {
-				//		//KAdm.control.showLoading(true);
-				//		KAdm.control.api({
-				//			url:KAdm.adminPath + "/api/Archive/list?cat=" + node.id + "&p=1&ps=10",
-				//			success:function(data)
-				//			{
-				//				KAdm.control.table.refresh(data.info.results);
-				//				
-				//			}
-				//		});
-				//		console.log($('[data-widget="collapse"]'));
-				//		//$("#content-frame").attr("src", "/ksitecore/#{list.path}/list/" + node._id + "?type=" + node.template);
-				//	},
-				//	data:list
-				//});
-			},
-			error:function(xhr, error)
-			{
-
-			}
-
 		});
 	},
 	box:boxEx,

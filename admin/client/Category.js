@@ -10,6 +10,7 @@ import _ from 'underscore';
 var Category = React.createClass({
 	treeTarget:null,
 	animateSpeed:300,
+	treeData:null,
 	getInitialState () {
 		return {
 			title:"栏目组",
@@ -17,8 +18,52 @@ var Category = React.createClass({
 			data:{}
 		};
 	},
+	formNode(obj)
+	{
+		var self = this;
+		var node = {};
+		node.text = obj.name;
+		node.link = obj.link;
+		node.navs = obj.navs;
+		obj.name= undefined;
+		node.id=obj._id;
+		if (obj.childs)
+		{
+			node.nodes = _.map(obj.childs, function(value){
+				return self.formNode(value);
+			});
+			obj.childs = undefined;
+		}
+		return node;
+	},
+	refreshCategory(callback){
+		var self = this;
+		KAdm.control.api({
+			url:KAdm.adminPath + "/api/Category/tree",
+			dataType:"json",
+			success:function(data){
+				var list = _.map(data.list, function(value){
+					return self.formNode(value);
+				});
+				self.treeData = list;
+				self.updateTrees();
+				if (callback)
+				{
+					callback(data);
+				}
+			},
+			error:function(xhr, error)
+			{
+				if (callback)
+				{
+					callback(xhr, error);
+				}
+			}
+		});
+	},
 	componentDidMount () {
 		$(ReactDOM.findDOMNode(this)).find("#category-create").hide();
+		this.refreshCategory();
 	},
 	enterEditMode(e){
 		this.setState({
@@ -32,40 +77,72 @@ var Category = React.createClass({
 		})
 		$(ReactDOM.findDOMNode(this)).find("#category-create").slideUp(this.animateSpeed);
 	},
-	createHandler(e){
+	checkForm(form)
+	{
+		var name = form['name'].value;
+		if (name.length ==0 )
+			return false;
+		return true;
+	},
+	submitHandler(e){
 		e.preventDefault();
-		var node = this.treeTarget.treeview('getSelected');
-		if (node.length == 0)
-		{
-			this.setState({
-				remind:{
-					title:"提示",
-					content:"请选择一个父级栏目?"
-				}
-			});
-			$(ReactDOM.findDOMNode(this)).find(".category-remind").slideDown(this.animateSpeed);
-			return;
-		}
+		var nodes = this.treeTarget.treeview('getSelected');
+		var form = e.currentTarget;
+		var btn = form.querySelector("button[type='submit']");
 		
-		if (this.props.createHandler)
+		if (!this.checkForm(form))
 		{
-			var l = Ladda.create(e.currentTarget);
-			l.start();
-			this.props.createHandler(name, function(remind){
-				if (remind)
+			return false;
+		}
+		var name = form['name'].value;
+		var l = Ladda.create(btn);
+		l.start();
+		var self = this;
+		KAdm.control.api({
+			url:KAdm.adminPath + "/api/Category",
+			type:"POST",
+			data:{
+				action:"create",
+				name:name,
+				parent:nodes.length > 0 ? nodes[0].id : null,
+				navs:KAdm.navs
+			},
+			success:function(data)
+			{
+				if (data.status===1)
 				{
-					this.setState({
-						title:remind.title,
-						content:remind.content
-					});
-					$(ReactDOM.findDOMNode(this)).find(".category-remind").slideDown(this.animateSpeed);
+					self.refreshCategory();
 				}
+				
+				KAdm.cateContent.setState({
+					loading:false
+				});
 				l.stop();
-			});
-		}
-		else {
-			
-		}
+				//KAdm.cateContent.refresh(data.info.results);
+			},
+			error:function(){
+				l.stop();
+			}
+		}, true);
+		//
+		//if (this.props.createHandler)
+		//{
+		//	
+		//	this.props.createHandler(name, function(remind){
+		//		if (remind)
+		//		{
+		//			this.setState({
+		//				title:remind.title,
+		//				content:remind.content
+		//			});
+		//			$(ReactDOM.findDOMNode(this)).find(".category-remind").slideDown(this.animateSpeed);
+		//		}
+		//		l.stop();
+		//	});
+		//}
+		//else {
+		//	
+		//}
 		
 	},
 	showCreateFormHandler(e){
@@ -76,9 +153,7 @@ var Category = React.createClass({
 	},
 	onNodeSelected(e, node){
 		if (this.state.editMode){
-			//console.log(node);
-			this.treeTarget.treeview("toggleNodeChecked", [node.nodeId]);
-			//this.treeTarget.treeview("selectNode", [node.nodeId]);
+			
 		}	
 		else {
 			this.props.onNodeSelected(e, node);
@@ -94,7 +169,7 @@ var Category = React.createClass({
 			showBorder:false,
 			onNodeSelected:this.onNodeSelected,
 			onNodeChecked:this.onCatetoryNodeChecked,
-			data:this.state.data
+			data:this.treeData
 		})
 	},
 	renderHeader(){
@@ -125,14 +200,16 @@ var Category = React.createClass({
 	renderCreateForm(){
 		
 		return (
-			<div  id="category-create" className="form-group">
-				<div className="input-group" >
-					<input  type="text" className="form-control" placeholder="名称"/>
-					<div className="input-group-btn">
-						<button  type="button" className="btn btn-primary btn-flat ladda-button" data-style="expand-left" onClick={this.createHandler}><span className="ladda-labble">创建</span></button>
+			<form id="category-create" onSubmit={this.submitHandler}>
+				<div className="form-group">
+					<div className="input-group" >
+						<input name="name"  type="text" className="form-control" placeholder="名称"/>
+						<div className="input-group-btn">
+							<button type="submit" className="btn btn-primary btn-flat ladda-button" data-style="expand-left"><span className="ladda-labble">创建</span></button>
+						</div>
 					</div>
 				</div>
-			</div>	
+			</form>	
 		);
 	},
 	//renderRemind(){
@@ -158,14 +235,13 @@ var Category = React.createClass({
 		);
 	},
 	componentDidUpdate(preProps, preState){
-		
-		console.log('did update');
+		this.updateTrees();
 	}
 
 });
 
 KAdm.mainCategory = ReactDOM.render(
-	<Category 
+	<Category
 		createHandler={KAdm.control.category.createHandler}
 		removeHandler={KAdm.control.category.removeHandler}
 		onNodeSelected={KAdm.control.category.onNodeSelected}

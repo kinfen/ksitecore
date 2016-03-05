@@ -23,6 +23,7 @@ module.exports = function(req, res) {
 			return value.field;fields.push("name");
 		});
 		fields.push("_id");
+		fields.push("navs");
 	}
 	//Base.json(res, {
 	//	status:1,
@@ -37,6 +38,6 @@ module.exports = function(req, res) {
 		Base.json(res, {
 			status:1,
 			info:items
-		})
+		});
 	});
 };

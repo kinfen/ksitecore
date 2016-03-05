@@ -16,7 +16,7 @@ Base.prototype.error = function (res, key, err, msg)
 	if (err) {
 		console.log(err);
 	}
-	res.status(500);
+	//res.status(500);
 	this.json(res, { status:0,  error: key || 'error', detail: err ? err.message : '' });	
 
 }

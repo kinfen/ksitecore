@@ -66,7 +66,7 @@ var MainSideBar = React.createClass({
 				}
 				list.push(
 					<li className={cn} key={index}>
-						<a href='#' data-url={element.link}>
+						<a href='#' data-url={element.link} data-id={element._id}>
 							<i className="fa fa-dashboard"></i><span>{element.name}</span>{rightItem}
 						</a>
 						{subNods}

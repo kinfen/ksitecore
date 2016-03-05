@@ -21,7 +21,7 @@ module.exports = function(req, res) {
 	if (!fields)
 	{
 		fields = _.map(req.list.getOptions().uiElements, function(value, index){
-			return value.field;fields.push("name");
+			return value.field;
 		});
 		fields.push("_id");
 		fields.push("name");
