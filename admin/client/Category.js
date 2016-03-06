@@ -11,6 +11,7 @@ var Category = React.createClass({
 	treeTarget:null,
 	animateSpeed:300,
 	treeData:null,
+	treeTarget:null,
 	getInitialState () {
 		return {
 			title:"栏目组",
@@ -18,32 +19,33 @@ var Category = React.createClass({
 			data:{}
 		};
 	},
-	formNode(obj)
-	{
-		var self = this;
-		var node = {};
-		node.text = obj.name;
-		node.link = obj.link;
-		node.navs = obj.navs;
-		obj.name= undefined;
-		node.id=obj._id;
-		if (obj.childs)
-		{
-			node.nodes = _.map(obj.childs, function(value){
-				return self.formNode(value);
-			});
-			obj.childs = undefined;
-		}
-		return node;
-	},
 	refreshCategory(callback){
 		var self = this;
+		var formNode = function(obj)
+		{
+			var self = this;
+			var node = {};
+			node.text = obj.name;
+			node.link = obj.link;
+			node.navs = obj.navs;
+			obj.name= undefined;
+			node.id=obj._id;
+			if (obj.childs)
+			{
+				node.nodes = _.map(obj.childs, function(value){
+					return formNode(value);
+				});
+				obj.childs = undefined;
+			}
+			return node;
+		};
+		
 		KAdm.control.api({
 			url:KAdm.adminPath + "/api/Category/tree",
 			dataType:"json",
 			success:function(data){
 				var list = _.map(data.list, function(value){
-					return self.formNode(value);
+					return formNode(value);
 				});
 				self.treeData = list;
 				self.updateTrees();
@@ -63,6 +65,7 @@ var Category = React.createClass({
 	},
 	componentDidMount () {
 		$(ReactDOM.findDOMNode(this)).find("#category-create").hide();
+		
 		this.refreshCategory();
 	},
 	enterEditMode(e){
@@ -83,6 +86,87 @@ var Category = React.createClass({
 		if (name.length ==0 )
 			return false;
 		return true;
+	},
+	removeHandler(e){
+		var checkedNodes = this.treeTarget.treeview("getChecked");
+		
+		if (checkedNodes.length == 0)
+		{
+			KAdm.modal.show({
+				style:"default",
+				title:"提示",
+				body:"请勾选需要删除的栏目"
+			});
+			return;
+		}
+		
+		var list = [];
+		for (var i = 0; i < checkedNodes.length; i++)
+		{
+			
+			var node = checkedNodes[i];
+			list.push(<li key={i}>{node.text}</li>);
+		}
+		var bodyElement = (
+			<div>
+				<div>是否确认删除以下{list.length}个栏目</div>
+				<ul>
+					{list}
+				</ul>
+			</div>
+		);
+		
+		KAdm.modal.show({
+			style:"danger",
+			title:"提示",
+			body:bodyElement,
+			footer:{
+				leftItems:[
+					<button key={0} type="button" className="btn btn-danger pull-left ladda-button" data-style="expand-left" onClick={this.removeItem}>删除</button>
+				],
+				rightItems:[{
+					name:"关闭",
+					style:"default",
+					data:"dismiss"
+				}]
+			}
+		});
+	},
+	removeItem(e){
+		var self = this;
+		var checkedNodes = this.treeTarget.treeview("getChecked");
+		var ids = _.pluck(checkedNodes, "id");
+		
+		var btn = e.currentTarget;
+		var l =Ladda.create(btn);
+		l.start();
+		
+		KAdm.control.api({
+			url:KAdm.adminPath + "/api/Category",
+			type:"POST",
+			data:{
+				action:"delete",
+				ids:ids
+			},
+			success:function(data)
+			{
+				if (data.status===1)
+				{
+					self.treeTarget.treeview("uncheckAll");
+					self.refreshCategory();
+				}
+
+				KAdm.cateContent.setState({
+					loading:false
+				});
+				l.stop();
+				KAdm.modal.hide();
+				//KAdm.cateContent.refresh(data.info.results);
+			},
+			error:function(){
+				l.stop();
+			}
+		}, true);
 	},
 	submitHandler(e){
 		e.preventDefault();
@@ -124,26 +208,6 @@ var Category = React.createClass({
 				l.stop();
 			}
 		}, true);
-		//
-		//if (this.props.createHandler)
-		//{
-		//	
-		//	this.props.createHandler(name, function(remind){
-		//		if (remind)
-		//		{
-		//			this.setState({
-		//				title:remind.title,
-		//				content:remind.content
-		//			});
-		//			$(ReactDOM.findDOMNode(this)).find(".category-remind").slideDown(this.animateSpeed);
-		//		}
-		//		l.stop();
-		//	});
-		//}
-		//else {
-		//	
-		//}
-		
 	},
 	showCreateFormHandler(e){
 		this.setState({
@@ -158,19 +222,54 @@ var Category = React.createClass({
 		else {
 			this.props.onNodeSelected(e, node);
 		}
+		var ids = $('.box-body .tree-group').treeview("getExpanded");
+		console.log(ids);
 	},
 	onCatetoryNodeChecked(e, node){
 		//console.log('check!');
 		//console.log(node);
 	},
 	updateTrees(){
+		
+		var expandedNodes;
+		var selectedNodes;
+		var checkedNodes;
+		var firstRun = true;
+		if (this.treeTarget)
+		{
+			//save the tree state to avoid refresh and lost data
+			expandedNodes = this.treeTarget.treeview("getExpanded");
+			selectedNodes = this.treeTarget.treeview("getSelected");
+			checkedNodes = this.treeTarget.treeview("getChecked");
+			expandedNodes = _.pluck(expandedNodes, "nodeId");
+			selectedNodes = _.pluck(selectedNodes, "nodeId");
+			checkedNodes = _.pluck(checkedNodes, "nodeId");
+			firstRun = false;
+			this.treeTarget.treeview("remove");
+		}
+		
 		this.treeTarget = $(ReactDOM.findDOMNode(this)).find('.box-body .tree-group').treeview({
 			showCheckbox:this.state.editMode,
 			showBorder:false,
 			onNodeSelected:this.onNodeSelected,
 			onNodeChecked:this.onCatetoryNodeChecked,
 			data:this.treeData
-		})
+		});
+		if (!firstRun)
+		{
+			if (expandedNodes.length > 0)
+			{
+				this.treeTarget.treeview("expandNode", [expandedNodes, {silent:true}]);
+			}
+			if (selectedNodes.length > 0)
+			{
+				this.treeTarget.treeview("selectNode", [selectedNodes, {silent:true}]);
+			}
+			if (checkedNodes.length > 0)
+			{
+				this.treeTarget.treeview("checkNode", [checkedNodes, {silent:true}]);
+			}
+		}
 	},
 	renderHeader(){
 		let toolsNormal = (<button type="button" className="btn btn-box-tool" onClick={this.enterEditMode}><i className="glyphicon glyphicon-edit"></i>
@@ -180,7 +279,7 @@ var Category = React.createClass({
 			<span>
 				<button type="button" className="btn btn-box-tool" onClick={this.showCreateFormHandler}><i className="glyphicon glyphicon-plus"></i>
 				</button>
-				<button type="button" className="btn btn-box-tool" onClick={this.props.removeHandler}><i className="glyphicon glyphicon-minus"></i>
+				<button type="button" className="btn btn-box-tool" onClick={this.removeHandler}><i className="glyphicon glyphicon-minus"></i>
 				</button>
 				<button type="button" className="btn btn-box-tool" onClick={this.leaveEditMode}><i className="glyphicon glyphicon-ok"></i>
 				</button>
@@ -212,14 +311,6 @@ var Category = React.createClass({
 			</form>	
 		);
 	},
-	//renderRemind(){
-	//	return (
-	//		<div className="callout callout-info category-remind">
-	//			<h4>{this.state.remind.title}</h4>
-	//			{this.state.remind.content}
-	//		</div>	
-	//	);
-	//},
 	render(){
 		return (
 			<div>
@@ -241,9 +332,5 @@ var Category = React.createClass({
 });
 
 KAdm.mainCategory = ReactDOM.render(
-	<Category
-		createHandler={KAdm.control.category.createHandler}
-		removeHandler={KAdm.control.category.removeHandler}
-		onNodeSelected={KAdm.control.category.onNodeSelected}
-	/>, $("#category")[0]
+	<Category onNodeSelected={KAdm.control.category.onNodeSelected}/>, $("#category")[0]
 );

@@ -6,22 +6,21 @@
 var Base = require('./global/Base');
 var kadm = require('../');
 var _ = require('underscore');
+var async = require('async');
 var keystone = kadm.getAdminPlus();
 
 module.exports = function(req, res) {
 
 	var data = (req.method === 'POST') ? req.body : req.query;
+	if (!keystone.security.csrf.validate(req)) {
+		return Base.error(res, "Error", new Error('csrf检验错误'), 'csrf检验错误');
+	}
 	var action = data.action;
-	//console.log(req.list.getOptions().fields);
-	//console.log("=============");
-	//console.log(req.list.initialFields);
 	switch(action)
 	{
 		case "create":
 		{
-			if (!keystone.security.csrf.validate(req)) {
-				return Base.error(res, "Error", new Error('csrf检验错误'), 'csrf检验错误');
-			}
+			
 			var item = new req.list.model();
 			var updateHandler = item.getUpdateHandler(req);
 			var data = (req.method === 'POST') ? req.body : req.query;
@@ -48,6 +47,51 @@ module.exports = function(req, res) {
 			});
 		}
 			break;
+		case "delete":
+		{
+			if (req.list.get('nodelete')) {
+				console.log(`Refusing to delete ${req.list.key} items; List.nodelete is true`);
+				return Base.error(res, "Error", new Error('指定的类型不能删除'), '指定的类型不能删除');
+			}
+			var ids = req.body.ids || req.body.id || req.params.id;
+			if (typeof ids === 'string') {
+				ids = ids.split(',');
+			}
+			if (!Array.isArray(ids)) {
+				ids = [ids];
+			}
+			if (req.user) {
+				var userId = String(req.user.id);
+				if (ids.some(function(id) {
+						return id === userId;
+					})) {
+					console.log(`Refusing to delete ${req.list.key} items; ids contains current User`);
+					return Base.error(res, "Error", new Error('不能删除自身用户'), '不能删除自身用户');
+				}
+			}
+			var deletedCount = 0;
+			var deletedIds = [];
+			req.list.model.find().where('_id').in(ids).exec(function (err, results) {
+				if (err) {
+					console.log(`Error deleting ${req.list.key} items:`, err);
+					return Base.error(res, "Error", err, err.message);
+				}
+				async.forEachLimit(results, 10, function(item, next) {
+					item.remove(function (err) {
+						if (err) return next(err);
+						deletedCount++;
+						deletedIds.push(item.id);
+						next();
+					});
+				}, function() {
+					return Base.json(res, {
+						status:1,
+						delete_ids: deletedIds,
+						count: deletedCount
+					});
+				});
+			});
+		}
 		
 	}
 	//var itemQuery = req.list.model.findById(req.params.item).select();
