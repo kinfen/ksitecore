@@ -42,6 +42,9 @@ var Category = React.createClass({
 		
 		KAdm.control.api({
 			url:KAdm.adminPath + "/api/Category/tree",
+			data:{
+				navs:self.props.navs
+			},
 			dataType:"json",
 			success:function(data){
 				var list = _.map(data.list, function(value){
@@ -135,6 +138,7 @@ var Category = React.createClass({
 	removeItem(e){
 		var self = this;
 		var checkedNodes = this.treeTarget.treeview("getChecked");
+		this.treeTarget.treeview("unselectNode", [checkedNodes, {silent:true}]);
 		var ids = _.pluck(checkedNodes, "id");
 		
 		var btn = e.currentTarget;
@@ -189,7 +193,7 @@ var Category = React.createClass({
 				action:"create",
 				name:name,
 				parent:nodes.length > 0 ? nodes[0].id : null,
-				navs:KAdm.navs
+				navs:self.props.navs
 			},
 			success:function(data)
 			{
@@ -263,6 +267,7 @@ var Category = React.createClass({
 			}
 			if (selectedNodes.length > 0)
 			{
+				//now when edit and delete the selectNode will make mistake
 				this.treeTarget.treeview("selectNode", [selectedNodes, {silent:true}]);
 			}
 			if (checkedNodes.length > 0)
@@ -279,7 +284,7 @@ var Category = React.createClass({
 			<span>
 				<button type="button" className="btn btn-box-tool" onClick={this.showCreateFormHandler}><i className="glyphicon glyphicon-plus"></i>
 				</button>
-				<button type="button" className="btn btn-box-tool" onClick={this.removeHandler}><i className="glyphicon glyphicon-minus"></i>
+				<button type="button" className="btn btn-box-tool" onClick={this.removeHandler}><i className="glyphicon glyphicon-trash"></i>
 				</button>
 				<button type="button" className="btn btn-box-tool" onClick={this.leaveEditMode}><i className="glyphicon glyphicon-ok"></i>
 				</button>
@@ -332,5 +337,5 @@ var Category = React.createClass({
 });
 
 KAdm.mainCategory = ReactDOM.render(
-	<Category onNodeSelected={KAdm.control.category.onNodeSelected}/>, $("#category")[0]
+	<Category navs={KAdm.navs} onNodeSelected={KAdm.control.category.onNodeSelected}/>, $("#category")[0]
 );

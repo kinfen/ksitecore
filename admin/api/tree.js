@@ -12,9 +12,9 @@ var keystone = require('../').getAdminPlus();
 module.exports = function(req, res) {
 	
 	var parent = req.query.parent;
-	
+	var navs = req.query.navs;
 	var fields = req.query.fields ? req.query.fields.split(',') : null;
-	var searchTag  = {state:"normal"};
+	var searchTag  = {state:"normal", navs:navs};
 	if (parent)
 		_.extend(searchTag, {parent:parent});
 	//console.log(req.list.getOptions());
