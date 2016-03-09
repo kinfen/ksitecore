@@ -9,15 +9,19 @@ import ReactDOM from 'react-dom';
 import _ from 'underscore';
 
 var MainTable = React.createClass({
+	tableTarget:$("#table"),
 	getInitialState () {
 		return {
 			data: {},
 			columns: []
 		}	
 	},
+	reloadData(){
+		this.tableTarget.bootstrapTable('load', this.state.data);
+
+	},
 	componentDidMount () {
-		console.log('mount');
-		KAdm.control.table.init("#table", this.state.data);
+		this.reloadData();
 		
 	},
 	//renderHeader(){
@@ -86,14 +90,7 @@ var MainTable = React.createClass({
 	},
 	componentDidUpdate()
 	{
-		$('#table').bootstrapTable('destroy');
-		KAdm.control.table.init("#table", this.state.data);
-		//
 	},
 
 
 });
-
-KAdm.mainTable = ReactDOM.render(
-	<MainTable/>, $("#table1")[0]
-);

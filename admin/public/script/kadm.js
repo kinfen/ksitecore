@@ -3,12 +3,7 @@
  */
 
 var category = {
-	createHandler:function(e){
-		console.log(e);
-	},
-	removeHandler:function(e){
-		console.log(e);
-	},
+	//set the handle function about the Category
 	onNodeSelected: function(event, node){
 		KAdm.cateContent.setState({
 			loading:true

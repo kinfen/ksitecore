@@ -74,6 +74,7 @@ var Category = React.createClass({
 		})
 	},
 	leaveEditMode(e){
+		this.treeTarget.treeview("uncheckAll");
 		this.setState({
 			title:"栏目组",
 			editMode:false
@@ -247,7 +248,6 @@ var Category = React.createClass({
 			firstRun = false;
 			this.treeTarget.treeview("remove");
 		}
-		
 		this.treeTarget = $(ReactDOM.findDOMNode(this)).find('.box-body .tree-group').treeview({
 			showCheckbox:this.state.editMode,
 			showBorder:false,
@@ -279,13 +279,12 @@ var Category = React.createClass({
 			<span>
 				<button type="button" className="btn btn-box-tool" onClick={this.showCreateFormHandler}><i className="glyphicon glyphicon-plus"></i>
 				</button>
-				<button type="button" className="btn btn-box-tool" onClick={this.removeHandler}><i className="glyphicon glyphicon-minus"></i>
+				<button type="button" className="btn btn-box-tool" onClick={this.removeHandler}><i className="glyphicon glyphicon-trash"></i>
 				</button>
 				<button type="button" className="btn btn-box-tool" onClick={this.leaveEditMode}><i className="glyphicon glyphicon-ok"></i>
 				</button>
 			</span>	
 		);
-		
 		return (
 			
 				<div className="box-header with-border">
