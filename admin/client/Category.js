@@ -77,6 +77,7 @@ var Category = React.createClass({
 		})
 	},
 	leaveEditMode(e){
+		this.treeTarget.treeview("uncheckAll");
 		this.setState({
 			title:"栏目组",
 			editMode:false
@@ -227,7 +228,6 @@ var Category = React.createClass({
 			this.props.onNodeSelected(e, node);
 		}
 		var ids = $('.box-body .tree-group').treeview("getExpanded");
-		console.log(ids);
 	},
 	onCatetoryNodeChecked(e, node){
 		//console.log('check!');
@@ -251,7 +251,6 @@ var Category = React.createClass({
 			firstRun = false;
 			this.treeTarget.treeview("remove");
 		}
-		
 		this.treeTarget = $(ReactDOM.findDOMNode(this)).find('.box-body .tree-group').treeview({
 			showCheckbox:this.state.editMode,
 			showBorder:false,
@@ -290,7 +289,6 @@ var Category = React.createClass({
 				</button>
 			</span>	
 		);
-		
 		return (
 			
 				<div className="box-header with-border">

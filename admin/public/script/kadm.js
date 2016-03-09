@@ -3,30 +3,13 @@
  */
 
 var category = {
-	createHandler:function(e){
-		console.log(e);
-	},
-	removeHandler:function(e){
-		console.log(e);
-	},
+	//set the handle function about the Category
 	onNodeSelected: function(event, node){
-		KAdm.cateContent.setState({
-			loading:true
-		});
-		KAdm.control.api({
-			url:KAdm.adminPath + "/api/Archive/list?cat=" + node.id + "&p=1&ps=10",
-			success:function(data)
-			{
-				KAdm.cateContent.setState({
-					loading:false
-				});
-				KAdm.cateContent.refresh(data.info.results);
-				
-			}
-		});
+		KAdm.cateContent.loadData(KAdm.adminPath + "/api/Archive/list?cat=" + node.id + "&p=1&ps=10");
 	},
 	activeCategory:function(){
 		KAdm.mainCategory.updateTrees();
+		
 		//KAdm.category.props = {
 		//	createHandler:this.createHandler,
 		//	removeHandler:this.removeHandler
