@@ -66,8 +66,9 @@ var CateContent = React.createClass({
 		}
 		
 		//destory the old table;
+		console.log(data);
 		console.log(this.tableList(data));
-		$(this.sector).bootstrapTable('load', {data:this.tableList(data)});
+		$(this.sector).bootstrapTable('load', this.tableList(data));
 		
 	},
 	loadData(url){
@@ -154,8 +155,8 @@ var CateContent = React.createClass({
 		};
 	},
 	componentDidMount () {
-		console.log('mount');
 		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
+		console.log(columns);
 		$(this.sector).bootstrapTable({
 			columns:columns,
 			classes : "table table-hover table-no-bordered",
