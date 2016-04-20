@@ -19,9 +19,12 @@ var Modal = React.createClass({
 		}
 	},
 	componentDidMount () {
-
 	},
 	show(state){
+		if (!state.footer)
+		{
+			state.footer = this.getInitialState().footer;
+		}
 		if (state){
 			this.setState(state);
 		}

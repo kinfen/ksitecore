@@ -6,6 +6,9 @@ var category = {
 	//set the handle function about the Category
 	onNodeSelected: function(event, node){
 		KAdm.cateContent.loadData(KAdm.adminPath + "/api/Archive/list?cat=" + node.id + "&p=1&ps=10");
+		KAdm.cateContent.setState({
+			category:node.id
+		});
 	},
 	activeCategory:function(){
 		KAdm.mainCategory.updateTrees();
@@ -62,7 +65,7 @@ KAdm.control = {
 	init:function()
 	{
 		this.loadSideBarMenu();
-		this.loadPage('http://localhost:3000/admin/Category/Archive', "56ab8d55d5ac429506d72260");
+		this.loadPage('http://localhost:3000/admin/Category/Archive', "56aece7f7dd7f7e801621fa8");
 		$(".sidebar").on('click', 'li a', function (e) {
 			var ele = $(this).next();
 			if (!ele.is('.treeview-menu')){

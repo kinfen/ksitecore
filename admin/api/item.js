@@ -16,6 +16,7 @@ module.exports = function(req, res) {
 		return Base.error(res, "Error", new Error('csrf检验错误'), 'csrf检验错误');
 	}
 	var action = data.action;
+	console.log(data);
 	switch(action)
 	{
 		case "create":

@@ -5,11 +5,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
+import moment from 'moment'
 import _ from 'underscore';
 
 var CateContent = React.createClass({
-
 	sector:"#table",
+	currentUrl:null,
 	tableList:function(data) {
 		data = _.map(data, function (obj) {
 			return _.mapObject(obj, function (value, key) {
@@ -17,8 +18,8 @@ var CateContent = React.createClass({
 					return value.name;
 				}
 				else if (key == "publishedDate") {
-					return "yyyy-mm-dd";
-					//return moment(value).format('YYYY-MM-DD');
+					//return "yyyy-mm-dd";
+					return moment(value).format('YYYY-M-D H:mm');
 				}
 				return value;
 			})
@@ -64,13 +65,45 @@ var CateContent = React.createClass({
 			console.log('table view need a sector');
 			return;
 		}
+		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
+		$(this.sector).bootstrapTable("destroy");
+		$(this.sector).bootstrapTable({
+			columns:columns,
+			classes : "table table-hover table-no-bordered",
+			striped : false,
+			clickToSelect : true,
+			minimumCountColumns: 1,
+			showColumns: true,
+			toolbar : "#table-toolbar",
+			data: this.tableList(data)
+		}).on('click-row.bs.table', function (e, row, $element) {
+			//- console.log(this);
+			//- console.log($(this).bootstrapTable("getSelections"));
+			//- console.log(e);
+			//- console.log(row);
+			//- console.log($element);
+		});
+		$(this.sector).on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
+			var selections = $(this.sector).bootstrapTable("getSelections");
+			if (selections.length == 1){
+				$('.list-tool-bar li.edit').removeClass("disabled");
+				$('.list-tool-bar li.edit a').css("pointer-events", "");
+
+			}
+			else{
+				$('.list-tool-bar li.edit').addClass("disabled");
+				$('.list-tool-bar li.edit a').css("pointer-events", "none");
+
+			}
+		});
+		$('.list-tool-bar li.edit').on("click", this.editItemHandler);
+		$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
+
 		
-		//destory the old table;
-		console.log(this.tableList(data));
-		$(this.sector).bootstrapTable('load', {data:this.tableList(data)});
 		
 	},
 	loadData(url){
+		this.currentUrl = url;
 		var self = this;
 		this.setState({
 			loading:true
@@ -87,19 +120,28 @@ var CateContent = React.createClass({
 			}
 		});
 	},
+	checkForm(form)
+	{
+		var name = form['name'].value;
+		if (name.length ==0 )
+			return false;
+		return true;
+	},
 	createItemHandler:function(e)
 	{
 		var node = (
-			<div className="create-input-group">
-				<div className="input-group">
-					<input type="text" className="form-control" placeholder="名称"/>
-					<div className="input-group-btn">
-						<button type="button" className="btn btn-primary ladda-button" data-style="expand-left">
-							<span className="ladda-labble">创建</span>
-						</button>
+			<form id="table-create">
+				<div className="create-input-group">
+					<div className="input-group">
+						<input type="text" className="form-control" placeholder="名称" name="name"/>
+						<div className="input-group-btn">
+							<button type="submit" className="btn btn-primary ladda-button" data-style="expand-left">
+								<span className="ladda-labble">创建</span>
+							</button>
+						</div>
 					</div>
 				</div>
-			</div>
+			</form>
 		);
 		var createField = $(ReactDOM.findDOMNode(this)).find(".create-input-group");
 		if ($(ReactDOM.findDOMNode(this)).find(".create-input-group").length == 0)
@@ -110,9 +152,56 @@ var CateContent = React.createClass({
 			createField.hide();
 		}
 		createField.slideToggle(KAdm.config.animateSpeed);
+		$(ReactDOM.findDOMNode(this)).find("#table-create").submit(this.submitHandler);
+	},
+	submitHandler:function(e){
 		
-		
-		
+		e.preventDefault();
+		var form = e.currentTarget;
+		var btn = form.querySelector("button[type='submit']");
+		if (!this.checkForm(form))
+		{
+			return false;
+		}
+		if (!this.state.category)
+		{
+			KAdm.modal.show({
+				style:"default",
+				title:"提示",
+				body:"请选择一个栏目栏目创建" + this.props.model
+			});
+			return false;
+		}
+		var name = form['name'].value;
+		var l = Ladda.create(btn);
+		l.start();
+		var self = this;
+
+		KAdm.control.api({
+			url:KAdm.adminPath + "/api/" + this.props.model,
+			type:"POST",
+			data:{
+				action:"create",
+				name:name,
+				category:this.state.category,
+			},
+			success:function(data)
+			{
+				if (data.status===1) {
+					self.loadData(self.currentUrl);
+				}
+				else 
+				{
+					console.log(data);
+				}
+				l.stop();
+				
+			},
+			error:function(){
+				l.stop();
+			}
+		}, true);
+		return false;
 	},
 	editItemHandler:function(e)
 	{
@@ -127,34 +216,91 @@ var CateContent = React.createClass({
 	{
 		var selections = $(this.sector).bootstrapTable("getSelections");
 		var ids = _.pluck(selections, "_id");
-		var csrfObj = {};
-		csrfObj[Keystone.csrf.key] = Keystone.csrf.value;
+		if (selections.length == 0)
+		{
+			KAdm.modal.show({
+				style:"default",
+				title:"提示",
+				body:"请勾选需要删除的栏目"
+			});
+			return;
+		}
+		var list = [];
+		for (var i = 0; i < selections.length; i++)
+		{
 
-		//parent.deleteItem(null, Keystone.template.path, ids, csrfObj, function(result){
-		//	if (result)
-		//	{
-		//		if (Keystone.template.path === "categories")
-		//		{
-		//			parent.window.location.reload();
-		//		}
-		//		else
-		//		{
-		//			window.location.reload();
-		//		}
-		//	}
-		//	else{
-		//		$("div#msg").append('<div class="alert alert-danger">删除数据失败</div>');
-		//	}
-		//});
+			var node = selections[i];
+			list.push(<li key={i}>{node.name}</li>);
+		}
+		var bodyElement = (
+			<div>
+				<div>是否确认删除以下{list.length}个对象</div>
+				<ul>
+					{list}
+				</ul>
+			</div>
+		);
+
+		KAdm.modal.show({
+			style:"danger",
+			title:"提示",
+			body:bodyElement,
+			footer:{
+				leftItems:[
+					<button key={0} type="button" className="btn btn-danger pull-left ladda-button" data-style="expand-left" onClick={this.removeItem}>删除</button>
+				],
+				rightItems:[{
+					name:"关闭",
+					style:"default",
+					data:"dismiss"
+				}]
+			}
+		});
+	},
+	removeItem(e){
+		var self = this;
+
+		var selections = $(this.sector).bootstrapTable("getSelections");
+		var ids = _.pluck(selections, "_id");
+		
+		var btn = e.currentTarget;
+		var l =Ladda.create(btn);
+		l.start();
+
+		KAdm.control.api({
+			url:KAdm.adminPath + "/api/" + this.props.model,
+			type:"POST",
+			data:{
+				action:"delete",
+				ids:ids
+			},
+			success:function(data)
+			{
+				if (data.status===1)
+				{
+					self.loadData(self.currentUrl);
+				}
+				KAdm.cateContent.setState({
+					loading:false
+				});
+				l.stop();
+				KAdm.modal.hide();
+			},
+			error:function(){
+				l.stop();
+			}
+		}, true);
 	},
 	getInitialState () {
 		return {
 			loading:false,
-			dataUrl:""
+			category:null
 		};
 	},
+	compponentDidUpdate(){
+			
+	},
 	componentDidMount () {
-		console.log('mount');
 		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
 		$(this.sector).bootstrapTable({
 			columns:columns,
@@ -185,19 +331,37 @@ var CateContent = React.createClass({
 
 			}
 		});
-
 		$('.list-tool-bar li.edit').on("click", this.editItemHandler);
 		$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
+		
 	},
 	renderToolBar(){
 		return(
 			<div id="table-toolbar" className="btn-toolbar" role="toolbar" aria-label="...">
 				<div className="btn-group" role="group">
 					<button type="button" className="btn btn-default" onClick={this.createItemHandler}><i className="glyphicon glyphicon-plus"></i></button>
-					<button type="button" className="btn btn-default"><i className="glyphicon glyphicon-trash"></i></button>
+					<button type="button" className="btn btn-default" onClick={this.removeItemHandler}><i className="glyphicon glyphicon-trash"></i></button>
 				</div>
 			</div>
 		);	
+	},
+	renderCreateForm()
+	{
+		var node = (
+			<form id="table-create" onSubmit={this.submitHandler}>
+				<div className="create-input-group">
+					<div className="input-group">
+						<input type="text" className="form-control" placeholder="名称"/>
+						<div className="input-group-btn">
+							<button type="submit" className="btn btn-primary ladda-button" data-style="expand-left">
+								<span className="ladda-labble">创建</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		);
+		return node;
 	},
 	renderContent (){
 		return(
@@ -205,9 +369,17 @@ var CateContent = React.createClass({
 			</section>
 		);
 	},
+	renderTable(){
+		return (
+			<table id="jqtable">
+				<thead>
+				
+				</thead>
+			</table>	
+		);
+	},
 	render(){
 		var node;
-		console.log('render');
 		if (this.state.loading)
 		{
 			node = (
@@ -235,9 +407,7 @@ var CateContent = React.createClass({
 		}
 		return node;
 	},
-
 });
-
 KAdm.cateContent = ReactDOM.render(
-	<CateContent />, $("#cateContent")[0]
+	<CateContent model={KAdm.model.singular } />, $("#cateContent")[0]
 );

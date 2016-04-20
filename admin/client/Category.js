@@ -178,7 +178,6 @@ var Category = React.createClass({
 		var nodes = this.treeTarget.treeview('getSelected');
 		var form = e.currentTarget;
 		var btn = form.querySelector("button[type='submit']");
-		
 		if (!this.checkForm(form))
 		{
 			return false;
@@ -290,7 +289,6 @@ var Category = React.createClass({
 			</span>	
 		);
 		return (
-			
 				<div className="box-header with-border">
 					<h3 className="box-title">{this.state.title}</h3>
 					<div className="box-tools">
