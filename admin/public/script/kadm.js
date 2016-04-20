@@ -19,7 +19,12 @@ var category = {
 		//};
 		//KAdm.category.render();
 	}
-}
+};
+var cateContent = {
+	onTitleSelected: function(event){
+		console.log(event);
+	},
+};
 var boxEx = {
 	//sector_
 	mainSector:"#category .box",
@@ -152,7 +157,8 @@ KAdm.control = {
 		});
 	},
 	box:boxEx,
-	category:category
+	category:category,
+	cateContent:cateContent
 };
 console.log('init kadm');
 KAdm.control.init();

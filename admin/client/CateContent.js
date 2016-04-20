@@ -33,6 +33,7 @@ var CateContent = React.createClass({
 		var d = fieldsStr.split(",");
 
 		var fieldsList = [{field:"selected", title:"selected", checkbox:true, width:"28px"}];
+		var self = this;
 		_.each(d, function(obj, index){
 			var tmpList = obj.split('|');
 			var width;
@@ -46,6 +47,12 @@ var CateContent = React.createClass({
 			if (obj.path == "name")
 			{
 				item.align = "left";
+				item.formatter = function(value, row, index){
+					var target = $("<a href='#'>" + value + "</a>");
+					target.on("click", self.props.onTitleSelected);
+					console.log(target);
+					return target.outerHTML();
+				};
 			}
 			if (obj.width){
 				item.width = obj.width;
@@ -60,44 +67,45 @@ var CateContent = React.createClass({
 
 	},
 	refresh:function(data) {
-		if (!this.sector)
-		{
-			console.log('table view need a sector');
-			return;
-		}
-		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
-		$(this.sector).bootstrapTable("destroy");
-		$(this.sector).bootstrapTable({
-			columns:columns,
-			classes : "table table-hover table-no-bordered",
-			striped : false,
-			clickToSelect : true,
-			minimumCountColumns: 1,
-			showColumns: true,
-			toolbar : "#table-toolbar",
-			data: this.tableList(data)
-		}).on('click-row.bs.table', function (e, row, $element) {
-			//- console.log(this);
-			//- console.log($(this).bootstrapTable("getSelections"));
-			//- console.log(e);
-			//- console.log(row);
-			//- console.log($element);
-		});
-		$(this.sector).on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
-			var selections = $(this.sector).bootstrapTable("getSelections");
-			if (selections.length == 1){
-				$('.list-tool-bar li.edit').removeClass("disabled");
-				$('.list-tool-bar li.edit a').css("pointer-events", "");
-
-			}
-			else{
-				$('.list-tool-bar li.edit').addClass("disabled");
-				$('.list-tool-bar li.edit a').css("pointer-events", "none");
-
-			}
-		});
-		$('.list-tool-bar li.edit').on("click", this.editItemHandler);
-		$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
+		//if (!this.sector)
+		//{
+		//	console.log('table view need a sector');
+		//	return;
+		//}
+		//var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
+		//$(this.sector).bootstrapTable("destroy");
+		//$(this.sector).bootstrapTable({
+		//	columns:columns,
+		//	classes : "table table-hover table-no-bordered",
+		//	striped : false,
+		//	clickToSelect : true,
+		//	minimumCountColumns: 1,
+		//	showColumns: true,
+		//	toolbar : "#table-toolbar",
+		//	data: this.tableList(data)
+		//}).on('click-row.bs.table', function (e, row, $element) {
+		//	//console.log($element);
+		//	//- console.log(this);
+		//	//- console.log($(this).bootstrapTable("getSelections"));
+		//	//- console.log(e);
+		//	//- console.log(row);
+		//	//- console.log($element);
+		//});
+		//$(this.sector).on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
+		//	var selections = $(this.sector).bootstrapTable("getSelections");
+		//	if (selections.length == 1){
+		//		$('.list-tool-bar li.edit').removeClass("disabled");
+		//		$('.list-tool-bar li.edit a').css("pointer-events", "");
+        //
+		//	}
+		//	else{
+		//		$('.list-tool-bar li.edit').addClass("disabled");
+		//		$('.list-tool-bar li.edit a').css("pointer-events", "none");
+        //
+		//	}
+		//});
+		//$('.list-tool-bar li.edit').on("click", this.editItemHandler);
+		//$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
 		
 	},
 	loadData(url){
@@ -110,10 +118,12 @@ var CateContent = React.createClass({
 			url:url,
 			success:function(data)
 			{
+				//console.log(data.info.results);
 				self.setState({
-					loading:false
+					loading:false,
+					data:self.tableList(data.info.results)
 				});
-				self.refresh(data.info.results);
+				//self.refresh(data.info.results);
 
 			}
 		});
@@ -292,46 +302,53 @@ var CateContent = React.createClass({
 	getInitialState () {
 		return {
 			loading:false,
-			category:null
+			category:null,
+			data:null
 		};
 	},
-	compponentDidUpdate(){
-			
-	},
+	componentDidUpdate(){
+		if (!this.state.loading)
+		{
+			$(this.sector).bootstrapTable();
+		}
+	}
+	,
 	componentDidMount () {
-		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
-		console.log(columns);
-		$(this.sector).bootstrapTable({
-			columns:columns,
-			classes : "table table-hover table-no-bordered",
-			striped : false,
-			clickToSelect : true,
-			minimumCountColumns: 1,
-			showColumns: true,
-			toolbar : "#table-toolbar",
-			data: []
-		}).on('click-row.bs.table', function (e, row, $element) {
-			//- console.log(this);
-			//- console.log($(this).bootstrapTable("getSelections"));
-			//- console.log(e);
-			//- console.log(row);
-			//- console.log($element);
-		});
-		$(this.sector).on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
-			var selections = $(this.sector).bootstrapTable("getSelections");
-			if (selections.length == 1){
-				$('.list-tool-bar li.edit').removeClass("disabled");
-				$('.list-tool-bar li.edit a').css("pointer-events", "");
-
-			}
-			else{
-				$('.list-tool-bar li.edit').addClass("disabled");
-				$('.list-tool-bar li.edit a').css("pointer-events", "none");
-
-			}
-		});
-		$('.list-tool-bar li.edit').on("click", this.editItemHandler);
-		$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
+		$(this.sector).bootstrapTable();
+		//var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
+		//console.log(columns);
+		//$(this.sector).bootstrapTable({
+		//	columns:columns,
+		//	classes : "table table-hover table-no-bordered",
+		//	striped : false,
+		//	clickToSelect : true,
+		//	minimumCountColumns: 1,
+		//	showColumns: true,
+		//	toolbar : "#table-toolbar",
+		//	data: []
+		//}).on('click-row.bs.table', function (e, row, $element) {
+		//	console.log($element);
+		//	//- console.log(this);
+		//	//- console.log($(this).bootstrapTable("getSelections"));
+		//	//- console.log(e);
+		//	//- console.log(row);
+		//	//- console.log($element);
+		//});
+		//$(this.sector).on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
+		//	var selections = $(this.sector).bootstrapTable("getSelections");
+		//	if (selections.length == 1){
+		//		$('.list-tool-bar li.edit').removeClass("disabled");
+		//		$('.list-tool-bar li.edit a').css("pointer-events", "");
+        //
+		//	}
+		//	else{
+		//		$('.list-tool-bar li.edit').addClass("disabled");
+		//		$('.list-tool-bar li.edit a').css("pointer-events", "none");
+        //
+		//	}
+		//});
+		//$('.list-tool-bar li.edit').on("click", this.editItemHandler);
+		//$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
 		
 	},
 	renderToolBar(){
@@ -369,11 +386,51 @@ var CateContent = React.createClass({
 		);
 	},
 	renderTable(){
+		var thList = [];
+		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
+		for (var i = 0; i < columns.length; i++)
+		{
+			var column = columns[i];
+			thList.push(<th key={i} data-width={column.width} data-checkbox={column.checkbox}>{column.title}</th>);
+		}
+		
+		var itemList = [];
+		if (this.state.data)
+		{
+			for (var i = 0; i < this.state.data.length; i++)
+			{
+				var item = this.state.data[i];
+				var tdList = [];
+				for (var j = 0; j < columns.length; j++)
+				{
+					var column = columns[j];
+					console.log(column);
+					tdList.push(<td key={j}>{item[column.field]}</td>);
+					
+				}
+				itemList.push(<tr key={i}>
+					{tdList}
+				</tr>);
+			}
+			
+		}
 		return (
-			<table id="jqtable">
+			<table id="table"
+				   data-toggle="table"
+				   data-classes="table table-hover table-no-bordered" 
+				   data-striped="false"
+				   data-minimum-count-columns="1"
+				   data-show-columns="true" 
+				   data-toolbar="#table-toolbar"
+				>
 				<thead>
-				
+					<tr>
+						{thList}
+					</tr>
 				</thead>
+				<tbody>
+					{itemList}
+				</tbody>
 			</table>	
 		);
 	},
@@ -399,7 +456,7 @@ var CateContent = React.createClass({
 					</div>
 					<div className="box-body">
 						{this.renderToolBar()}
-						<table id="table"></table>
+						{this.renderTable()}
 					</div>
 				</div>
 			);
@@ -408,5 +465,5 @@ var CateContent = React.createClass({
 	},
 });
 KAdm.cateContent = ReactDOM.render(
-	<CateContent model={KAdm.model.singular } />, $("#cateContent")[0]
+	<CateContent model={KAdm.model.singular} onTitleSelected={KAdm.control.cateContent.onTitleSelected} />, $("#cateContent")[0]
 );
