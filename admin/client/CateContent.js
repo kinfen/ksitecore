@@ -98,8 +98,6 @@ var CateContent = React.createClass({
 		});
 		$('.list-tool-bar li.edit').on("click", this.editItemHandler);
 		$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
-
-		
 		
 	},
 	loadData(url){
@@ -302,6 +300,7 @@ var CateContent = React.createClass({
 	},
 	componentDidMount () {
 		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
+		console.log(columns);
 		$(this.sector).bootstrapTable({
 			columns:columns,
 			classes : "table table-hover table-no-bordered",
