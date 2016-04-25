@@ -50,7 +50,6 @@ var CateContent = React.createClass({
 				item.formatter = function(value, row, index){
 					var target = $("<a href='#'>" + value + "</a>");
 					target.on("click", self.props.onTitleSelected);
-					console.log(target);
 					return target.outerHTML();
 				};
 			}
@@ -66,48 +65,6 @@ var CateContent = React.createClass({
 		return fieldsList;
 
 	},
-	refresh:function(data) {
-		//if (!this.sector)
-		//{
-		//	console.log('table view need a sector');
-		//	return;
-		//}
-		//var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
-		//$(this.sector).bootstrapTable("destroy");
-		//$(this.sector).bootstrapTable({
-		//	columns:columns,
-		//	classes : "table table-hover table-no-bordered",
-		//	striped : false,
-		//	clickToSelect : true,
-		//	minimumCountColumns: 1,
-		//	showColumns: true,
-		//	toolbar : "#table-toolbar",
-		//	data: this.tableList(data)
-		//}).on('click-row.bs.table', function (e, row, $element) {
-		//	//console.log($element);
-		//	//- console.log(this);
-		//	//- console.log($(this).bootstrapTable("getSelections"));
-		//	//- console.log(e);
-		//	//- console.log(row);
-		//	//- console.log($element);
-		//});
-		//$(this.sector).on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
-		//	var selections = $(this.sector).bootstrapTable("getSelections");
-		//	if (selections.length == 1){
-		//		$('.list-tool-bar li.edit').removeClass("disabled");
-		//		$('.list-tool-bar li.edit a').css("pointer-events", "");
-        //
-		//	}
-		//	else{
-		//		$('.list-tool-bar li.edit').addClass("disabled");
-		//		$('.list-tool-bar li.edit a').css("pointer-events", "none");
-        //
-		//	}
-		//});
-		//$('.list-tool-bar li.edit').on("click", this.editItemHandler);
-		//$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
-		
-	},
 	loadData(url){
 		this.currentUrl = url;
 		var self = this;
@@ -118,12 +75,16 @@ var CateContent = React.createClass({
 			url:url,
 			success:function(data)
 			{
-				//console.log(data.info.results);
-				self.setState({
-					loading:false,
-					data:self.tableList(data.info.results)
-				});
-				//self.refresh(data.info.results);
+				if (data.status == 1)
+				{
+					self.setState({
+						loading:false,
+						data:self.tableList(data.info.results)
+					});
+				}
+				else {
+					console.log(data);
+				}
 
 			}
 		});
@@ -236,7 +197,6 @@ var CateContent = React.createClass({
 		var list = [];
 		for (var i = 0; i < selections.length; i++)
 		{
-
 			var node = selections[i];
 			list.push(<li key={i}>{node.name}</li>);
 		}
@@ -309,12 +269,40 @@ var CateContent = React.createClass({
 	componentDidUpdate(){
 		if (!this.state.loading)
 		{
-			$(this.sector).bootstrapTable();
+			this.configTableView();
 		}
-	}
-	,
+	},
+	configTableView(){
+		var self = this;
+		var eventHandler = function(row)
+		{
+			
+			var selections = $(self.sector).bootstrapTable("getSelections");
+			//console.log('config');
+			//console.log($(this).bootstrapTable("getSelections"));
+			//console.log(selections);
+			//console.log($('#table-toolbar button.delete'));
+			if (selections.length >= 1){
+				$('#table-toolbar button.delete').removeClass("disabled");
+				//$('#table-toolbar button.delete').css("pointer-events", "");
+
+			}
+			else{
+				$('#table-toolbar button.delete').addClass("disabled");
+				//$('#table-toolbar button.delete').css("pointer-events", "none");
+			}
+		}
+		$(this.sector).bootstrapTable({
+			//onPostBody:eventHandler,
+			//onPreBody: eventHandler,
+			onCheck: eventHandler,
+			onUncheck: eventHandler,
+			onCheckAll: eventHandler,
+			onUncheckAll: eventHandler
+		});
+	},
 	componentDidMount () {
-		$(this.sector).bootstrapTable();
+		this.configTableView();
 		//var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
 		//console.log(columns);
 		//$(this.sector).bootstrapTable({
@@ -334,29 +322,15 @@ var CateContent = React.createClass({
 		//	//- console.log(row);
 		//	//- console.log($element);
 		//});
-		//$(this.sector).on("pre-body.bs.table check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table", function(row){
-		//	var selections = $(this.sector).bootstrapTable("getSelections");
-		//	if (selections.length == 1){
-		//		$('.list-tool-bar li.edit').removeClass("disabled");
-		//		$('.list-tool-bar li.edit a').css("pointer-events", "");
-        //
-		//	}
-		//	else{
-		//		$('.list-tool-bar li.edit').addClass("disabled");
-		//		$('.list-tool-bar li.edit a').css("pointer-events", "none");
-        //
-		//	}
-		//});
-		//$('.list-tool-bar li.edit').on("click", this.editItemHandler);
-		//$('.list-tool-bar li.delete').on("click", this.removeItemHandler);
+		
 		
 	},
 	renderToolBar(){
 		return(
 			<div id="table-toolbar" className="btn-toolbar" role="toolbar" aria-label="...">
 				<div className="btn-group" role="group">
-					<button type="button" className="btn btn-default" onClick={this.createItemHandler}><i className="glyphicon glyphicon-plus"></i></button>
-					<button type="button" className="btn btn-default" onClick={this.removeItemHandler}><i className="glyphicon glyphicon-trash"></i></button>
+					<button type="button" className="btn btn-default create" onClick={this.createItemHandler}><i className="glyphicon glyphicon-plus"></i></button>
+					<button type="button" className="btn btn-default delete disabled" onClick={this.removeItemHandler}><i className="glyphicon glyphicon-trash"></i></button>
 				</div>
 			</div>
 		);	
@@ -404,7 +378,6 @@ var CateContent = React.createClass({
 				for (var j = 0; j < columns.length; j++)
 				{
 					var column = columns[j];
-					console.log(column);
 					tdList.push(<td key={j}>{item[column.field]}</td>);
 					
 				}
