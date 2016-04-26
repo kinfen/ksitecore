@@ -10,6 +10,8 @@ import _ from 'underscore';
 
 var CateContent = React.createClass({
 	sector:"#table",
+	sortName:null,
+	sortOrder:null,
 	currentUrl:null,
 	tableList:function(data) {
 		data = _.map(data, function (obj) {
@@ -65,14 +67,25 @@ var CateContent = React.createClass({
 		return fieldsList;
 
 	},
-	loadData(url){
+	loadData(url, params){
 		this.currentUrl = url;
 		var self = this;
 		this.setState({
 			loading:true
 		});
+		if (!params)
+		{
+			params={p:1,ps:10}
+		}
+		else
+		{
+			params.p= params.p ? params.p : 1;
+			params.ps= params.ps ? params.ps : 10;
+		}
+		
 		KAdm.control.api({
 			url:url,
+			data:params,
 			success:function(data)
 			{
 				if (data.status == 1)
@@ -284,17 +297,22 @@ var CateContent = React.createClass({
 			//console.log($('#table-toolbar button.delete'));
 			if (selections.length >= 1){
 				$('#table-toolbar button.delete').removeClass("disabled");
-				//$('#table-toolbar button.delete').css("pointer-events", "");
 
 			}
 			else{
 				$('#table-toolbar button.delete').addClass("disabled");
-				//$('#table-toolbar button.delete').css("pointer-events", "none");
 			}
-		}
+		};
+		var sortHandler = function(name,order) {
+			var orderTag = order == "asc" ? "+" : "-";
+			self.sortName = name;
+			self.sortOrder = order;
+			self.loadData(self.currentUrl, {sort:orderTag + name});
+		};
 		$(this.sector).bootstrapTable({
 			//onPostBody:eventHandler,
 			//onPreBody: eventHandler,
+			onSort:sortHandler,
 			onCheck: eventHandler,
 			onUncheck: eventHandler,
 			onCheckAll: eventHandler,
@@ -365,9 +383,18 @@ var CateContent = React.createClass({
 		for (var i = 0; i < columns.length; i++)
 		{
 			var column = columns[i];
-			thList.push(<th key={i} data-width={column.width} data-checkbox={column.checkbox}>{column.title}</th>);
+			thList.push(
+				<th 
+					data-field={column.field}
+					data-sortable="true"
+					data-width={column.width}
+					data-checkbox={column.checkbox}
+					key={i} 
+				>
+						{column.title}
+				</th>);
 		}
-		
+		//<div className="th-inner sortable both"></div>
 		var itemList = [];
 		if (this.state.data)
 		{
@@ -389,12 +416,15 @@ var CateContent = React.createClass({
 		}
 		return (
 			<table id="table"
+				   data-sort-name={this.sortName}
+				   data-sort-order={this.sortOrder}
 				   data-toggle="table"
 				   data-classes="table table-hover table-no-bordered" 
 				   data-striped="false"
 				   data-minimum-count-columns="1"
 				   data-show-columns="true" 
 				   data-toolbar="#table-toolbar"
+				   data-side-pagination="server"
 				>
 				<thead>
 					<tr>

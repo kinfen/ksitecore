@@ -5,7 +5,11 @@
 var category = {
 	//set the handle function about the Category
 	onNodeSelected: function(event, node){
-		KAdm.cateContent.loadData(KAdm.adminPath + "/api/Archive/list?cat=" + node.id + "&p=1&ps=10");
+		KAdm.cateContent.loadData(KAdm.adminPath + "/api/Archive/list",{
+			"cat":node.id,
+			"p":1,
+			"ps":10
+		});
 		KAdm.cateContent.setState({
 			category:node.id
 		});
