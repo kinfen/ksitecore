@@ -377,6 +377,46 @@ var CateContent = React.createClass({
 			</section>
 		);
 	},
+	renderTablePagination(){
+		
+		return (
+			<div className="table-pagination">
+				<div className="pull-left pagination-detail">
+					<span className="pagination-info">Showing 1 to 10 of 800 rows</span>
+					<span className="page-list">
+						<span className="btn-group dropup">
+							<button type="button" className="btn btn-default  dropdown-toggle" data-toggle="dropdown">
+								<span className="page-size">10</span>
+								<span className="caret"></span>
+							</button>
+							<ul className="dropdown-menu" role="menu">
+								<li className="active"><a href="javascript:void(0)">10</a></li>
+								<li><a href="javascript:void(0)">25</a></li>
+								<li><a href="javascript:void(0)">50</a></li>
+								<li><a href="javascript:void(0)">100</a></li>
+								<li><a href="javascript:void(0)">All</a></li>
+							</ul>
+						</span>
+					records per page
+					</span>	
+				</div>
+				<div className="pull-right pagination">
+					<ul className="pagination">
+						<li className="page-pre"><a href="javascript:void(0)">‹</a></li>
+						<li className="page-number active"><a href="javascript:void(0)">1</a></li>
+						<li className="page-number"><a href="javascript:void(0)">2</a></li>
+						<li className="page-number"><a href="javascript:void(0)">3</a></li>
+						<li className="page-number"><a href="javascript:void(0)">4</a></li>
+						<li className="page-number"><a href="javascript:void(0)">5</a></li>
+						<li className="page-last-separator disabled"><a href="javascript:void(0)">...</a></li>
+						<li className="page-last"><a href="javascript:void(0)">80</a></li>
+						<li className="page-next"><a href="javascript:void(0)">›</a></li>
+					</ul>
+				</div>
+			</div>
+			);
+		
+	},
 	renderTable(){
 		var thList = [];
 		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
@@ -386,7 +426,7 @@ var CateContent = React.createClass({
 			thList.push(
 				<th 
 					data-field={column.field}
-					data-sortable="true"
+					data-sortable={i == 0 ? null : "true"}
 					data-width={column.width}
 					data-checkbox={column.checkbox}
 					key={i} 
@@ -460,6 +500,7 @@ var CateContent = React.createClass({
 					<div className="box-body">
 						{this.renderToolBar()}
 						{this.renderTable()}
+						{this.renderTablePagination()}
 					</div>
 				</div>
 			);
