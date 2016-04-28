@@ -104,26 +104,45 @@ KAdm.Dom.Pagination = React.createClass({
 
 	maxPage:7,
 	getInitialState () {
+		//console.log('init param' + this.props.page);
 		return {
-			pageSize: this.props.pageSize || 10,
-			page: this.props.page || 1,
-			totalPage: this.props.totalPage || 1,
+			//pageSize: this.props.pageSize || 10,
+			//page: this.props.page || 1,
+			//totalPage: this.props.totalPage || 1,
 			
 		}
 	},
-
+	nextPage(){
+		if (this.props.onPageWillChangeTo)
+		{
+			this.props.onPageWillChangeTo(Math.min(this.props.page + 1, this.props.totalPages) );
+		}
+	},
+	prePage(){
+		if (this.props.onPageWillChangeTo)
+		{
+			this.props.onPageWillChangeTo(Math.max(this.props.page - 1, 1) );
+		}
+	},
+	pageSelectedHandler(e){
+		var page = $(e.currentTarget).data("page");
+		if (this.props.onPageWillChangeTo)
+		{
+			this.props.onPageWillChangeTo(page);
+		}
+	},
 	renderPageSizeSelector(){
 		return(
 			<div className="pull-left pagination-detail">
-				<span className="pagination-info">第{this.state.Page}页</span>
+				<span className="pagination-info">第{this.props.Page}页</span>
 				<span className="page-list">
 					<span className="btn-group dropup">
 						<button type="button" className="btn btn-default  dropdown-toggle" data-toggle="dropdown">
-							<span className="page-size">{this.state.pageSize}</span>
+							<span className="page-size">{this.props.pageSize}</span>
 							<span className="caret"></span>
 						</button>
 						<ul className="dropdown-menu" role="menu">
-							<li className="active"><a href="javascript:void(0)">{this.state.pageSize}</a></li>
+							<li className="active"><a href="javascript:void(0)">{this.props.pageSize}</a></li>
 							<li><a href="javascript:void(0)">25</a></li>
 							<li><a href="javascript:void(0)">50</a></li>
 							<li><a href="javascript:void(0)">100</a></li>
@@ -134,76 +153,75 @@ KAdm.Dom.Pagination = React.createClass({
 			</div>	
 		);
 	},
+	
+	
 	renderPageSelector(){
 		
 		var liList = [];
 		var beginIndex;
 		var endIndex;
-		if (this.state.totalPage <= this.maxPage)
+		var page = this.props.page;
+		page = Math.max(1, page);
+		page = Math.min(this.props.totalPages, page);
+		
+		if (this.props.totalPages <= this.maxPage)
 		{
 			beginIndex = 1;
-			endIndex = this.state.totalPage;
+			endIndex = this.props.totalPages;
 			for (var i = beginIndex; i <= endIndex; i++)
 			{
-				var classStr = i === this.state.page? "page-number active" : "page-number";
-				liList.push(<li className={classStr} key={i}><a href="javascript:void(0)">{i}</a></li>);
+				var classStr = i === page? "page-number active" : "page-number";
+				liList.push(<li className={classStr} data-page={i} key={i} onClick={this.pageSelectedHandler}><a href="javascript:void(0)">{i}</a></li>);
 			}
 		}
 		else
 		{
-			beginIndex = 1;
-			endIndex = this.maxPage;
-			var fixIndexList = [];
-			if (this.state.page - 1 > this.maxPage / 2)
-				fixIndexList.push(beginIndex + 1);
-			if (this.state.totalPage - this.state.page > this.maxPage / 2)
-				fixIndexList.push(endIndex - 1);
-			
-			//console.log(fixIndexList.contains(1));
-
+			var offset = 0;
+			var halfPage = Math.floor(this.maxPage / 2);
+			beginIndex = page - halfPage;
+			endIndex = page + halfPage;
+			if (page-halfPage < 1)
+			{
+				offset = 1 - (page - halfPage);
+			}
+			else if (page + halfPage > this.props.totalPages)
+			{
+				offset = this.props.totalPages - (page + halfPage);
+			}
+			beginIndex += offset;
+			endIndex += offset;
+			var keyCounter = 0;
+			if (beginIndex > 1)
+			{
+				beginIndex += 2;
+				liList.push(<li className="page-number" onClick={this.pageSelectedHandler} data-page={1} key={1}><a href="javascript:void(0)" >1</a></li>);
+				liList.push(<li className="page-last-separator disabled" key={2}><a href="javascript:void(0)">...</a></li>);
+			}
+			if (endIndex < this.props.totalPages) {
+				endIndex -= 2;
+			}
 			for (var i = beginIndex; i <= endIndex; i++)
 			{
-				var classStr;
-				var pageText;
-				if (fixIndexList.indexOf(i) != -1)
-				{
-					classStr = "page-last-separator disabled";
-					pageText = "...";
-				}
-				else 
-				{
-					if (i === this.state.page)
-					{
-						classStr = "page-number active"
-					}
-					else 
-					{
-						classStr = "page-number"
-					}
-					if (i === endIndex)
-					{
-						pageText = 
-					}
-				}
-				var classStr = fixIndexList.indexOf(i) != -1 ? "page-last-separator disabled"
-														: i === this.state.page
-															? "page-number active" 
-															: "page-number";
-				var pageText = fixIndexList.indexOf(i) != -1 ? "..." 
-																:i === endIndex
-																	? this.max
-				liList.push(<li className={classStr} key={i}><a href="javascript:void(0)">{pageText}</a></li>);
+				var classStr = i === page? "page-number active" : "page-number";
+				liList.push(<li className={classStr} data-page={i} key={i} onClick={this.pageSelectedHandler}><a href="javascript:void(0)">{i}</a></li>);
+			}
+			if (endIndex < this.props.totalPages)
+			{
+				liList.push(<li className="page-last-separator disabled" key={this.props.totalPages - 1}><a href="javascript:void(0)">...</a></li>);
+				liList.push(
+					<li className="page-number" onClick={this.pageSelectedHandler} data-page={this.props.totalPages} key={this.props.totalPages}>
+						<a href="javascript:void(0)">{this.props.totalPages}</a>
+					</li>);
 			}
 		}
-		
 		
 		
 		return(
 			<div className="pull-right pagination">
 				<ul className="pagination">
-					<li className="page-pre"><a href="javascript:void(0)">‹</a></li>
+					<li className="page-pre" onClick={this.prePage}><a href="javascript:void(0)" >‹</a></li>
 					{liList}
-					<li className="page-next"><a href="javascript:void(0)">›</a></li>
+					<li className="page-next" onClick={this.nextPage}><a href="javascript:void(0)" >›</a></li>
 				</ul>
 			</div>	
 		);
@@ -215,10 +233,7 @@ KAdm.Dom.Pagination = React.createClass({
 				{this.renderPageSelector()}
 			</div>
 		);
-	} 
-		
-	
-	
+	}
 
 });
 

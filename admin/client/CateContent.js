@@ -13,6 +13,7 @@ var CateContent = React.createClass({
 	sortName:null,
 	sortOrder:null,
 	currentUrl:null,
+	
 	tableList:function(data) {
 		data = _.map(data, function (obj) {
 			return _.mapObject(obj, function (value, key) {
@@ -89,8 +90,11 @@ var CateContent = React.createClass({
 			{
 				if (data.status == 1)
 				{
+					console.log(data);
 					self.setState({
 						loading:false,
+						page:data.info.currentPage,
+						totalPages:data.info.totalPages,
 						data:self.tableList(data.info.results)
 					});
 				}
@@ -271,11 +275,20 @@ var CateContent = React.createClass({
 			}
 		}, true);
 	},
+	pageSelectedHandler(page)
+	{
+		this.loadData(this.currentUrl, {
+			p:page
+		});
+	},
 	getInitialState () {
 		return {
 			loading:false,
 			category:null,
-			data:null
+			data:null,
+			page:1,
+			totalPage:10,
+			pageSize:10,
 		};
 	},
 	componentDidUpdate(){
@@ -376,7 +389,6 @@ var CateContent = React.createClass({
 			</section>
 		);
 	},
-	
 	renderTable(){
 		var thList = [];
 		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
@@ -460,7 +472,7 @@ var CateContent = React.createClass({
 					<div className="box-body">
 						{this.renderToolBar()}
 						{this.renderTable()}
-						<KAdm.Dom.Pagination page={1} pageSize={10} totalPage={100} />
+						<KAdm.Dom.Pagination page={this.state.page} pageSize={this.state.pageSize} totalPages={this.state.totalPages} onPageWillChangeTo={this.pageSelectedHandler} />
 					</div>
 				</div>
 			);
