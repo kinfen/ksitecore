@@ -20,7 +20,7 @@ module.exports = exports = function () {
 		MainLoading: browserify('MainLoading.js'),
 		CateContent: browserify('CateContent.js'),
 		Category: browserify('Category.js'),
-		Modal: browserify('Modal.js'),
+		Utils: browserify('utilsForReactDom.js'),
 		//home: browserify('views/home.js'),
 		//item: browserify('views/item.js'),
 		//list: browserify('views/list.js'),
@@ -35,7 +35,7 @@ module.exports = exports = function () {
 		bundles.MainLoading.build();
 		bundles.CateContent.build();
 		bundles.Category.build();
-		bundles.Modal.build();
+		bundles.Utils.build();
 		//bundles.home.build();
 		//bundles.item.build();
 		//bundles.list.build();
@@ -64,7 +64,7 @@ module.exports = exports = function () {
 	router.get('/script/MainLoading.js', bundles.MainLoading.serve);
 	router.get('/script/CateContent.js', bundles.CateContent.serve);
 	router.get('/script/Category.js', bundles.Category.serve);
-	router.get('/script/Modal.js', bundles.Modal.serve);
+	router.get('/script/utilsForReactDom.js', bundles.Utils.serve);
 	//router.get('/js/home.js', bundles.home.serve);
 	//router.get('/js/item.js', bundles.item.serve);
 	//router.get('/js/list.js', bundles.list.serve);
