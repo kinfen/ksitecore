@@ -20,7 +20,6 @@ var CateContent = React.createClass({
 					return value.name;
 				}
 				else if (key == "publishedDate") {
-					//return "yyyy-mm-dd";
 					return moment(value).format('YYYY-M-D H:mm');
 				}
 				return value;
