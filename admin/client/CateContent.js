@@ -68,6 +68,7 @@ var CateContent = React.createClass({
 
 	},
 	loadData(url, params){
+		if (!url) return;
 		this.currentUrl = url;
 		var self = this;
 		this.setState({
@@ -94,6 +95,7 @@ var CateContent = React.createClass({
 					self.setState({
 						loading:false,
 						page:data.info.currentPage,
+						pageSize:params.ps,
 						totalPages:data.info.totalPages,
 						data:self.tableList(data.info.results)
 					});
@@ -250,7 +252,7 @@ var CateContent = React.createClass({
 		var btn = e.currentTarget;
 		var l =Ladda.create(btn);
 		l.start();
-
+		console.log(selections);
 		KAdm.control.api({
 			url:KAdm.adminPath + "/api/" + this.props.model,
 			type:"POST",
@@ -279,6 +281,12 @@ var CateContent = React.createClass({
 	{
 		this.loadData(this.currentUrl, {
 			p:page
+		});
+	},
+	pageSizeChangedHandler(size)
+	{
+		this.loadData(this.currentUrl, {
+			ps:size
 		});
 	},
 	getInitialState () {
@@ -408,6 +416,7 @@ var CateContent = React.createClass({
 		}
 		//<div className="th-inner sortable both"></div>
 		var itemList = [];
+		console.log(this)
 		if (this.state.data)
 		{
 			for (var i = 0; i < this.state.data.length; i++)
@@ -418,13 +427,12 @@ var CateContent = React.createClass({
 				{
 					var column = columns[j];
 					tdList.push(<td key={j}>{item[column.field]}</td>);
-					
 				}
+				
 				itemList.push(<tr key={i}>
 					{tdList}
 				</tr>);
 			}
-			
 		}
 		return (
 			<table id="table"
@@ -472,7 +480,13 @@ var CateContent = React.createClass({
 					<div className="box-body">
 						{this.renderToolBar()}
 						{this.renderTable()}
-						<KAdm.Dom.Pagination page={this.state.page} pageSize={this.state.pageSize} totalPages={this.state.totalPages} onPageWillChangeTo={this.pageSelectedHandler} />
+						<KAdm.Dom.Pagination 
+							page={this.state.page} 
+							pageSize={this.state.pageSize} 
+							totalPages={this.state.totalPages} 
+							onPageWillChangeTo={this.pageSelectedHandler}
+							onPageSizeWillChangeTo={this.pageSizeChangedHandler}
+						/>
 					</div>
 				</div>
 			);

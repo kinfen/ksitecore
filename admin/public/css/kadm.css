@@ -33,6 +33,14 @@
 	animation-delay: -1.0s;
 }
 
+div.pagination, div.pagination-detail{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+div.pagination .pagination{
+	margin: 0;
+}
+
 /*.create-input-group{*/
 	/*display: hidden;*/
 /*}*/

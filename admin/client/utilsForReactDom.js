@@ -124,6 +124,13 @@ KAdm.Dom.Pagination = React.createClass({
 			this.props.onPageWillChangeTo(Math.max(this.props.page - 1, 1) );
 		}
 	},
+	pageSizeSelectedHandler(e){
+		var size = $(e.currentTarget).data("size");
+		if (this.props.onPageSizeWillChangeTo)
+		{
+			this.props.onPageSizeWillChangeTo(size);
+		}	
+	},
 	pageSelectedHandler(e){
 		var page = $(e.currentTarget).data("page");
 		if (this.props.onPageWillChangeTo)
@@ -132,9 +139,20 @@ KAdm.Dom.Pagination = React.createClass({
 		}
 	},
 	renderPageSizeSelector(){
+		
+		var psList = [10, 25, 50, 100];
+		var liList = [];
+		for (var i = 0; i < psList.length; i++)
+		{
+			var size = psList[i];
+			liList.push(
+				<li onClick={this.pageSizeSelectedHandler} data-size={size} key={i}><a href="javascript:void(0)">{size}</a></li>
+			);
+		}
+		
 		return(
 			<div className="pull-left pagination-detail">
-				<span className="pagination-info">第{this.props.Page}页</span>
+				<span className="pagination-info">第{this.props.page}页&nbsp;</span>
 				<span className="page-list">
 					<span className="btn-group dropup">
 						<button type="button" className="btn btn-default  dropdown-toggle" data-toggle="dropdown">
@@ -142,11 +160,7 @@ KAdm.Dom.Pagination = React.createClass({
 							<span className="caret"></span>
 						</button>
 						<ul className="dropdown-menu" role="menu">
-							<li className="active"><a href="javascript:void(0)">{this.props.pageSize}</a></li>
-							<li><a href="javascript:void(0)">25</a></li>
-							<li><a href="javascript:void(0)">50</a></li>
-							<li><a href="javascript:void(0)">100</a></li>
-							<li><a href="javascript:void(0)">All</a></li>
+							{liList}
 						</ul>
 					</span>
 				</span>
