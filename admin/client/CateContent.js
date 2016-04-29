@@ -264,7 +264,10 @@ var CateContent = React.createClass({
 			{
 				if (data.status===1)
 				{
-					self.loadData(self.currentUrl);
+					self.loadData(self.currentUrl, {
+						p:this.state.page,
+						ps:this.state.pageSize
+					});
 				}
 				KAdm.cateContent.setState({
 					loading:false
@@ -429,7 +432,7 @@ var CateContent = React.createClass({
 					tdList.push(<td key={j}>{item[column.field]}</td>);
 				}
 				
-				itemList.push(<tr key={i}>
+				itemList.push(<tr id={item._id} data-index={i} key={i}>
 					{tdList}
 				</tr>);
 			}
