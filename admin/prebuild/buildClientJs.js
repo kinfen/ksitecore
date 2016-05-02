@@ -21,6 +21,7 @@ module.exports = exports = function () {
 		CateContent: browserify('CateContent.js'),
 		Category: browserify('Category.js'),
 		Utils: browserify('utilsForReactDom.js'),
+		Item: browserify('itemEx.js'),
 		//home: browserify('views/home.js'),
 		//item: browserify('views/item.js'),
 		//list: browserify('views/list.js'),
@@ -36,6 +37,7 @@ module.exports = exports = function () {
 		bundles.CateContent.build();
 		bundles.Category.build();
 		bundles.Utils.build();
+		bundles.Item.build();
 		//bundles.home.build();
 		//bundles.item.build();
 		//bundles.list.build();
@@ -65,6 +67,7 @@ module.exports = exports = function () {
 	router.get('/script/CateContent.js', bundles.CateContent.serve);
 	router.get('/script/Category.js', bundles.Category.serve);
 	router.get('/script/utilsForReactDom.js', bundles.Utils.serve);
+	router.get('/script/itemEx.js', bundles.Item.serve);
 	//router.get('/js/home.js', bundles.home.serve);
 	//router.get('/js/item.js', bundles.item.serve);
 	//router.get('/js/list.js', bundles.list.serve);

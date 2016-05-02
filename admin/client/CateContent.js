@@ -13,15 +13,22 @@ var CateContent = React.createClass({
 	sortName:null,
 	sortOrder:null,
 	currentUrl:null,
-	
+	getInitialState () {
+		return {
+			loading:false,
+			category:null,
+			data:null,
+			page:1,
+			totalPage:10,
+			pageSize:10,
+		};
+	},
 	tableList:function(data) {
+		var self = this;
 		data = _.map(data, function (obj) {
 			return _.mapObject(obj, function (value, key) {
 				if (typeof(value) == "object" && value.name) {
 					return value.name;
-				}
-				else if (key == "publishedDate") {
-					return moment(value).format('YYYY-M-D H:mm');
 				}
 				return value;
 			})
@@ -74,15 +81,8 @@ var CateContent = React.createClass({
 		this.setState({
 			loading:true
 		});
-		if (!params)
-		{
-			params={p:1,ps:10}
-		}
-		else
-		{
-			params.p= params.p ? params.p : 1;
-			params.ps= params.ps ? params.ps : 10;
-		}
+		//assign the current category Id
+		_.extend(params, {cat:this.state.category});
 		
 		KAdm.control.api({
 			url:url,
@@ -252,7 +252,7 @@ var CateContent = React.createClass({
 		var btn = e.currentTarget;
 		var l =Ladda.create(btn);
 		l.start();
-		console.log(selections);
+		console.log(ids);
 		KAdm.control.api({
 			url:KAdm.adminPath + "/api/" + this.props.model,
 			type:"POST",
@@ -265,8 +265,8 @@ var CateContent = React.createClass({
 				if (data.status===1)
 				{
 					self.loadData(self.currentUrl, {
-						p:this.state.page,
-						ps:this.state.pageSize
+						p:self.state.page,
+						ps:self.state.pageSize
 					});
 				}
 				KAdm.cateContent.setState({
@@ -280,6 +280,12 @@ var CateContent = React.createClass({
 			}
 		}, true);
 	},
+	nameSelectedHandler(id)
+	{
+		var path = KAdm.adminPath + "/item/" + this.props.model + '/' + id;
+		console.log(path);
+		KAdm.control.loadPage(path);
+	},
 	pageSelectedHandler(page)
 	{
 		this.loadData(this.currentUrl, {
@@ -292,16 +298,7 @@ var CateContent = React.createClass({
 			ps:size
 		});
 	},
-	getInitialState () {
-		return {
-			loading:false,
-			category:null,
-			data:null,
-			page:1,
-			totalPage:10,
-			pageSize:10,
-		};
-	},
+	
 	componentDidUpdate(){
 		if (!this.state.loading)
 		{
@@ -400,18 +397,29 @@ var CateContent = React.createClass({
 			</section>
 		);
 	},
+	nameFormatter(value, row, index){
+		
+		return '<a href="#" onClick="KAdm.cateContent.nameSelectedHandler(\'' + row._id + '\')">' + value + '</a>'
+	},
 	renderTable(){
 		var thList = [];
 		var columns = this.fields(KAdm.model.fields, KAdm.model.defaultColumns);
 		for (var i = 0; i < columns.length; i++)
 		{
 			var column = columns[i];
+			var formatter = null;
+			if (column.field == "name")
+			{
+				formatter = "KAdm.cateContent.nameFormatter";
+					
+			}
 			thList.push(
 				<th 
 					data-field={column.field}
 					data-sortable={i == 0 ? null : "true"}
 					data-width={column.width}
 					data-checkbox={column.checkbox}
+					data-formatter={formatter}
 					key={i} 
 				>
 						{column.title}
@@ -419,7 +427,6 @@ var CateContent = React.createClass({
 		}
 		//<div className="th-inner sortable both"></div>
 		var itemList = [];
-		console.log(this)
 		if (this.state.data)
 		{
 			for (var i = 0; i < this.state.data.length; i++)
@@ -429,7 +436,20 @@ var CateContent = React.createClass({
 				for (var j = 0; j < columns.length; j++)
 				{
 					var column = columns[j];
-					tdList.push(<td key={j}>{item[column.field]}</td>);
+					if (column.field == "name")
+					{
+
+						tdList.push(<td key={j}>{item[column.field]}</td>); 
+					}
+					else if (column.field == "publishedDate")
+					{
+						tdList.push(<td key={j}>{moment(item[column.field]).format('YYYY-M-D H:mm')}</td>); 
+					}
+					else 
+					{
+						tdList.push(<td key={j}>{item[column.field]}</td>);
+					}
+					
 				}
 				
 				itemList.push(<tr id={item._id} data-index={i} key={i}>

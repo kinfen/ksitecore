@@ -1,0 +1,44 @@
+//include ../includes/kadm
+include ../includes/kadmEx
+section.content-header
+	h1
+		| Dashboard
+		small Control panel
+	ol.breadcrumb
+		li
+			a(href='#')
+				i.fa.fa-dashboard
+				|  Home
+		li.active Dashboard
+section.content
+	#item-view
+script.
+	KAdm.lists = !{JSON.stringify(lists)};
+	KAdm.list = KAdm.lists[!{JSON.stringify(list.key)}];
+	KAdm.wysiwyg = {options: !{JSON.stringify(wysiwygOptions)}};
+	KAdm.itemId = '!{itemId}';
+	var Keystone = KAdm;
+script(src='#{adminPath}/js/packages.js')
+script(src='#{adminPath}/js/fields.js')
+script(src='#{adminPathEx}/script/itemEx.js')
+script.
+	KAdm.control.api({
+		url:KAdm.adminPath + "item"
+	})
+	KAdm.itemPage = ReactDOM.render(
+			<ItemView
+					appversion={KAdm.appversion}
+					backUrl={KAdm.backUrl}
+					brand={KAdm.brand}
+					itemId={KAdm.itemId}
+					list={Lists[KAdm.list.key]}
+					messages={KAdm.messages}
+					nav={KAdm.nav}
+					signoutUrl={KAdm.signoutUrl}
+					User={KAdm.User}
+					user={KAdm.user}
+					version={KAdm.version}
+			/>,
+			document.getElementById('item-view')
+	);
+

@@ -5,14 +5,14 @@
 var category = {
 	//set the handle function about the Category
 	onNodeSelected: function(event, node){
-		KAdm.cateContent.loadData(KAdm.adminPath + "/api/Archive/list",{
-			"cat":node.id,
-			"p":1,
-			"ps":10
-		});
 		KAdm.cateContent.setState({
 			category:node.id
 		});
+		KAdm.cateContent.loadData(KAdm.adminPath + "/api/Archive/list",{
+			"p":1,
+			"ps":10
+		});
+		
 	},
 	activeCategory:function(){
 		KAdm.mainCategory.updateTrees();
@@ -153,6 +153,7 @@ KAdm.control = {
 			dataType:"html",
 			success:function(data)
 			{
+				console.log('load success');
 				$('#content').html(data)
 			},
 			error:function(){

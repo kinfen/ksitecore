@@ -7,6 +7,7 @@
     "babelify": "7.2.0",
     "async": "~1.5.2",
     "browserify": "13.0.0",
+    "browserify-shim": "3.8.12",
     "fs-extra": "0.26.4",
     "connect-mongo": "~0.8.1",
     "dotenv": "1.1.0",
@@ -17,6 +18,7 @@
     "keystone-utils": "~0.3.1",
     "jade": "~1.11.0",
     "watchify": "3.7.0",
+    "kerberos": "0.0.17",
     "react": "0.14.6",
     "react-addons-css-transition-group": "0.14.6",
     "react-alt-text": "1.1.0",
@@ -55,6 +57,18 @@
   },
   "scripts": {
     "start": "node index.js"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "tinymce": "global:tinymce",
+    "jquery": "global:$",
+    "codemirror": "global:CodeMirror",
+    "underscore": "global:_",
+    "moment": "global.moment"
   },
   "main": "index.js"
 }
