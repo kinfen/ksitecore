@@ -21,24 +21,5 @@ script.
 script(src='#{adminPath}/js/packages.js')
 script(src='#{adminPath}/js/fields.js')
 script(src='#{adminPathEx}/script/itemEx.js')
-script.
-	KAdm.control.api({
-		url:KAdm.adminPath + "item"
-	})
-	KAdm.itemPage = ReactDOM.render(
-			<ItemView
-					appversion={KAdm.appversion}
-					backUrl={KAdm.backUrl}
-					brand={KAdm.brand}
-					itemId={KAdm.itemId}
-					list={Lists[KAdm.list.key]}
-					messages={KAdm.messages}
-					nav={KAdm.nav}
-					signoutUrl={KAdm.signoutUrl}
-					User={KAdm.User}
-					user={KAdm.user}
-					version={KAdm.version}
-			/>,
-			document.getElementById('item-view')
-	);
+
 
