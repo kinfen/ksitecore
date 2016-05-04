@@ -26,10 +26,11 @@ var ItemView = React.createClass({
 	},
 	loadItemData () {
 		this.props.list.loadItem(this.props.itemId, { drilldown: true }, (err, itemData) => {
+			console.log(itemData);
 			if (err || !itemData) {
 				// TODO: nicer error handling
-				console.log('Error loading item data', err);
-				alert('Error loading data (details logged to console)');
+				//console.log('Error loading item data', err);
+				//alert('Error loading data (details logged to console)');
 				return;
 			}
 			this.setState({ itemData });

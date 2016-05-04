@@ -18,7 +18,7 @@ exports = module.exports = function() {
 	router.all('/item/:model/:id', initList(), require('./views/item'));
 	router.all('/api/:model/tree', initList(), require('../api/tree'));
 	router.all('/api/:model/list', initList(), require('../api/list'));
-	router.all('/api/:model/:id', initList(), require('../api/item'));
+	//router.all('/api/:model/:id', initList(), require('../api/item'));
 
 	// lists
 	//router.all('/api/counts', require('../api/counts'));
