@@ -8,7 +8,7 @@ var category = {
 		KAdm.cateContent.setState({
 			category:node.id
 		});
-		KAdm.cateContent.loadData(KAdm.adminPath + "/api/Archive/list",{
+		KAdm.cateContent.loadData(KAdm.adminPath + "/api2/Archive/list",{
 			"p":1,
 			"ps":10
 		});
@@ -133,7 +133,7 @@ KAdm.control = {
 	{
 		var self = this;
 		this.api({
-			url: KAdm.adminPath + '/api/Navs/tree',
+			url: KAdm.adminPath + '/api2/Navs/tree',
 			success: function (data) {
 				self.setNavsData(data.list);
 			},

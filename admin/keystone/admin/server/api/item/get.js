@@ -122,6 +122,7 @@ module.exports = function(req, res) {
 				async.each(relationships, function(rel, done) {
 
 					// TODO: Handle invalid relationship config
+					console.log('aa:' + rel.ref);
 					rel.list = keystone.list(rel.ref);
 					rel.sortable = (rel.list.get('sortable') && rel.list.get('sortContext') === req.list.key + ':' + rel.path);
 

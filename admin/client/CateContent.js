@@ -165,7 +165,7 @@ var CateContent = React.createClass({
 		var self = this;
 
 		KAdm.control.api({
-			url:KAdm.adminPath + "/api/" + this.props.model,
+			url:KAdm.adminPath + "/api2/" + this.props.model,
 			type:"POST",
 			data:{
 				action:"create",
@@ -254,7 +254,7 @@ var CateContent = React.createClass({
 		l.start();
 		console.log(ids);
 		KAdm.control.api({
-			url:KAdm.adminPath + "/api/" + this.props.model,
+			url:KAdm.adminPath + "/api2/" + this.props.model,
 			type:"POST",
 			data:{
 				action:"delete",

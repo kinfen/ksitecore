@@ -41,7 +41,7 @@ var Category = React.createClass({
 		};
 		
 		KAdm.control.api({
-			url:KAdm.adminPath + "/api/Category/tree",
+			url:KAdm.adminPath + "/api2/Category/tree",
 			data:{
 				navs:self.props.navs
 			},
@@ -147,7 +147,7 @@ var Category = React.createClass({
 		l.start();
 		
 		KAdm.control.api({
-			url:KAdm.adminPath + "/api/Category",
+			url:KAdm.adminPath + "/api2/Category",
 			type:"POST",
 			data:{
 				action:"delete",
@@ -187,7 +187,7 @@ var Category = React.createClass({
 		l.start();
 		var self = this;
 		KAdm.control.api({
-			url:KAdm.adminPath + "/api/Category",
+			url:KAdm.adminPath + "/api2/Category",
 			type:"POST",
 			data:{
 				action:"create",

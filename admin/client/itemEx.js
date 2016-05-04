@@ -33,6 +33,7 @@ var ItemView = React.createClass({
 				//alert('Error loading data (details logged to console)');
 				return;
 			}
+			KAdm.control.showLoading(false, 300);
 			this.setState({ itemData });
 		});
 	},
@@ -107,6 +108,7 @@ var ItemView = React.createClass({
 		);
 	},
 });
+
 ReactDOM.render(
 	<ItemView
 		appversion={KAdm.appversion}
