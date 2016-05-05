@@ -1,16 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Columns from '../keystone/admin/client/columns';
 import Lists from '../keystone/admin/client/stores/Lists';
-import CreateForm from '../keystone/admin/client/components/CreateForm';
-import EditForm from '../keystone/admin/client/components/EditForm';
-import EditFormHeader from '../keystone/admin/client/components/EditFormHeader';
-import FlashMessages from '../keystone/admin/client/components/FlashMessages';
+import EditForm from './components/EditForm';
 import Footer from '../keystone/admin/client/components/Footer';
 //import MobileNavigation from '../keystone/admin/client/components/MobileNavigation';
 //import PrimaryNavigation from '../keystone/admin/client/components/PrimaryNavigation';
 import RelatedItemsList from '../keystone/admin/client/components/RelatedItemsList';
-import SecondaryNavigation from '../keystone/admin/client/components/SecondaryNavigation';
 import { Alert, Container, Spinner } from 'elemental';
 
 var ItemView = React.createClass({
@@ -60,23 +55,29 @@ var ItemView = React.createClass({
 	render () {
 		if (!this.state.itemData) return <div className="view-loading-indicator"><Spinner size="md" /></div>;
 		return (
-			<div className="keystone-wrapper">
-				<div className="keystone-body">
+		<div className="box box-primary">
+			<div className="box-header with-border">
+				<h3 className="box-title">编辑</h3>
+			</div>
+			<div className="box-body">
 					<Container>
 						<EditForm
 							list={this.props.list}
 							data={this.state.itemData} />
 						{this.renderRelationships()}
 					</Container>
-				</div>
+			</div>
+			<div className="box-footer">
 				<Footer
 					appversion={this.props.appversion}
 					backUrl={this.props.backUrl}
 					brand={this.props.brand}
 					User={this.props.User}
 					user={this.props.user}
-					version={this.props.version} />
+					version={this.props.version} 
+				/>
 			</div>
+		</div>
 		);
 	},
 });
