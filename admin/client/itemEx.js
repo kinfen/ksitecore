@@ -7,8 +7,8 @@ import EditForm from '../keystone/admin/client/components/EditForm';
 import EditFormHeader from '../keystone/admin/client/components/EditFormHeader';
 import FlashMessages from '../keystone/admin/client/components/FlashMessages';
 import Footer from '../keystone/admin/client/components/Footer';
-import MobileNavigation from '../keystone/admin/client/components/MobileNavigation';
-import PrimaryNavigation from '../keystone/admin/client/components/PrimaryNavigation';
+//import MobileNavigation from '../keystone/admin/client/components/MobileNavigation';
+//import PrimaryNavigation from '../keystone/admin/client/components/PrimaryNavigation';
 import RelatedItemsList from '../keystone/admin/client/components/RelatedItemsList';
 import SecondaryNavigation from '../keystone/admin/client/components/SecondaryNavigation';
 import { Alert, Container, Spinner } from 'elemental';
@@ -61,36 +61,8 @@ var ItemView = React.createClass({
 		if (!this.state.itemData) return <div className="view-loading-indicator"><Spinner size="md" /></div>;
 		return (
 			<div className="keystone-wrapper">
-				<header className="keystone-header">
-					<MobileNavigation
-						brand={this.props.brand}
-						currentListKey={this.props.list.path}
-						currentSectionKey={this.props.nav.currentSection.key}
-						sections={this.props.nav.sections}
-						signoutUrl={this.props.signoutUrl}
-						/>
-					<PrimaryNavigation
-						currentSectionKey={this.props.nav.currentSection.key}
-						brand={this.props.brand}
-						sections={this.props.nav.sections}
-						signoutUrl={this.props.signoutUrl} />
-					<SecondaryNavigation
-						currentListKey={this.props.list.path}
-						lists={this.props.nav.currentSection.lists} />
-				</header>
 				<div className="keystone-body">
-					<EditFormHeader
-						list={this.props.list}
-						data={this.state.itemData}
-						drilldown={this.state.itemDrilldown}
-						toggleCreate={this.toggleCreate} />
 					<Container>
-						<CreateForm
-							list={this.props.list}
-							isOpen={this.state.createIsOpen}
-							onCancel={() => this.toggleCreate(false)} />
-						<FlashMessages
-							messages={this.props.messages} />
 						<EditForm
 							list={this.props.list}
 							data={this.state.itemData} />
