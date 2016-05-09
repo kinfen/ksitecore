@@ -13,8 +13,7 @@ var KAdm = function()
 	this._options = {
 		"kadmPath":"admin",
 		"adminModule":this.getAdminPlus()
-	}
-	;
+	};
 	keystone = this.get("adminModule");
 }
 _.extend(KAdm.prototype, require('./core/options')());

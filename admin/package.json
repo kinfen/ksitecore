@@ -39,6 +39,7 @@
     "store-prototype": "1.1.1",
     "elemental": "0.5.11",
     "xhr": "2.2.0",
+    "less-middleware": "2.0.1",
     "debug": "^2.2.0"
   },
   "devDependencies": {

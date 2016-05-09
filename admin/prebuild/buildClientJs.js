@@ -6,9 +6,10 @@
 
 var browserify = require('./middleware/browserify');
 var express = require('express');
-//var less = require('less-middleware');
+var less = require('less-middleware');
 var path = require('path');
-
+var kadm = require('../');
+//var keystone = kadm.getAdminPlus();
 module.exports = exports = function () {
 	var router = express.Router();
 
@@ -43,22 +44,24 @@ module.exports = exports = function () {
 		//bundles.list.build();
 	});
 
-	///* Prepare LESS options */
-	//var elementalPath = path.join(path.dirname(require.resolve('elemental')), '..');
-	//var reactSelectPath = path.join(path.dirname(require.resolve('react-select')), '..');
-    //
-	//var lessOptions = {
-	//	render: {
-	//		modifyVars: {
-	//			elementalPath: JSON.stringify(elementalPath),
-	//			reactSelectPath: JSON.stringify(reactSelectPath),
-	//			adminPath: JSON.stringify(keystone.get('admin path')),
-	//		}
-	//	}
-	//};
+	/* Prepare LESS options */
+	var elementalPath = path.join(path.dirname(require.resolve('elemental')), '..');
+	var reactSelectPath = path.join(path.dirname(require.resolve('react-select')), '..');
+	console.log(elementalPath);
+	console.log(reactSelectPath);
+	var lessOptions = {
+		render: {
+			modifyVars: {
+				elementalPath: JSON.stringify(elementalPath),
+				reactSelectPath: JSON.stringify(reactSelectPath),
+				adminPath: "admincore"//JSON.stringify(keystone.get('admin path')),
+			}
+		}
+	};
+	console.log(path.resolve(__dirname + '/../public/css'));
     //
 	/* Configure router */
-	//router.use('/styles', less(path.resolve(__dirname + '../../../public/styles'), lessOptions));
+	router.use('/style', less(path.resolve(__dirname + '/../public/style'), lessOptions));
 	//router.use('/styles/fonts', express.static(path.resolve(__dirname + '../../../public/js/lib/tinymce/skins/keystone/fonts')));
 	//router.get('/js/fields.js', bundles.fields.serve);
 	router.get('/script/signin.js', bundles.signin.serve);
