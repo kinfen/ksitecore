@@ -45,14 +45,15 @@ module.exports = exports = function () {
 	});
 
 	/* Prepare LESS options */
-	var lessPaths = keystone.get('less');
-	var lessOptions = keystone.get('less options') || {};
+	//var lessPaths = keystone.get('less');
+	//var lessOptions = keystone.get('less options') || {};
 	var elementalPath = path.join(path.dirname(require.resolve('elemental')), '..');
 	var reactSelectPath = path.join(path.dirname(require.resolve('react-select')), '..');
 	var lessOptions = {
 		render: {
 			modifyVars: {
-				elementalPath: 1
+				elementalPath: JSON.stringify(elementalPath),
+				reactSelectPath: JSON.stringify(reactSelectPath)
 			}
 		},
 		debug:true
@@ -61,9 +62,8 @@ module.exports = exports = function () {
 	console.log('hoho');
     //
 	/* Configure router */
-	router.use('/style', less(path.resolve(__dirname + '/../public/style'), lessOptions));
-	
-	//router.use('/styles/fonts', express.static(path.resolve(__dirname + '../../../public/js/lib/tinymce/skins/keystone/fonts')));
+	router.use('/style', less(path.resolve(__dirname , '../public/style'), lessOptions));
+	//router.use('/styles/fonts', express.static(path.resolve(__dirname , '../../../public/js/lib/tinymce/skins/keystone/fonts')));
 	//router.get('/js/fields.js', bundles.fields.serve);
 	router.get('/script/signin.js', bundles.signin.serve);
 	router.get('/script/MainSideBar.js', bundles.MainSideBar.serve);

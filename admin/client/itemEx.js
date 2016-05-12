@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Lists from '../keystone/admin/client/stores/Lists';
 import EditForm from './components/EditForm';
-import Footer from '../keystone/admin/client/components/Footer';
+import FooterBar from './components/FooterBar';
+//import Footer from '../keystone/admin/client/components/Footer';
 //import MobileNavigation from '../keystone/admin/client/components/MobileNavigation';
 //import PrimaryNavigation from '../keystone/admin/client/components/PrimaryNavigation';
 import RelatedItemsList from '../keystone/admin/client/components/RelatedItemsList';
-import { Alert, Container, Spinner } from 'elemental';
+import {Button,ResponsiveText, Alert, Container, Spinner } from 'elemental';
 
 var ItemView = React.createClass({
 	displayName: 'ItemView',
@@ -37,6 +38,50 @@ var ItemView = React.createClass({
 			createIsOpen: visible,
 		});
 	},
+	confirmReset(){
+		var bodyElement = (
+			<div>
+				<div>是否重置当前对象的属性?</div>
+			</div>
+		);
+		KAdm.modal.show({
+			style:"info",
+			title:"提示",
+			body:bodyElement,
+			footer:{
+				leftItems:[
+					<button key={0} type="button" className="btn btn-info pull-left ladda-button" data-style="expand-left">重置</button>
+				],
+				rightItems:[{
+					name:"关闭",
+					style:"default",
+					data:"dismiss"
+				}]
+			}
+		});
+	},
+	confirmDelete (){
+		var bodyElement = (
+			<div>
+				<div>是否确认删除当前对象</div>
+			</div>
+		);
+		KAdm.modal.show({
+			style:"danger",
+			title:"提示",
+			body:bodyElement,
+			footer:{
+				leftItems:[
+					<button key={0} type="button" className="btn btn-danger pull-left ladda-button" data-style="expand-left">删除</button>
+				],
+				rightItems:[{
+					name:"关闭",
+					style:"default",
+					data:"dismiss"
+				}]
+			}
+		});
+	},
 	renderRelationships () {
 		let { relationships } = this.props.list;
 		let keys = Object.keys(relationships);
@@ -50,6 +95,28 @@ var ItemView = React.createClass({
 					return <RelatedItemsList key={relationship.path} list={this.props.list} refList={refList} relatedItemId={this.props.itemId} relationship={relationship} />;
 				})}
 			</div>
+		);
+	},
+	renderFooterBar () {
+		var buttons = [
+			<Button key="save" type="primary" submit>保存</Button>
+		];
+		buttons.push(
+			<Button key="reset" onClick={this.confirmReset} type="link-text">
+				<ResponsiveText hiddenXS="重置修改" visibleXS="重置" />
+			</Button>
+		);
+		if (!this.props.list.nodelete) {
+			buttons.push(
+				<Button key="del" onClick={this.confirmDelete} type="link-delete" className="u-float-right">
+					<ResponsiveText hiddenXS="删除" visibleXS="删除" />
+				</Button>
+			);
+		}
+		return (
+			<FooterBar className="EditForm__footer">
+				{buttons}
+			</FooterBar>
 		);
 	},
 	render () {
@@ -68,14 +135,7 @@ var ItemView = React.createClass({
 					</Container>
 			</div>
 			<div className="box-footer">
-				<Footer
-					appversion={this.props.appversion}
-					backUrl={this.props.backUrl}
-					brand={this.props.brand}
-					User={this.props.User}
-					user={this.props.user}
-					version={this.props.version} 
-				/>
+				{this.renderFooterBar()}
 			</div>
 		</div>
 		);

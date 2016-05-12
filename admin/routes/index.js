@@ -28,10 +28,5 @@ exports = module.exports = function(app) {
 	
 	app.use ("/" + ksiteadm.get("kadmPath"), serverRoutes);
 	app.use ("/" + ksiteadm.get("kadmPath"), jsRoutes);
-	var str = ksiteadm.getAdminPlus().expandPath('public');
-	var obj = require('less-middleware')(str, lessOptions)
-	console.log('oh');
-	console.log(obj);
-	app.use(obj);
 	app.use ("/" + ksiteadm.get("kadmPath"), staticRoutes);
 }

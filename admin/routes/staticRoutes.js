@@ -8,6 +8,7 @@ var path = require('path');
 
 exports = module.exports = function() {
 	var routes = express.Router();
+	console.log(path.resolve(__dirname, "../public"));
 	routes.use(express.static(path.resolve(__dirname, "../public")));
 	return routes;
 };

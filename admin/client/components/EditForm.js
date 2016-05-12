@@ -4,7 +4,6 @@ import ConfirmationDialog from '../../keystone/admin/client/components/Confirmat
 import Fields from '../../keystone/admin/client/fields';
 import FormHeading from '../../keystone/admin/client/components/FormHeading';
 import AltText from '../../keystone/admin/client/components/AltText';
-import FooterBar from '../../keystone/admin/client/components/FooterBar';
 import InvalidFieldType from '../../keystone/admin/client/components/InvalidFieldType';
 import { Button, Col, Form, FormField, FormInput, ResponsiveText, Row } from 'elemental';
 
@@ -153,28 +152,6 @@ var EditForm = React.createClass({
 			}
 		}, this);
 	},
-	renderFooterBar () {
-		var buttons = [
-			<Button key="save" type="primary" submit>Save</Button>
-		];
-		buttons.push(
-			<Button key="reset" onClick={this.confirmReset} type="link-cancel">
-				<ResponsiveText hiddenXS="reset changes" visibleXS="reset" />
-			</Button>
-		);
-		if (!this.props.list.nodelete) {
-			buttons.push(
-				<Button key="del" onClick={this.confirmDelete} type="link-delete" className="u-float-right">
-					<ResponsiveText hiddenXS={`delete ${this.props.list.singular.toLowerCase()}`} visibleXS="delete" />
-				</Button>
-			);
-		}
-		return (
-			<FooterBar className="EditForm__footer">
-				{buttons}
-			</FooterBar>
-		);
-	},
 	renderTrackingMeta () {
 		if (!this.props.list.tracking) return null;
 
@@ -249,8 +226,6 @@ var EditForm = React.createClass({
 					</Col>
 					<Col lg="1/4"><span /></Col>
 				</Row>
-				{this.renderFooterBar()}
-				{this.state.confirmationDialog}
 			</form>
 		);
 	},

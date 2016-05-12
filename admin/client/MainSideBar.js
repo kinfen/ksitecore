@@ -10,7 +10,7 @@ import _ from 'underscore';
 var MainSideBar = React.createClass({
 	getInitialState () {
 		return {
-			userHead: "dist/img/user2-160x160.jpg",
+			userHead: KAdm.adminPath + "/dist/img/user2-160x160.jpg",
 			userName: "Kinfen",
 			userState: 1,
 			navs: this.props.navs
@@ -93,7 +93,7 @@ var MainSideBar = React.createClass({
 
 KAdm.sidebar = ReactDOM.render(
 	<MainSideBar
-	userHead="dist/img/user2-160x160.jpg"
+	userHead={KAdm.adminPath + "/dist/img/user2-160x160.jpg"}
 	userName="Kinfen"
 	userState="1"
 	navs={[]}

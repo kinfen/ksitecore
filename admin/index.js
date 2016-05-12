@@ -39,7 +39,7 @@ KAdm.prototype.init = function()
 		'admin path': 'admincore',
 		'less': 'public',
 		'env' : "production",
-		'static': 'public',
+		//'static': 'public',
 		'favicon': 'favicon.ico',
 		'views': '/templates/views',
 		'view engine': 'jade',
