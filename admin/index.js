@@ -101,7 +101,7 @@ KAdm.prototype.init = function()
 //	});
 //	KAdm.prototype.route = require("./core/routes");
 }
-KAdm.prototype.prebuild = require('./prebuild/buildClientJs');
+//KAdm.prototype.prebuild = require('./prebuild/buildClientJs');
 KAdm.prototype.start = function()
 {
 	keystone.start();

@@ -8,8 +8,8 @@ var browserify = require('./middleware/browserify');
 var express = require('express');
 var less = require('less-middleware');
 var path = require('path');
-var kadm = require('../');
-//var keystone = kadm.getAdminPlus();
+var kadm = require('../index');
+var keystone = kadm.getAdminPlus();
 module.exports = exports = function () {
 	var router = express.Router();
 
@@ -45,23 +45,24 @@ module.exports = exports = function () {
 	});
 
 	/* Prepare LESS options */
+	var lessPaths = keystone.get('less');
+	var lessOptions = keystone.get('less options') || {};
 	var elementalPath = path.join(path.dirname(require.resolve('elemental')), '..');
 	var reactSelectPath = path.join(path.dirname(require.resolve('react-select')), '..');
-	console.log(elementalPath);
-	console.log(reactSelectPath);
 	var lessOptions = {
 		render: {
 			modifyVars: {
-				elementalPath: JSON.stringify(elementalPath),
-				reactSelectPath: JSON.stringify(reactSelectPath),
-				adminPath: "admincore"//JSON.stringify(keystone.get('admin path')),
+				elementalPath: 1
 			}
-		}
+		},
+		debug:true
 	};
-	console.log(path.resolve(__dirname + '/../public/css'));
+	//JSON.stringify(keystone.get('admin path'))
+	console.log('hoho');
     //
 	/* Configure router */
 	router.use('/style', less(path.resolve(__dirname + '/../public/style'), lessOptions));
+	
 	//router.use('/styles/fonts', express.static(path.resolve(__dirname + '../../../public/js/lib/tinymce/skins/keystone/fonts')));
 	//router.get('/js/fields.js', bundles.fields.serve);
 	router.get('/script/signin.js', bundles.signin.serve);

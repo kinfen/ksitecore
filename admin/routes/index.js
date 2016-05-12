@@ -3,7 +3,7 @@
  */
 var	express = require('express');
 var ksiteadm = require('../index');
-
+//console.log(ksiteadm);
 //var dest = {
 //	views: importRoutes('../routes/')
 //};
@@ -16,7 +16,22 @@ exports = module.exports = function(app) {
 	{
 		ksiteadm.get("routes")(app);
 	}
+
+	var lessOptions = {
+		render: {
+			modifyVars: {
+				elementalPath: 1
+			}
+		},
+		debug:true
+	};
+	
 	app.use ("/" + ksiteadm.get("kadmPath"), serverRoutes);
 	app.use ("/" + ksiteadm.get("kadmPath"), jsRoutes);
+	var str = ksiteadm.getAdminPlus().expandPath('public');
+	var obj = require('less-middleware')(str, lessOptions)
+	console.log('oh');
+	console.log(obj);
+	app.use(obj);
 	app.use ("/" + ksiteadm.get("kadmPath"), staticRoutes);
 }
