@@ -47,17 +47,24 @@ module.exports = exports = function () {
 	/* Prepare LESS options */
 	//var lessPaths = keystone.get('less');
 	//var lessOptions = keystone.get('less options') || {};
+	
+	var path1 = kadm.getKeystonePath();
+	var path2 = kadm.getKeystoneRelativePath(__dirname);
+	
 	var elementalPath = path.join(path.dirname(require.resolve('elemental')), '..');
 	var reactSelectPath = path.join(path.dirname(require.resolve('react-select')), '..');
+	var keystonePath = kadm.getKeystonePath();
 	var lessOptions = {
 		render: {
 			modifyVars: {
 				elementalPath: JSON.stringify(elementalPath),
-				reactSelectPath: JSON.stringify(reactSelectPath)
+				reactSelectPath: JSON.stringify(reactSelectPath),
+				keystonePath: JSON.stringify(keystonePath)
 			}
 		},
 		debug:true
 	};
+	
 	//JSON.stringify(keystone.get('admin path'))
 	console.log('hoho');
     //

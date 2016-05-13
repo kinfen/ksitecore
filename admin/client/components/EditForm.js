@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment';
-import ConfirmationDialog from '../../keystone/admin/client/components/ConfirmationDialog';
-import Fields from '../../keystone/admin/client/fields';
-import FormHeading from '../../keystone/admin/client/components/FormHeading';
-import AltText from '../../keystone/admin/client/components/AltText';
-import InvalidFieldType from '../../keystone/admin/client/components/InvalidFieldType';
+import ConfirmationDialog from 'keystone/admin/client/components/ConfirmationDialog';
+import Fields from 'keystone/admin/client/fields';
+import FormHeading from 'keystone/admin/client/components/FormHeading';
+import AltText from 'keystone/admin/client/components/AltText';
+import InvalidFieldType from 'keystone/admin/client/components/InvalidFieldType';
 import { Button, Col, Form, FormField, FormInput, ResponsiveText, Row } from 'elemental';
 
 var EditForm = React.createClass({

@@ -1,12 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Lists from '../keystone/admin/client/stores/Lists';
+import Lists from 'keystone/admin/client/stores/Lists';
 import EditForm from './components/EditForm';
 import FooterBar from './components/FooterBar';
-//import Footer from '../keystone/admin/client/components/Footer';
-//import MobileNavigation from '../keystone/admin/client/components/MobileNavigation';
-//import PrimaryNavigation from '../keystone/admin/client/components/PrimaryNavigation';
-import RelatedItemsList from '../keystone/admin/client/components/RelatedItemsList';
+import RelatedItemsList from 'keystone/admin/client/components/RelatedItemsList';
 import {Button,ResponsiveText, Alert, Container, Spinner } from 'elemental';
 
 var ItemView = React.createClass({

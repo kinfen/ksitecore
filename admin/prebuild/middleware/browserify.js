@@ -7,8 +7,9 @@ var moment = require('moment');
 var packages = require('../packages');
 var path = require('path');
 var watchify = require('watchify');
-
+var kadm = require('../../index');
 var basedir = path.resolve(__dirname + '/../../client/');
+var keystonePath = path.relative(basedir, kadm.getKeystonePath());
 var devMode = process.env.KEYSTONE_DEV === 'true';
 var devWriteBundles = process.env.KEYSTONE_WRITE_BUNDLES === 'true';
 var devWriteDisc = process.env.KEYSTONE_WRITE_DISC === 'true';
@@ -54,7 +55,11 @@ module.exports = function(file, name) {
 	function build() {
 		if (building) return;
 		building = true;
-		var opts = { basedir: basedir };
+		console.log(keystonePath)
+		var opts = {
+			basedir: basedir,
+			paths:[keystonePath]
+		};
 		if (devMode) {
 			logInit(file);
 			opts.debug = true;

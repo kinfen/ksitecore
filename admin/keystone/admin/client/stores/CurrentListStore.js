@@ -1,4 +1,3 @@
-'use strict';
 
 import createHistory from 'history/lib/createBrowserHistory';
 import useQueries from 'history/lib/useQueries';

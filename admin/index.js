@@ -3,7 +3,7 @@
 var keystone;
 
 var _ = require("underscore");
-
+var path = require("path");
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
@@ -12,22 +12,32 @@ var KAdm = function()
 {
 	this._options = {
 		"kadmPath":"admin",
-		"adminModule":this.getAdminPlus()
+		"adminModuleName":"./keystone"
 	};
-	keystone = this.get("adminModule");
+	keystone = this.getAdminPlus();
 }
 _.extend(KAdm.prototype, require('./core/options')());
 KAdm.prototype.getAdminPlus = function()
 {
 	var admin;
-	//try {
-	//	admin = require("keystone");
-	//}
-	//catch 
-	//{
-		admin = require('./keystone');
-	//}
+	try {
+		admin = require(this.get('adminModuleName'));
+	}
+	catch(e)
+	{
+		admin = require("./keystone");
+	}
 	return admin;
+}
+KAdm.prototype.getKeystonePath = function()
+{
+	var str = path.join(path.dirname(require.resolve(this.get('adminModuleName'))), '..');
+	return str;
+}
+KAdm.prototype.getKeystoneRelativePath = function(dir)
+{
+	var str = path.relative(dir, this.getKeystonePath());
+	return str;
 }
 KAdm.prototype.init = function()
 {
