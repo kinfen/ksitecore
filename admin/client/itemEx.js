@@ -69,7 +69,7 @@ var ItemView = React.createClass({
 			body:bodyElement,
 			footer:{
 				leftItems:[
-					<button key={0} type="button" className="btn btn-danger pull-left ladda-button" data-style="expand-left">删除</button>
+					<button key={0} type="button" className="btn btn-danger pull-left ladda-button" data-style="expand-left" onClick={this.handleDelete}>删除</button>
 				],
 				rightItems:[{
 					name:"关闭",
@@ -78,6 +78,34 @@ var ItemView = React.createClass({
 				}]
 			}
 		});
+	},
+	handleDelete(e){
+		var self = this;
+		var selections = $(this.sector).bootstrapTable("getSelections");
+		var ids = this.props.itemId;
+		var btn = e.currentTarget;
+		var l =Ladda.create(btn);
+		l.start();
+		KAdm.control.api({
+			url:KAdm.adminPath + "/api2/" + this.props.list.singular,
+			type:"POST",
+			data:{
+				action:"delete",
+				ids:ids,
+			},
+			success:function(data)
+			{
+				if (data.status===1)
+				{
+					KAdm.control.loadPage(this.props.backUrl);
+				}
+				l.stop();
+				KAdm.modal.hide();
+			},
+			error:function(){
+				l.stop();
+			}
+		}, true);
 	},
 	renderRelationships () {
 		let { relationships } = this.props.list;
@@ -141,17 +169,13 @@ var ItemView = React.createClass({
 
 ReactDOM.render(
 	<ItemView
-		appversion={KAdm.appversion}
 		backUrl={KAdm.backUrl}
-		brand={KAdm.brand}
 		itemId={KAdm.itemId}
 		list={Lists[KAdm.list.key]}
-		messages={KAdm.messages}
 		nav={KAdm.nav}
 		signoutUrl={KAdm.signoutUrl}
 		User={KAdm.User}
 		user={KAdm.user}
-		version={KAdm.version}
 	/>,
 	document.getElementById('item-view')
 );

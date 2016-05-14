@@ -8,10 +8,7 @@ var category = {
 		KAdm.cateContent.setState({
 			category:node.id
 		});
-		KAdm.cateContent.loadData(KAdm.adminPath + "/api2/Archive/list",{
-			"p":1,
-			"ps":10
-		});
+		KAdm.cateContent.reloadDataFromStateParam();
 		
 	},
 	activeCategory:function(){
@@ -165,7 +162,6 @@ KAdm.control = {
 	category:category,
 	cateContent:cateContent
 };
-console.log('init kadm');
 KAdm.control.init();
 
 

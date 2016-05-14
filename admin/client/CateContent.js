@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import moment from 'moment'
 import _ from 'underscore';
+import path from "path"
 
 var CateContent = React.createClass({
 	sector:"#table",
@@ -74,19 +75,18 @@ var CateContent = React.createClass({
 		return fieldsList;
 
 	},
-	loadData(url, params){
-		if (!url) return;
-		this.currentUrl = url;
+	reloadDataFromStateParam(param){
 		var self = this;
+		param = param || {};
+		param = _.extend(_.clone(this.state), param);
 		this.setState({
 			loading:true
 		});
-		//assign the current category Id
-		_.extend(params, {cat:this.state.category});
-		
+		var url = this.formUrlWithParam(param);
 		KAdm.control.api({
 			url:url,
-			data:params,
+			data:{},
+			method:"post",
 			success:function(data)
 			{
 				if (data.status == 1)
@@ -95,7 +95,7 @@ var CateContent = React.createClass({
 					self.setState({
 						loading:false,
 						page:data.info.currentPage,
-						pageSize:params.ps,
+						pageSize:param.pageSize,
 						totalPages:data.info.totalPages,
 						data:self.tableList(data.info.results)
 					});
@@ -104,8 +104,13 @@ var CateContent = React.createClass({
 					console.log(data);
 				}
 
+			},
+			error:function(xhr, err)
+			{
+				console.log(xhr);
 			}
-		});
+		},
+		true);
 	},
 	checkForm(form)
 	{
@@ -163,9 +168,9 @@ var CateContent = React.createClass({
 		var l = Ladda.create(btn);
 		l.start();
 		var self = this;
-
+		var url = path.join(this.props.apiPath, this.props.model);
 		KAdm.control.api({
-			url:KAdm.adminPath + "/api2/" + this.props.model,
+			url:url,
 			type:"POST",
 			data:{
 				action:"create",
@@ -175,7 +180,7 @@ var CateContent = React.createClass({
 			success:function(data)
 			{
 				if (data.status===1) {
-					self.loadData(self.currentUrl);
+					self.reloadDataFromStateParam();
 				}
 				else 
 				{
@@ -252,9 +257,9 @@ var CateContent = React.createClass({
 		var btn = e.currentTarget;
 		var l =Ladda.create(btn);
 		l.start();
-		console.log(ids);
+		var url = path.join(this.props.apiPath, this.props.model);
 		KAdm.control.api({
-			url:KAdm.adminPath + "/api2/" + this.props.model,
+			url:url,
 			type:"POST",
 			data:{
 				action:"delete",
@@ -264,10 +269,7 @@ var CateContent = React.createClass({
 			{
 				if (data.status===1)
 				{
-					self.loadData(self.currentUrl, {
-						p:self.state.page,
-						ps:self.state.pageSize
-					});
+					self.reloadDataFromStateParam();
 				}
 				KAdm.cateContent.setState({
 					loading:false
@@ -288,14 +290,14 @@ var CateContent = React.createClass({
 	},
 	pageSelectedHandler(page)
 	{
-		this.loadData(this.currentUrl, {
-			p:page
+		this.reloadDataFromStateParam({
+			page:page
 		});
 	},
 	pageSizeChangedHandler(size)
 	{
-		this.loadData(this.currentUrl, {
-			ps:size
+		this.reloadDataFromStateParam({
+			pageSize:size
 		});
 	},
 	
@@ -324,10 +326,9 @@ var CateContent = React.createClass({
 			}
 		};
 		var sortHandler = function(name,order) {
-			var orderTag = order == "asc" ? "+" : "-";
 			self.sortName = name;
 			self.sortOrder = order;
-			self.loadData(self.currentUrl, {sort:orderTag + name});
+			self.reloadDataFromStateParam();
 		};
 		$(this.sector).bootstrapTable({
 			//onPostBody:eventHandler,
@@ -338,6 +339,16 @@ var CateContent = React.createClass({
 			onCheckAll: eventHandler,
 			onUncheckAll: eventHandler
 		});
+	},
+	formUrlWithParam(param){
+		var orderTag = this.sortOrder == "asc" ? "+" : "-";
+		var url = path.join(this.props.apiPath, this.props.model, "list");
+		url += "?p=" + param.page;
+		url += "&ps=" + param.pageSize;
+		url += "&cat=" + param.category;
+		if (this.sortName && this.sortOrder)
+			url += "&sort=" + orderTag + this.sortName;
+		return url;
 	},
 	componentDidMount () {
 		this.configTableView();
@@ -518,5 +529,5 @@ var CateContent = React.createClass({
 	},
 });
 KAdm.cateContent = ReactDOM.render(
-	<CateContent model={KAdm.model.singular} onTitleSelected={KAdm.control.cateContent.onTitleSelected} />, $("#cateContent")[0]
+	<CateContent apiPath={KAdm.adminPath + "/api2/"} model={KAdm.model.singular} onTitleSelected={KAdm.control.cateContent.onTitleSelected} />, $("#cateContent")[0]
 );

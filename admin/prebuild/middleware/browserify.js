@@ -55,7 +55,6 @@ module.exports = function(file, name) {
 	function build() {
 		if (building) return;
 		building = true;
-		console.log(keystonePath)
 		var opts = {
 			basedir: basedir,
 			paths:[keystonePath]
