@@ -168,7 +168,7 @@ var CateContent = React.createClass({
 		var l = Ladda.create(btn);
 		l.start();
 		var self = this;
-		var url = path.join(this.props.apiPath, this.props.model);
+		var url = path.join(this.props.adminPath, this.props.apiPath, this.props.model);
 		KAdm.control.api({
 			url:url,
 			type:"POST",
@@ -180,7 +180,8 @@ var CateContent = React.createClass({
 			success:function(data)
 			{
 				if (data.status===1) {
-					self.reloadDataFromStateParam();
+					var url = path.join(self.props.adminPath, "item", self.props.model, data.info.item._id);
+					KAdm.control.loadPage(url);
 				}
 				else 
 				{
@@ -257,7 +258,7 @@ var CateContent = React.createClass({
 		var btn = e.currentTarget;
 		var l =Ladda.create(btn);
 		l.start();
-		var url = path.join(this.props.apiPath, this.props.model);
+		var url = path.join(this.props.adminPath, this.props.apiPath, this.props.model);
 		KAdm.control.api({
 			url:url,
 			type:"POST",
@@ -284,9 +285,9 @@ var CateContent = React.createClass({
 	},
 	nameSelectedHandler(id)
 	{
-		var path = KAdm.adminPath + "/item/" + this.props.model + '/' + id;
-		console.log(path);
-		KAdm.control.loadPage(path);
+		var url = path.join(his.props.adminPath, "item", id);
+		console.log(url);
+		KAdm.control.loadPage(url);
 	},
 	pageSelectedHandler(page)
 	{
@@ -342,7 +343,7 @@ var CateContent = React.createClass({
 	},
 	formUrlWithParam(param){
 		var orderTag = this.sortOrder == "asc" ? "+" : "-";
-		var url = path.join(this.props.apiPath, this.props.model, "list");
+		var url = path.join(this.props.adminPath, this.props.apiPath, this.props.model, "list");
 		url += "?p=" + param.page;
 		url += "&ps=" + param.pageSize;
 		url += "&cat=" + param.category;
@@ -529,5 +530,5 @@ var CateContent = React.createClass({
 	},
 });
 KAdm.cateContent = ReactDOM.render(
-	<CateContent apiPath={KAdm.adminPath + "/api2/"} model={KAdm.model.singular} onTitleSelected={KAdm.control.cateContent.onTitleSelected} />, $("#cateContent")[0]
+	<CateContent adminPath={KAdm.adminPath} apiPath="api2" model={KAdm.model.singular} onTitleSelected={KAdm.control.cateContent.onTitleSelected} />, $("#cateContent")[0]
 );

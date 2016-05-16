@@ -99,7 +99,9 @@ module.exports = function(req, res) {
 				} else {
 					Base.json(res, {
 						status:1,
-						info:"Success Create Item"
+						info:{
+							item:item
+						}
 					});
 				}
 			});
