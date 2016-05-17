@@ -59,6 +59,7 @@ module.exports = exports = function () {
 			modifyVars: {
 				elementalPath: JSON.stringify(elementalPath),
 				reactSelectPath: JSON.stringify(reactSelectPath),
+				adminPath:JSON.stringify(keystone.get('admin path')),
 				keystonePath: JSON.stringify(keystonePath)
 			}
 		},

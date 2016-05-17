@@ -71,7 +71,7 @@ KAdm.control = {
 	init:function()
 	{
 		this.loadSideBarMenu();
-		this.loadPage('http://localhost:3000/admin/Category/Archive', "56aece7f7dd7f7e801621fa8");
+		this.loadPage('http://localhost:3000/admin/Category/Archive',{navs: "56aece7f7dd7f7e801621fa8"});
 		$(".sidebar").on('click', 'li a', function (e) {
 			var ele = $(this).next();
 			if (!ele.is('.treeview-menu')){
@@ -79,7 +79,7 @@ KAdm.control = {
 				var navs = $(this).data("id");
 				if (url.trim().length > 0)
 				{
-					KAdm.control.loadPage(url, navs);
+					KAdm.control.loadPage(url, {navs:navs});
 				}
 				
 			}
@@ -140,13 +140,11 @@ KAdm.control = {
 
 		});
 	},
-	loadPage:function(url, navs){
+	loadPage:function(url, data){
 		this.showLoading(true);
 		KAdm.control.api({
 			url:url,
-			data:{
-				navs:navs	
-			},
+			data:data,
 			dataType:"html",
 			success:function(data)
 			{

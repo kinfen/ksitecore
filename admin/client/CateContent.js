@@ -181,7 +181,7 @@ var CateContent = React.createClass({
 			{
 				if (data.status===1) {
 					var url = path.join(self.props.adminPath, "item", self.props.model, data.info.item._id);
-					KAdm.control.loadPage(url);
+					KAdm.control.loadPage(url,  {backUrl:self.formBackUrlWithParam(self.state)});
 				}
 				else 
 				{
@@ -285,9 +285,9 @@ var CateContent = React.createClass({
 	},
 	nameSelectedHandler(id)
 	{
-		var url = path.join(his.props.adminPath, "item", id);
+		var url = path.join(this.props.adminPath, "item", this.props.model, id);
 		console.log(url);
-		KAdm.control.loadPage(url);
+		KAdm.control.loadPage(url, {backUrl:this.formBackUrlWithParam(this.state)});
 	},
 	pageSelectedHandler(page)
 	{
@@ -347,6 +347,17 @@ var CateContent = React.createClass({
 		url += "?p=" + param.page;
 		url += "&ps=" + param.pageSize;
 		url += "&cat=" + param.category;
+		if (this.sortName && this.sortOrder)
+			url += "&sort=" + orderTag + this.sortName;
+		return url;
+	},
+	formBackUrlWithParam(param){
+		var orderTag = this.sortOrder == "asc" ? "+" : "-";
+		var url = path.join(this.props.adminPath, 'category', this.props.model);
+		url += "?p=" + param.page;
+		url += "&ps=" + param.pageSize;
+		url += "&cat=" + param.category;
+		url += "&navs=" + this.props.navs;
 		if (this.sortName && this.sortOrder)
 			url += "&sort=" + orderTag + this.sortName;
 		return url;
@@ -530,5 +541,5 @@ var CateContent = React.createClass({
 	},
 });
 KAdm.cateContent = ReactDOM.render(
-	<CateContent adminPath={KAdm.adminPath} apiPath="api2" model={KAdm.model.singular} onTitleSelected={KAdm.control.cateContent.onTitleSelected} />, $("#cateContent")[0]
+	<CateContent adminPath={KAdm.adminPath} apiPath="api2" model={KAdm.model.singular} navs={KAdm.navs} onTitleSelected={KAdm.control.cateContent.onTitleSelected} />, $("#cateContent")[0]
 );

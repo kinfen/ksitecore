@@ -97,7 +97,7 @@ var ItemView = React.createClass({
 			{
 				if (data.status===1)
 				{
-					KAdm.control.loadPage(this.props.backUrl);
+					KAdm.control.loadPage(self.props.backUrl);
 				}
 				l.stop();
 				KAdm.modal.hide();

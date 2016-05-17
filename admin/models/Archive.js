@@ -10,7 +10,7 @@ var keystone = require('../keystone'),
 var Archive = new keystone.List('Archive');
 
 Archive.add({
-	name: { label:"标题", type: String, required: true },
+	name: { label:"标题", type: String, required: true},
 	subName : { label:"副标题",  type: String, default:''},
 	category: {label:"栏目", type: Types.Relationship, ref: 'Category',default:'', treeMode:true, initial:true},
 	author: {label:"作者", type: String, default:''},
@@ -19,4 +19,5 @@ Archive.add({
 	publishedDate: {label:"发布日期", type: Date, default: Date.now },
 });
 Archive.defaultColumns = 'name, author|20%, publishedDate|20%';
+Archive.defaultSort = '-publishedDate';
 Archive.register();

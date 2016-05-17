@@ -12,7 +12,7 @@ module.exports = function(req, res) {
 	var category = req.query.cat;
 	var fields = req.query.fields ? req.query.fields.split(',') : null;
 	var page = req.query.p || 1;
-	var sortTag = req.query.sort;
+	var sortTag = req.query.sort || req.list.defaultSort;
 	var pageSize = req.query.ps || 10;
 	var searchTag  = {state:"normal"};
 	if (category)
