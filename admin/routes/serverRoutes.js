@@ -15,7 +15,7 @@ exports = module.exports = function() {
 	router.all('/', require('./views/main'));
 	router.all('/signin', require('./views/signin'));
 	router.all('/signout', require('./views/signout'));
-	router.all('/category/:model', require('./views/listWithCa'));
+	router.all('/category/:model', initList(), require('./views/listWithCa'));
 	router.all('/item/:model/:id', initList(), require('./views/item'));
 	router.all('/api2/:model/tree', initList(), require('../api/tree'));
 	router.all('/api2/:model/list', initList(), require('../api/list'));

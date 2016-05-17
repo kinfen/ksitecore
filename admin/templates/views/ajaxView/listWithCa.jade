@@ -16,7 +16,9 @@ section.content
 			#category
 		.col-sm-9
 			#cateContent
-
+script.
+	KAdm.page = !{page ? JSON.stringify(page) : null};
+	KAdm.category = "!{category}";
 script(src="#{adminPathEx}/dist/js/bootstrap-table.js")
 script(src="#{adminPathEx}/dist/js/bootstrap-treeview.min.js")
 script(src="#{adminPathEx}/script/Category.js")

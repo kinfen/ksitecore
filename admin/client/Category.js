@@ -333,5 +333,5 @@ var Category = React.createClass({
 });
 
 KAdm.mainCategory = ReactDOM.render(
-	<Category navs={KAdm.navs} onNodeSelected={KAdm.control.category.onNodeSelected}/>, $("#category")[0]
+	<Category navs={KAdm.navs} initCategory={KAdm.category} onNodeSelected={KAdm.control.category.onNodeSelected}/>, $("#category")[0]
 );

@@ -2,7 +2,7 @@
  * Created by kinfen on 16/1/31.
  */
 
-var kadm = require('../../index');
+var kadm = require('../../');
 
 module.exports = function(req, res) {
 	
@@ -17,7 +17,7 @@ module.exports = function(req, res) {
 		page:{
 			page:page,
 			pageSize:pageSize
-		}
+		},
 		from: req.query.from,
 		logo: null
 	});

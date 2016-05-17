@@ -13,7 +13,10 @@ var category = {
 	},
 	activeCategory:function(){
 		KAdm.mainCategory.updateTrees();
-		
+		KAdm.cateContent.setState({
+			category:KAdm.category
+		});
+		KAdm.cateContent.reloadDataFromStateParam();
 		//KAdm.category.props = {
 		//	createHandler:this.createHandler,
 		//	removeHandler:this.removeHandler
