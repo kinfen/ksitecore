@@ -103,7 +103,6 @@ var CateContent = React.createClass({
 				else {
 					console.log(data);
 				}
-
 			},
 			error:function(xhr, err)
 			{

@@ -26,13 +26,10 @@ module.exports = function(req, res) {
 		fields.push("_id");
 		fields.push("navs");
 	}
-	//Base.json(res, {
-	//	status:1,
-	//	list:{}
-	//});
 	var db = req.list.paginate({
 		page: page,
-		perPage: pageSize
+		perPage: pageSize,
+		filters:searchTag
 	}).where(searchTag);
 	if (sortTag)
 	{

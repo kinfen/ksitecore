@@ -98,7 +98,39 @@ KAdm.Dom.Modal = React.createClass({
 		
 	}
 });
+KAdm.Dom.LaddaBtn = React.createClass({
+	getInitialState () {
+		//console.log('init param' + this.props.page);
+		return {
+			//pageSize: this.props.pageSize || 10,
+			//page: this.props.page || 1,
+			//totalPage: this.props.totalPage || 1,
 
+		}
+	},
+	onClick(e){
+		var btn = e.currentTarget;
+		var l = Ladda.create(btn);
+		l.start();
+		console.log('click');
+	},
+	render(){
+		var direction = "expand-" + this.props.direction || "left";
+		var classStr = "btn ladda-button btn-" + this.props.type || "primary";
+		var extClassName = classStr + " " + this.props.className || "";
+		var props = {};
+		var tag = 'button';
+		props.type = this.props.submit ? 'submit' : 'button';
+		props.dataStyle = direction;
+		props.className = classStr;
+		props.onClick= this.onClick;
+		if (props.href) {
+			tag = 'a';
+			delete props.type;
+		}
+		return React.createElement(tag, props, this.props.children);
+	}
+});
 
 KAdm.Dom.Pagination = React.createClass({
 
