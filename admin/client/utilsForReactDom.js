@@ -99,6 +99,7 @@ KAdm.Dom.Modal = React.createClass({
 	}
 });
 KAdm.Dom.LaddaBtn = React.createClass({
+	laddaBtn:null,
 	getInitialState () {
 		//console.log('init param' + this.props.page);
 		return {
@@ -110,26 +111,42 @@ KAdm.Dom.LaddaBtn = React.createClass({
 	},
 	onClick(e){
 		var btn = e.currentTarget;
-		var l = Ladda.create(btn);
-		l.start();
-		console.log('click');
+		this.laddaBtn = Ladda.create(btn);
+		this.laddaBtn.start();
+		if (this.props.clickHandler)
+		{
+			this.props.clickHandler(this, e);
+		}
+		
+	},
+	stop(){
+		this.laddaBtn.stop();
 	},
 	render(){
+		var type = this.props.submit ? 'submit' : 'button';
 		var direction = "expand-" + this.props.direction || "left";
 		var classStr = "btn ladda-button btn-" + this.props.type || "primary";
 		var extClassName = classStr + " " + this.props.className || "";
-		var props = {};
-		var tag = 'button';
-		props.type = this.props.submit ? 'submit' : 'button';
-		props.dataStyle = direction;
-		props.className = classStr;
-		props.onClick= this.onClick;
-		if (props.href) {
-			tag = 'a';
-			delete props.type;
-		}
-		return React.createElement(tag, props, this.props.children);
+		return (
+			<button type={type} onClick={this.onClick} className={extClassName} data-style={direction}>
+				<span className="ladda-labble">{this.props.children}</span>
+			</button>
+		)
 	}
+	//render(){
+	
+	//	var props = {};
+	//	var tag = 'button';
+	//	props.type = this.props.submit ? 'submit' : 'button';
+	//	props.dataStyle = direction;
+	//	props.className = classStr;
+	//	props.onClick= this.onClick;
+	//	if (props.href) {
+	//		tag = 'a';
+	//		delete props.type;
+	//	}
+	//	return React.createElement(tag, props, this.props.children);
+	//}
 });
 
 KAdm.Dom.Pagination = React.createClass({

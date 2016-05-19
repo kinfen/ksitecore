@@ -35,8 +35,11 @@ var ItemView = React.createClass({
 			createIsOpen: visible,
 		});
 	},
-	saveHandler(){
-		
+	saveHandler(target, e){
+		console.log(target);
+		setTimeout(function(){
+			target.stop();
+		}, 2000);
 	},
 	confirmReset(){
 		var bodyElement = (
@@ -127,8 +130,8 @@ var ItemView = React.createClass({
 	},
 	renderFooterBar () {
 		var buttons = [
-			<KAdm.Dom.LaddaBtn onClick={this.saveHandler} type="primary" className="pull-left">
-				<span className="ladda-labble">保存</span>
+			<KAdm.Dom.LaddaBtn clickHandler={this.saveHandler} direction="left" type="primary" className="pull-left">
+				保存
 			</KAdm.Dom.LaddaBtn>
 			
 		];
