@@ -78,7 +78,6 @@ module.exports = function(req, res) {
 	{
 		case "create":
 		{
-			
 			var item = new req.list.model();
 			var updateHandler = item.getUpdateHandler(req);
 			var data = (req.method === 'POST') ? req.body : req.query;
@@ -176,40 +175,19 @@ module.exports = function(req, res) {
 			break;
 		case "update":
 		{
-			var itemQuery = req.list.model.findById(req.params.id).select();
-
-			itemQuery.exec(function(err, item) {
-
-				if (err) {
-					return Base.error(res, "Error", err, err.message);
-				}
-
-				if (!item) {
-					var msg = 'Item ' + req.params.item + ' could not be found.';
-					return Base.error(res, "Error", new Error(msg), msg);
-				}
-				if (req.method === 'POST' && req.body.action === 'updateItem' && !req.list.get('noedit')) {
-
-					if (!keystone.security.csrf.validate(req)) {
-						console.error('CSRF failure', req.method, req.body);
-						Base.error(res, "Error", new Error("'There was a problem with your request, please try again.'"), "'There was a problem with your request, please try again.'");
-					}
-					item.getUpdateHandler(req).process(req.body, { flashErrors: true, logErrors: true }, function(err) {
-						if (err) {
-							return Base.error(res, "Error", err, err.message);
-						}
-						return Base.json(res, {
-							status:1,
-							msg:"you change have been saved"
-						});
+			req.list.model.findById(req.params.id, function(err, item) {
+				if (err) return Base.error(res, "error", err, err.message);
+				if (!item) return Base.error(res, "error", new Error("item not found"), "item not found");
+				req.list.updateItem(item, {
+					data: req.body,
+					files: req.files
+				}, function(err) {
+					if (err) return Base.error(res, "error", err, err.message);
+					Base.json(res, {
+						status:1,
+						info:req.list.getData(item)
 					});
-
-
-				} else {
-					
-					return Base.error(res, "Error", new Error("Can not update"), "Can not update");
-				}
-
+				});
 			});
 		}
 		

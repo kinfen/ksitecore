@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import path from 'path';
 import Lists from 'keystone/admin/client/stores/Lists';
 import EditForm from './components/EditForm';
 import FooterBar from './components/FooterBar';
@@ -36,10 +37,26 @@ var ItemView = React.createClass({
 		});
 	},
 	saveHandler(target, e){
-		console.log(target);
-		setTimeout(function(){
-			target.stop();
-		}, 2000);
+		
+		var self = this;
+		var actionPath = path.join(this.props.adminPath, "api2", this.props.list.key, this.props.itemId);
+		var opt = {
+			url:actionPath,
+			success:function (data){
+				if (data.status == 1)
+				{
+					KAdm.control.loadPage(self.props.backUrl);
+				}
+				console.log(data);
+				target.stop();
+			}
+		}
+		$("#item-form").ajaxSubmit(opt);
+	},
+	handleReset(e)
+	{
+		$("#item-form").resetForm();
+		KAdm.modal.hide();
 	},
 	confirmReset(){
 		var bodyElement = (
@@ -53,7 +70,7 @@ var ItemView = React.createClass({
 			body:bodyElement,
 			footer:{
 				leftItems:[
-					<button key={0} type="button" className="btn btn-info pull-left ladda-button" data-style="expand-left">重置</button>
+					<button onClick={this.handleReset} key={0} type="button" className="btn btn-info pull-left ladda-button" data-style="expand-left">重置</button>
 				],
 				rightItems:[{
 					name:"关闭",
@@ -155,6 +172,7 @@ var ItemView = React.createClass({
 	},
 	render () {
 		if (!this.state.itemData) return <div className="view-loading-indicator"><Spinner size="md" /></div>;
+		
 		return (
 		<div className="box box-primary">
 			<div className="box-header with-border">
@@ -164,7 +182,6 @@ var ItemView = React.createClass({
 					<Container>
 						<EditForm
 							id="item-form"
-							action=""
 							list={this.props.list}
 							data={this.state.itemData} />
 						{this.renderRelationships()}
@@ -180,6 +197,7 @@ var ItemView = React.createClass({
 
 ReactDOM.render(
 	<ItemView
+		adminPath={KAdm.adminPath}
 		backUrl={KAdm.backUrl}
 		itemId={KAdm.itemId}
 		list={Lists[KAdm.list.key]}
