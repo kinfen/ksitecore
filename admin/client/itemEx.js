@@ -163,6 +163,8 @@ var ItemView = React.createClass({
 			<div className="box-body">
 					<Container>
 						<EditForm
+							id="item-form"
+							action=""
 							list={this.props.list}
 							data={this.state.itemData} />
 						{this.renderRelationships()}
