@@ -12,9 +12,37 @@ exports = module.exports = function() {
 	if (!keystone.nativeApp || !keystone.get('session')) {
 		router.all('*', keystone.session.persist);
 	}
-	router.all('/', require('./views/main'));
+
+
+	//auth
+	if (keystone.get('auth') === true) {
+		// TODO: poor separation of concerns; settings should be defaulted elsewhere
+		console.log(kadm.get('signout url'));
+		if (!kadm.get('signout url')) {
+			kadm.set('signout url', '/' + kadm.get('kadmPath') + '/signout');
+		}
+		if (!kadm.get('signin url')) {
+			kadm.set('signin url', '/' + kadm.get('kadmPath') + '/signin');
+		}
+		if (!keystone.nativeApp || !keystone.get('session')) {
+			router.all('*', keystone.session.persist);
+		}
+	} else if ('function' === typeof keystone.get('auth')) {
+		router.use(keystone.get('auth'));
+	}
+
+	var kadmAuth = function(req, res, next) {
+		if (!req.user || !req.user.canAccessKeystone) {
+			var regex = new RegExp('^\/' + kadm.get('kadmPath') + '\/?$', 'i');
+			var from = '';// regex.test(req.url) ? '' : '?from=' + req.url;
+			return res.redirect(kadm.get('signin url') + from);
+		}
+		next();
+	};
 	router.all('/signin', require('./views/signin'));
 	router.all('/signout', require('./views/signout'));
+	router.use(kadmAuth);
+	router.all('/', require('./views/main'));
 	router.all('/category/:model', initList(), require('./views/listWithCa'));
 	router.all('/item/:model/:id', initList(), require('./views/item'));
 	router.all('/api2/:model/tree', initList(), require('../api/tree'));
@@ -37,6 +65,11 @@ exports = module.exports = function() {
 	//router.all('/:list/:page([0-9]{1,5})?', initList(true), require('../routes/list'));
 	//router.all('/:list/:item', initList(true), require('../routes/item'));
 
+
+	
+	
+	
+	
 	router.all('/test', function(req, res, next){
 		console.log("test");
 		next();

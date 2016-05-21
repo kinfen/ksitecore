@@ -80,8 +80,6 @@ module.exports = function createDynamicRouter(keystone) {
 	// #6: List Routes
 	router.all('/:list/:page([0-9]{1,5})?', initList(true), require('../routes/list'));
 	router.all('/:list/:item', initList(true), require('../routes/item'));
-
-	// TODO: catch 404s and errors with Admin-UI specific handlers
-	console.log("create keystone routes");
+	
 	return router;
 };

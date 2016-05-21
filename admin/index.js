@@ -12,6 +12,8 @@ var KAdm = function()
 {
 	this._options = {
 		"kadmPath":"admin",
+		'signin url':null,
+		'signout url':null,
 		"adminModuleName":"./keystone"
 	};
 	keystone = this.getAdminPlus();

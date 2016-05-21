@@ -25,8 +25,7 @@ exports = module.exports = function(app) {
 		},
 		debug:true
 	};
-	
-	app.use ("/" + ksiteadm.get("kadmPath"), serverRoutes);
 	app.use ("/" + ksiteadm.get("kadmPath"), jsRoutes);
 	app.use ("/" + ksiteadm.get("kadmPath"), staticRoutes);
+	app.use ("/" + ksiteadm.get("kadmPath"), serverRoutes);
 }
