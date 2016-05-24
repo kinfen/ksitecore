@@ -14,6 +14,7 @@ var KAdm = function()
 		"kadmPath":"admin",
 		'signin url':null,
 		'signout url':null,
+		'static':'public',
 		"adminModuleName":"./keystone"
 	};
 	keystone = this.getAdminPlus();

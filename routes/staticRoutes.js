@@ -5,9 +5,10 @@
 
 var	express = require('express');
 var path = require('path');
+var kadm = require('../admin');
 
 exports = module.exports = function() {
 	var routes = express.Router();
-	routes.use(express.static(path.resolve(__dirname, "../public")));
+	routes.use(express.static(path.join(__dirname, "..", kadm.get('static'))));
 	return routes;
 };
