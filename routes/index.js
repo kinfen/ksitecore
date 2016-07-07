@@ -8,12 +8,14 @@ var kadm = require('../admin');
 //	views: importRoutes('../routes/')
 //};
 // Setup Route Bindings
-exports = module.exports = function(app) {
-	
+exports = module.exports = function() {
+
+	var router = express.Router();
 	var staticRoutes = require("./staticRoutes")();
 	var serverRoutes = require("./serverRoutes")();
-	app.use ("/", staticRoutes);
-	app.use ("/", serverRoutes);
+	router.use ("/", staticRoutes);
+	router.use ("/", serverRoutes);
+	return router;
 
 
 }

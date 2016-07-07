@@ -2,7 +2,7 @@
  * Created by kinfen on 16/1/26.
  */
 var	express = require('express');
-var ksiteadm = require('../index');
+var kadm = require('../index');
 //console.log(ksiteadm);
 //var dest = {
 //	views: importRoutes('../routes/')
@@ -12,22 +12,13 @@ exports = module.exports = function(app) {
 	var serverRoutes = require("./serverRoutes")();
 	var jsRoutes = require("../prebuild/buildClientJs")();
 	var staticRoutes = require("./staticRoutes")();
-	if (ksiteadm.get("routes"))
+	if (kadm.get("routes"))
 	{
-		ksiteadm.get("routes")(app);
+		kadm.get("routes")(app);
 	}
-
-	var lessOptions = {
-		render: {
-			modifyVars: {
-				elementalPath: 1
-			}
-		},
-		debug:true
-	};
-	app.use ("/" + ksiteadm.get("kadmPath"), jsRoutes);
-	app.use ("/" + ksiteadm.get("kadmPath"), staticRoutes);
-	app.use ("/" + ksiteadm.get("kadmPath"), serverRoutes);
-	app.use('/', require('../../routes'));
+	app.use ("/" + kadm.get("kadmPath"), jsRoutes);
+	app.use ("/" + kadm.get("kadmPath"), staticRoutes);
+	app.use ("/" + kadm.get("kadmPath"), serverRoutes);
+	app.use('/', require('../../routes')());
 	
 }
